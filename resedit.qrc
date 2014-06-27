@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>GO3-Traks_logo.jpg</file>
+    </qresource>
+</RCC>
