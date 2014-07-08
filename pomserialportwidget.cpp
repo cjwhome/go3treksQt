@@ -4,6 +4,11 @@
 #include <QObject>
 #include <QFile>
 #include <QDir>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QUrl>
+#include <QUrlQuery>
+#include <QNetworkReply>
 
 pomSerialPortWidget::pomSerialPortWidget(QWidget *parent) :
     QWidget(parent),
@@ -71,6 +76,7 @@ void pomSerialPortWidget::pomConnect()
             //pomfile.close();
         }else{
             ui->textBrowser->append("Could not open file");
+            return;
         }
         ui->textBrowser->append("Downloading Logged Data");
         POMserialPort.write("t");
@@ -116,5 +122,50 @@ void pomSerialPortWidget::readData()
     }
 
 }
+
+
+void pomSerialPortWidget::on_loginButton_clicked()
+{
+
+	// TODO: Display an error in these cases
+	if (ui->usernameBox->text().isEmpty()) return;
+	if (ui->passwordBox->text().isEmpty()) return;
+
+
+
+
+	QNetworkAccessManager *nwam = new QNetworkAccessManager;
+
+	QNetworkRequest r (QUrl("http://go3project.com/scripts/user/SE_CheckLogin.php"));
+
+	QString requestString("{\"Username\":\"" + ui->usernameBox->text() + "\",\"Email\":\"" + ui->passwordBox->text() + "\"}");
+
+
+	QByteArray postData;
+	QUrlQuery q;
+    q.addQueryItem("Request", requestString);
+    postData = q.query(QUrl::FullyEncoded).toUtf8();
+
+	QNetworkReply *reply = nwam->post(r, postData);
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

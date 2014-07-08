@@ -26,6 +26,10 @@ public:
 private slots:
     void readData();
 
+    void on_pushButton_clicked();
+
+    void on_loginButton_clicked();
+
 private:
 
     Ui::pomSerialPortWidget *ui;

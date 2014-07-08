@@ -76,7 +76,7 @@
    <property name="title">
     <string>Signin</string>
    </property>
-   <widget class="QLineEdit" name="lineEdit">
+   <widget class="QLineEdit" name="usernameBox">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -89,7 +89,7 @@
      <string>Username</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_2">
+   <widget class="QLineEdit" name="passwordBox">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -102,7 +102,7 @@
      <string>Password</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="loginButton">
     <property name="geometry">
      <rect>
       <x>40</x>
