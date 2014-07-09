@@ -36,13 +36,13 @@ bool pomSerialPortWidget::findPomPort()
             {
                 POMserialPort.setPort(serialPortInfoList[i]);
                 //ui->textBrowser->append("Found port:"+QString(serialPortInfoList[i].portName()));
-				parentWidget()->statusUpdate("texttext");
+				this->log("texttext");
                 return 1;
                 //qDebug()<<"Found Pom serial port";//<< POMserialPort->portName(); //Microchip Technology, Inc.
             }
 
     }
-    ui->textBrowser->append("Could not find port");
+    //XXui->textBrowser->append("Could not find port");
     return 0;
 
 }
@@ -51,7 +51,7 @@ void pomSerialPortWidget::pomConnect()
 {
     if(POMserialPort.open(QIODevice::ReadWrite))
     {
-        ui->textBrowser->append("Port Opened Successfully");
+        //XXui->textBrowser->append("Port Opened Successfully");
         POMserialPort.setBaudRate(19200,QSerialPort::AllDirections);
         POMserialPort.setDataBits(QSerialPort::Data8);
         POMserialPort.setStopBits(QSerialPort::OneStop);
@@ -63,24 +63,24 @@ void pomSerialPortWidget::pomConnect()
         QDir dir(combinedPath);
         if(!dir.exists()){
             dir.mkpath(".");
-            ui->textBrowser->append("Creating Folder");
+            //XXui->textBrowser->append("Creating Folder");
         }else{
-            ui->textBrowser->append("Found Data Folder");
+            //XXui->textBrowser->append("Found Data Folder");
         }
-        if(QDir::setCurrent(combinedPath))
-            ui->textBrowser->append("Set Path");
+        //XXif(QDir::setCurrent(combinedPath))
+            //XXui->textBrowser->append("Set Path");
         //create file with temp name and change the name
         pomfile.setFileName("tempname.txt");
         if(pomfile.open(QIODevice::ReadWrite)){
-            ui->textBrowser->append("Created new file");
+            //XXui->textBrowser->append("Created new file");
             //pomfile.rename("newname.txt");
             //pomfile.write("blah blah");
             //pomfile.close();
         }else{
-            ui->textBrowser->append("Could not open file");
+            //XXui->textBrowser->append("Could not open file");
             return;
         }
-        ui->textBrowser->append("Downloading Logged Data");
+        //XXui->textBrowser->append("Downloading Logged Data");
         POMserialPort.write("t");
         POMserialPort.flush();
         POMserialPort.clear();
@@ -106,14 +106,14 @@ void pomSerialPortWidget::readData()
             QString newname = QString(fields[10].remove(QChar('/'))) + ".txt";
             pomfile.rename(newname);
             madeNewFileName=true;
-            ui->textBrowser->append("Created new name for file");
+            //XXui->textBrowser->append("Created new name for file");
             pomfile.open(QIODevice::ReadWrite);
         }
     }
     POMserialPort.flush();
     POMserialPort.clear();
     if(QString::compare(QString(dataLine),"End logged data")>0){
-        ui->textBrowser->append("Finished Downloading");
+        //XXui->textBrowser->append("Finished Downloading");
         transmittingData = false;
         POMserialPort.close();
         pomfile.close();
@@ -133,7 +133,7 @@ void pomSerialPortWidget::on_loginButton_clicked()
 	if (ui->usernameBox->text().isEmpty()) return;
 	if (ui->passwordBox->text().isEmpty()) return;
 	
-	ui->textBrowser->append("Attempting login (takes a while)...");
+	//XXui->textBrowser->append("Attempting login (takes a while)...");
 	
 	QNetworkAccessManager *nwam = new QNetworkAccessManager;
 	
@@ -156,11 +156,11 @@ void pomSerialPortWidget::on_loginButton_clicked()
 	loop.exec();
 	
 	if (reply->error() != QNetworkReply::NoError) {
-		ui->textBrowser->append("Request failed!  Error: "+reply->errorString());
+		//XXui->textBrowser->append("Request failed!  Error: "+reply->errorString());
 		return;
 	}
 	
-	ui->textBrowser->append("Returned "+QString(reply->readAll()));
+	//XXui->textBrowser->append("Returned "+QString(reply->readAll()));
 	
 	
 	QJsonDocument response = QJsonDocument::fromJson(postData);
@@ -169,24 +169,8 @@ void pomSerialPortWidget::on_loginButton_clicked()
 	
 	//this->setCursor(QCursor(Qt::ArrowCursor));
 	
-	ui->textBrowser->append("Login successful!");
+	//XXui->textBrowser->append("Login successful!");
 }
-
-
-void pomSerialPortWidget::addToTextLog(QString text) {
-	ui->textLog->append(text);
-}
-
-
-
-
-
-
-
-
-
-
-
 
 
 

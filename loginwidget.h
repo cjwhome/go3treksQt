@@ -15,6 +15,12 @@ public:
 	explicit LoginWidget(QWidget *parent = 0);
 	~LoginWidget();
 	
+signals:
+	void log(QString text);
+	
+private slots:
+	void on_pushButton_clicked();
+	
 private:
 	Ui::LoginWidget *ui;
 };

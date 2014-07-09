@@ -4,36 +4,78 @@ MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent)
 {
 	
-	TEMPTBD = new QListWidget(this);
+	//TEMPTBD = new QListWidget(this);
 	
-	/// Widget Stack ///
-	mainWidgetStack = new QStackedWidget(this);
-	mainWidgetStack->addWidget(TEMPTBD);
-	mainWidgetStack->addWidget(TEMPTBD2);
 	
-	setCentralWidget(mainWidgetStack);
+	
+	
+	
+	
+	/////////////////////
+	/// MENU BUILDING ///
+	/////////////////////
+	
+	
+	/// File Menu ///
+	fileMenu = menuBar()->addMenu(tr("&File"));
+	
+	quitAct = new QAction(tr("&Quit", "File menu"), this);
+	quitAct->setMenuRole(QAction::QuitRole);
+	quitAct->setShortcuts(QKeySequence::Quit);
+	quitAct->setStatusTip(tr("Exit the program"));
+	//connect(quitAct, SIGNAL(triggered()), this, SLOT(notImplemented()));
+	fileMenu->addAction(quitAct);
+	
 	
 	
 	
 	
 	// ui->setupUi(this);
-
-    pomSerialPortWidget* pomdevice = new pomSerialPortWidget();
-
-    setCentralWidget(pomdevice);
-
-    if(pomdevice->findPomPort())
-        pomdevice->pomConnect();
-        //qDebug()<<"Found Port";
+	
+	Logger *logger = new Logger(this);
+	
+	LoginWidget *loginWidget = new LoginWidget(this);
+	
+	//SerialStep* serialStep = new SerialStep(this);
+	
+	//connect(pomdevice, pomSerialPortWidget::log, logger, Logger::log);
+	
+	//if(pomdevice->findPomPort())
+	//	pomdevice->pomConnect();
+	//qDebug()<<"Found Port";
+	
+	
+	
+	/// Widget Stack ///
+	mainWidgetStack = new QStackedWidget(this);
+	mainWidgetStack->addWidget(loginWidget);
+	//mainWidgetStack->addWidget(TEMPTBD2);
+	
+	this->setCentralWidget(mainWidgetStack);
+	
+	
+	
+	
+	statusBar()->show();
+	
+	logger->log("Done!");
+	
+	
+	
+	//connect(loginWidget, LoginWidget::log, logger, Logger::log);
+	
+	connect(logger, Logger::logUpdated, this, updateStatus);
+	
+	setWindowTitle(tr("GO3 Treks"));
+	setMinimumSize(750,500);
+	setMaximumSize(750,500);
+	resize(750,500);
 }
 
-MainWindow::~MainWindow()
-{
-    delete ui;
+MainWindow::~MainWindow() {
 }
 
 
-void MainWindow::statusUpdate(QString text) {
-	statusBar()->showMessage(text);
-	pomdevice.addToTextLog(text);
+void MainWindow::updateStatus(QString text) {
+	this->statusBar()->showMessage(text);
 }

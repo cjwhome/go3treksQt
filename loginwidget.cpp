@@ -12,3 +12,8 @@ LoginWidget::~LoginWidget()
 {
 	delete ui;
 }
+
+void LoginWidget::on_pushButton_clicked()
+{
+    emit log("You pressed a button!");
+}

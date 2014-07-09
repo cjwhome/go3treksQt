@@ -21,8 +21,9 @@ public:
     ~pomSerialPortWidget();
     bool findPomPort();
     void pomConnect();
-	void addToTextLog(QString text);
-
+	
+signals:
+	void log(QString text);
 
 private slots:
     void readData();
@@ -37,7 +38,7 @@ private:
     bool transmittingData;
     bool madeNewFileName;
 	
-	bool loggedIn = false;
+	bool loggedIn;
 	QString userName;
 	QString userID;
 	QString userRealName;

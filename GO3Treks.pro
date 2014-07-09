@@ -14,13 +14,18 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    pomserialportwidget.cpp
+    pomserialportwidget.cpp \
+    logger.cpp \
+    loginwidget.cpp
 
 HEADERS  += mainwindow.h \
-    pomserialportwidget.h
+    pomserialportwidget.h \
+    logger.h \
+    loginwidget.h
 
-FORMS    += mainwindow.ui \
-    pomserialportwidget.ui
+FORMS    += pomserialportwidget.ui \
+    serialstep.ui \
+    loginwidget.ui
 
 OTHER_FILES +=
 
