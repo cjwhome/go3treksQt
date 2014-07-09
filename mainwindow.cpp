@@ -32,9 +32,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	
 	// ui->setupUi(this);
 	
-	Logger *logger = new Logger(this);
+	logger = new Logger(this);
 	
-	LoginWidget *loginWidget = new LoginWidget(this);
+	loginWidget = new LoginWidget(this);
 	
 	//SerialStep* serialStep = new SerialStep(this);
 	
@@ -58,19 +58,20 @@ MainWindow::MainWindow(QWidget *parent) :
 	
 	statusBar()->show();
 	
-	logger->log("Done!");
 	
 	
+	connect(loginWidget, &LoginWidget::log, logger, &Logger::log);
 	
-	//connect(loginWidget, LoginWidget::log, logger, Logger::log);
-	
-	connect(logger, Logger::logUpdated, this, updateStatus);
+	connect(logger, &Logger::logUpdated, this, &MainWindow::updateStatus);
 	
 	setWindowTitle(tr("GO3 Treks"));
 	setMinimumSize(750,500);
 	setMaximumSize(750,500);
 	resize(750,500);
+	
+	logger->log("Application initialized!");
 }
+
 
 MainWindow::~MainWindow() {
 }

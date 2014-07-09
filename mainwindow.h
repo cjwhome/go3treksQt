@@ -27,8 +27,8 @@ public:
 	QAction *quitAct;
 	
 	//pomSerialPortWidget pomdevice;
-	Logger logger;
-	LoginWidget loginWidget;
+	Logger *logger;
+	LoginWidget *loginWidget;
 
 public slots:
 	void updateStatus(QString text);
