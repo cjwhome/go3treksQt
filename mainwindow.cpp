@@ -1,13 +1,22 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
-#include "pomserialPortWidget.h"
-#include <QVBoxLayout>
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+	QMainWindow(parent)
 {
-    ui->setupUi(this);
+	
+	TEMPTBD = new QListWidget(this);
+	
+	/// Widget Stack ///
+	mainWidgetStack = new QStackedWidget(this);
+	mainWidgetStack->addWidget(TEMPTBD);
+	mainWidgetStack->addWidget(TEMPTBD2);
+	
+	setCentralWidget(mainWidgetStack);
+	
+	
+	
+	
+	// ui->setupUi(this);
 
     pomSerialPortWidget* pomdevice = new pomSerialPortWidget();
 
@@ -21,4 +30,10 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+
+void MainWindow::statusUpdate(QString text) {
+	statusBar()->showMessage(text);
+	pomdevice.addToTextLog(text);
 }

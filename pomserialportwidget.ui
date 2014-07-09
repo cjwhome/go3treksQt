@@ -16,7 +16,7 @@
   <property name="styleSheet">
    <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
   </property>
-  <widget class="QTextBrowser" name="textBrowser">
+  <widget class="QTextBrowser" name="textLog">
    <property name="geometry">
     <rect>
      <x>80</x>
@@ -85,7 +85,7 @@
       <height>21</height>
      </rect>
     </property>
-    <property name="text">
+    <property name="placeholderText">
      <string>Username</string>
     </property>
    </widget>
@@ -98,8 +98,8 @@
       <height>21</height>
      </rect>
     </property>
-    <property name="text">
-     <string>Password</string>
+    <property name="placeholderText">
+     <string>Email</string>
     </property>
    </widget>
    <widget class="QPushButton" name="loginButton">

@@ -9,6 +9,7 @@
 #include <QUrl>
 #include <QUrlQuery>
 #include <QNetworkReply>
+#include <QJsonDocument>
 
 pomSerialPortWidget::pomSerialPortWidget(QWidget *parent) :
     QWidget(parent),
@@ -34,7 +35,8 @@ bool pomSerialPortWidget::findPomPort()
             if(QString::compare(QString(serialPortInfoList[i].manufacturer()),"Microchip Technology, Inc.")==0)
             {
                 POMserialPort.setPort(serialPortInfoList[i]);
-                ui->textBrowser->append("Found port:"+QString(serialPortInfoList[i].portName()));
+                //ui->textBrowser->append("Found port:"+QString(serialPortInfoList[i].portName()));
+				parentWidget()->statusUpdate("texttext");
                 return 1;
                 //qDebug()<<"Found Pom serial port";//<< POMserialPort->portName(); //Microchip Technology, Inc.
             }
@@ -126,32 +128,54 @@ void pomSerialPortWidget::readData()
 
 void pomSerialPortWidget::on_loginButton_clicked()
 {
-
+	
 	// TODO: Display an error in these cases
 	if (ui->usernameBox->text().isEmpty()) return;
 	if (ui->passwordBox->text().isEmpty()) return;
-
-
-
-
+	
+	ui->textBrowser->append("Attempting login (takes a while)...");
+	
 	QNetworkAccessManager *nwam = new QNetworkAccessManager;
-
+	
 	QNetworkRequest r (QUrl("http://go3project.com/scripts/user/SE_CheckLogin.php"));
-
+	r.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+	
 	QString requestString("{\"Username\":\"" + ui->usernameBox->text() + "\",\"Email\":\"" + ui->passwordBox->text() + "\"}");
-
-
+	
+	// Build the POST data to be fed into the request
 	QByteArray postData;
 	QUrlQuery q;
     q.addQueryItem("Request", requestString);
     postData = q.query(QUrl::FullyEncoded).toUtf8();
-
-	QNetworkReply *reply = nwam->post(r, postData);
-
-
+	
+	QNetworkReply *reply = nwam->post(r, postData);  // Actually send the request
+	//while ( reply->waitForReadyRead(1));  // Block for up to 30s or until we've gotten our response
+	
+	QEventLoop loop;
+	QTimer::singleShot(10000, &loop, SLOT(quit()));
+	loop.exec();
+	
+	if (reply->error() != QNetworkReply::NoError) {
+		ui->textBrowser->append("Request failed!  Error: "+reply->errorString());
+		return;
+	}
+	
+	ui->textBrowser->append("Returned "+QString(reply->readAll()));
+	
+	
+	QJsonDocument response = QJsonDocument::fromJson(postData);
+	
+	
+	
+	//this->setCursor(QCursor(Qt::ArrowCursor));
+	
+	ui->textBrowser->append("Login successful!");
 }
 
 
+void pomSerialPortWidget::addToTextLog(QString text) {
+	ui->textLog->append(text);
+}
 
 
 
