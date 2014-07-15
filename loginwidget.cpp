@@ -6,9 +6,20 @@ LoginWidget::LoginWidget(QWidget *parent) :
 	ui(new Ui::LoginWidget)
 {
 	ui->setupUi(this);
+	
 	ui->label->setAlignment(Qt::AlignCenter);
 	ui->label->setText("Login with your GO<sub>3</sub> Social Network account");
-	ui->loginProgressBar->setMaximum(NetworkWaitTime);
+	
+	QPixmap pix(":/TreksLogo");
+	QSize targetSize = QSize(this->width()-150, this->height());
+	pix = pix.scaled(
+				targetSize,
+				Qt::KeepAspectRatio,
+				Qt::SmoothTransformation);
+	ui->imageHolder->setPixmap(pix);
+	ui->imageHolder->setMinimumSize(targetSize);
+	//ui->imageHolder->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+	//ui->horizontalLayout_2->update();
 	
 	user.LoggedIn = false;
 }
@@ -20,59 +31,61 @@ LoginWidget::~LoginWidget()
 
 bool LoginWidget::login(QString username, QString password) {
 	
-	log("Attempting login (takes a while)...");
+	log("Logging in...");
 	
+	ui->checkLoginButton->setEnabled(false);
+	ui->usernameBox->setEnabled(false);
+	ui->passwordBox->setEnabled(false);
+	ui->loginProgressBar->setMaximum(0);  // Sets the progress bar to "working" animation
 	
-	
+	// Get things going
 	QNetworkAccessManager *nwam = new QNetworkAccessManager;
 	
 	QNetworkRequest r (QUrl(LoginScriptURL));
 	r.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
 	
-	QString requestString("{\"Username\":\"" + username + "\",\"Password\":\"" + password + "\"}");
-	
 	// Build the POST data to be fed into the request
+	QString requestString("{\"Username\":\"" + username + "\",\"Password\":\"" + password + "\"}");
 	QByteArray postData;
 	QUrlQuery q;
     q.addQueryItem("Request", requestString);
     postData = q.query(QUrl::FullyEncoded).toUtf8();
 	
 	QNetworkReply *reply = nwam->post(r, postData);  // Actually send the request
-	//while ( reply->waitForReadyRead(1));  // Block for up to 30s or until we've gotten our response
 	
-	ui->loginProgressBar->setValue(0);
-	progressBarValue = 0;
-	QTimer *timer = new QTimer(this);
-	connect(timer, SIGNAL(timeout()), this, SLOT(updateProgressBar()));
-	timer->start(10);
-	while (progressBarValue < NetworkWaitTime) {
+	// Wait 30 seconds or untl we've got a response, whichever comes first
+	int timePassed = 0;
+	while ( ! reply->isFinished() && timePassed < 30000) {
 		QEventLoop loop;
 		QTimer::singleShot(100, &loop, SLOT(quit()));
 		loop.exec();
+		timePassed += 100;
 	}
-	timer->stop();
-	ui->loginProgressBar->setValue(0);
+	
+	ui->checkLoginButton->setEnabled(true);
+	ui->usernameBox->setEnabled(true);
+	ui->passwordBox->setEnabled(true);
+	ui->loginProgressBar->setMaximum(1);  // Reset progress bar to blank state
 	
 	if ( ! reply->isFinished()) {
-		log("Request failed!  Error: timed out with no reply.");
+		log("Request failed!  Error: Connection timed out.");
 		return false;
 	}
-
+	
 	if (reply->error() != QNetworkReply::NoError) {
 		log("Request failed!  Error: "+reply->errorString());
 		return false;
 	}
-	//log("Returned "+reply->readAll());
 	
+	// Parse the reply as JSON
 	QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
 	if (response.isNull()) {
 		log("Request failed!  Error: The response could not be parsed as valid JSON.");
 		return false;
 	}
-	
 	QJsonObject resOb = response.object();
 	
-	
+	// Check for errors from the server
 	if (resOb["Response"].toString() != "Success") {
 		QJsonArray errors = resOb["Errors"].toArray();
 		QString errorBuf;
@@ -84,6 +97,7 @@ bool LoginWidget::login(QString username, QString password) {
 		return false;
 	}
 	
+	// No errors, the user has logged in.  Store their information and call home.
 	QJsonObject dataBuf = resOb["Data"].toObject();
 	user.LoggedIn = true;
 	user.UserID = dataBuf["UserID"].toString();
@@ -92,7 +106,7 @@ bool LoginWidget::login(QString username, QString password) {
 	user.RealName = dataBuf["UserDisplayName"].toString();
 	user.Password = password;
 	
-	log("Logged in!  Hello, "+user.RealName+"!");
+	log("Logged in.  Hello, "+user.RealName+"!");
 	
 	return true;
 }
@@ -108,15 +122,7 @@ void LoginWidget::on_checkLoginButton_clicked()
 		return;
 	}
 	
-	ui->checkLoginButton->setEnabled(false);
-	ui->usernameBox->setEnabled(false);
-	ui->passwordBox->setEnabled(false);
-	
     bool status = login(ui->usernameBox->text(), ui->passwordBox->text());
-	
-	ui->checkLoginButton->setEnabled(true);
-	ui->usernameBox->setEnabled(true);
-	ui->passwordBox->setEnabled(true);
 	
 	if ( ! status) return;
 	
@@ -125,11 +131,6 @@ void LoginWidget::on_checkLoginButton_clicked()
 
 UserInfo LoginWidget::getUserInfo() {
 	return this->user;
-}
-
-void LoginWidget::updateProgressBar() {
-	progressBarValue += 10;
-	ui->loginProgressBar->setValue(progressBarValue);
 }
 
 

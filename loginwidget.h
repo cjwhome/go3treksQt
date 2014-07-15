@@ -11,8 +11,8 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QTimer>
+#include <QPixmap>
 
-#define NetworkWaitTime 5000 // The time we wait for a network reply in milliseconds
 #define LoginScriptURL "http://go3project.com/scripts/user/SE_CheckLogin.php"
 
 namespace Ui {
@@ -43,17 +43,13 @@ signals:
 	void loginSuccessful(UserInfo userInfo);
 	
 private slots:
-	void updateProgressBar();
 	void on_checkLoginButton_clicked();
-	
-	void on_usernameBox_returnPressed();
-	
-	void on_passwordBox_returnPressed();
+	void on_usernameBox_returnPressed();  // Just calls on_checkLoginButton_clicked();
+	void on_passwordBox_returnPressed();  // Just calls on_checkLoginButton_clicked();
 	
 private:
 	Ui::LoginWidget *ui;
 	UserInfo user;
-	int progressBarValue;
 };
 
 #endif // LOGINWIDGET_H

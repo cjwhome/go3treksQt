@@ -74,9 +74,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	updateStatus("Welcome!");
 	
 	setWindowTitle("GO3 Treks");
-	setMinimumSize(750,500);
-	setMaximumSize(750,500);
-	resize(750,500);
+	setMinimumSize(750,450);
+	setMaximumSize(750,450);
+	resize(750,450);
 }
 
 

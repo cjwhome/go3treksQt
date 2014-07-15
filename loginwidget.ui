@@ -13,9 +13,9 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,0">
-   <item>
-    <widget class="QGraphicsView" name="imageHolder"/>
+  <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0">
+   <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+    <widget class="QLabel" name="imageHolder"/>
    </item>
    <item>
     <layout class="QGridLayout" name="gridLayout">
@@ -29,28 +29,88 @@
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>20</width>
+         <width>150</width>
          <height>40</height>
         </size>
        </property>
       </spacer>
      </item>
-     <item row="2" column="0">
+     <item row="2" column="0" alignment="Qt::AlignHCenter">
       <widget class="QLineEdit" name="usernameBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>150</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>150</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="frame">
+        <bool>true</bool>
+       </property>
        <property name="placeholderText">
         <string>Username</string>
        </property>
       </widget>
      </item>
-     <item row="4" column="0">
+     <item row="4" column="0" alignment="Qt::AlignHCenter">
       <widget class="QPushButton" name="checkLoginButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>100</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>100</width>
+         <height>16777215</height>
+        </size>
+       </property>
        <property name="text">
         <string>Login</string>
        </property>
+       <property name="autoDefault">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
-     <item row="3" column="0">
+     <item row="3" column="0" alignment="Qt::AlignHCenter">
       <widget class="QLineEdit" name="passwordBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>150</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>150</width>
+         <height>16777215</height>
+        </size>
+       </property>
        <property name="placeholderText">
         <string>Email</string>
        </property>
@@ -63,35 +123,53 @@
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>20</width>
+         <width>150</width>
          <height>40</height>
         </size>
        </property>
       </spacer>
      </item>
-     <item row="1" column="0">
+     <item row="1" column="0" alignment="Qt::AlignHCenter">
       <widget class="QLabel" name="label">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="text">
         <string>Login with your Social Network account</string>
        </property>
        <property name="textFormat">
         <enum>Qt::RichText</enum>
        </property>
-       <property name="scaledContents">
-        <bool>false</bool>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
        </property>
        <property name="wordWrap">
         <bool>true</bool>
        </property>
       </widget>
      </item>
-     <item row="6" column="0">
+     <item row="6" column="0" alignment="Qt::AlignHCenter">
       <widget class="QProgressBar" name="loginProgressBar">
-       <property name="maximum">
-        <number>10000</number>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-       <property name="value">
-        <number>0</number>
+       <property name="minimumSize">
+        <size>
+         <width>150</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>150</width>
+         <height>16777215</height>
+        </size>
        </property>
       </widget>
      </item>
@@ -105,7 +183,7 @@
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>20</width>
+         <width>150</width>
          <height>20</height>
         </size>
        </property>
