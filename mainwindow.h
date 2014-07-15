@@ -32,6 +32,7 @@ public:
 
 public slots:
 	void updateStatus(QString text);
+	void onLogin(UserInfo userInfo);
 
 private:
     Ui::MainWindow *ui;

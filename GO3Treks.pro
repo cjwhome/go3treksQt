@@ -16,16 +16,19 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     pomserialportwidget.cpp \
     logger.cpp \
-    loginwidget.cpp
+    loginwidget.cpp \
+    serialwidget.cpp
 
 HEADERS  += mainwindow.h \
     pomserialportwidget.h \
     logger.h \
-    loginwidget.h
+    loginwidget.h \
+    serialwidget.h
 
 FORMS    += pomserialportwidget.ui \
     serialstep.ui \
-    loginwidget.ui
+    loginwidget.ui \
+    serialwidget.ui
 
 OTHER_FILES +=
 

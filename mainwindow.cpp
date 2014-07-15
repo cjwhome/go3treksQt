@@ -54,22 +54,21 @@ MainWindow::MainWindow(QWidget *parent) :
 	this->setCentralWidget(mainWidgetStack);
 	
 	
-	
-	
 	statusBar()->show();
 	
 	
 	
 	connect(loginWidget, &LoginWidget::log, logger, &Logger::log);
 	
+	logger->log("Application initialized!");
+	
 	connect(logger, &Logger::logUpdated, this, &MainWindow::updateStatus);
+	updateStatus("Welcome!");
 	
 	setWindowTitle(tr("GO3 Treks"));
 	setMinimumSize(750,500);
 	setMaximumSize(750,500);
 	resize(750,500);
-	
-	logger->log("Application initialized!");
 }
 
 
@@ -80,3 +79,35 @@ MainWindow::~MainWindow() {
 void MainWindow::updateStatus(QString text) {
 	this->statusBar()->showMessage(text);
 }
+
+
+
+void MainWindow::onLogin(UserInfo userInfo){
+	
+	
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

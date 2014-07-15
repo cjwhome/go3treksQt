@@ -12,9 +12,20 @@
 #include <QJsonArray>
 #include <QTimer>
 
+#define NetworkWaitTime 5000 // The time we wait for a network reply in milliseconds
+
 namespace Ui {
 class LoginWidget;
 }
+
+struct UserInfo {
+	bool LoggedIn;
+	QString UserID;
+	QString Username;
+	QString Password;
+	QString Email;
+	QString RealName;
+};
 
 class LoginWidget : public QWidget
 {
@@ -23,17 +34,21 @@ class LoginWidget : public QWidget
 public:
 	explicit LoginWidget(QWidget *parent = 0);
 	~LoginWidget();
-	bool checkLogin(QString username, QString password);
+	bool login(QString username, QString password);
+	UserInfo getUserInfo();
 	
 signals:
 	void log(QString text);
+	void loginSuccessful(UserInfo userInfo);
 	
 private slots:
-	
+	void updateProgressBar();
 	void on_checkLoginButton_clicked();
 	
 private:
 	Ui::LoginWidget *ui;
+	UserInfo user;
+	int progressBarValue;
 };
 
 #endif // LOGINWIDGET_H
