@@ -19,7 +19,12 @@ MainWindow::MainWindow(QWidget *parent) :
 	/// File Menu ///
 	fileMenu = menuBar()->addMenu(tr("&File"));
 	
-	quitAct = new QAction(tr("&Quit", "File menu"), this);
+	resetAct = new QAction("&Reconfigure settings", this);
+	resetAct->setStatusTip(tr("Wipe all settings (login credentials, serial setup) and reconfigure"));
+	//connect(quitAct, SIGNAL(triggered()), this, SLOT(notImplemented()));
+	fileMenu->addAction(resetAct);
+	
+	quitAct = new QAction("&Quit", this);
 	quitAct->setMenuRole(QAction::QuitRole);
 	quitAct->setShortcuts(QKeySequence::Quit);
 	quitAct->setStatusTip(tr("Exit the program"));
@@ -35,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	logger = new Logger(this);
 	
 	loginWidget = new LoginWidget(this);
+	serialWidget = new SerialWidget(this);
 	
 	//SerialStep* serialStep = new SerialStep(this);
 	
@@ -49,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	/// Widget Stack ///
 	mainWidgetStack = new QStackedWidget(this);
 	mainWidgetStack->addWidget(loginWidget);
+	mainWidgetStack->addWidget(serialWidget);
 	//mainWidgetStack->addWidget(TEMPTBD2);
 	
 	this->setCentralWidget(mainWidgetStack);
@@ -56,16 +63,17 @@ MainWindow::MainWindow(QWidget *parent) :
 	
 	statusBar()->show();
 	
-	
-	
+	// Connect local logging aliases
 	connect(loginWidget, &LoginWidget::log, logger, &Logger::log);
 	
-	logger->log("Application initialized!");
+	// Other connections
+	connect(loginWidget, &LoginWidget::loginSuccessful, this, &MainWindow::onLogin);
 	
-	connect(logger, &Logger::logUpdated, this, &MainWindow::updateStatus);
+	logger->log("Application initialized!");
+	connect(logger, &Logger::logUpdated, this, &MainWindow::updateStatus);  // Make log updates show in status bar
 	updateStatus("Welcome!");
 	
-	setWindowTitle(tr("GO3 Treks"));
+	setWindowTitle("GO3 Treks");
 	setMinimumSize(750,500);
 	setMaximumSize(750,500);
 	resize(750,500);
@@ -82,10 +90,11 @@ void MainWindow::updateStatus(QString text) {
 
 
 
-void MainWindow::onLogin(UserInfo userInfo){
+void MainWindow::onLogin(UserInfo user){
 	
+	this->userInfo = user;
 	
-	
+	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
 }
 
 

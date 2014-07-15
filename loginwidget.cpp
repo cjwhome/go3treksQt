@@ -26,7 +26,7 @@ bool LoginWidget::login(QString username, QString password) {
 	
 	QNetworkAccessManager *nwam = new QNetworkAccessManager;
 	
-	QNetworkRequest r (QUrl("http://go3project.com/scripts/user/SE_CheckLogin.php"));
+	QNetworkRequest r (QUrl(LoginScriptURL));
 	r.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
 	
 	QString requestString("{\"Username\":\"" + username + "\",\"Password\":\"" + password + "\"}");
@@ -148,3 +148,13 @@ void LoginWidget::updateProgressBar() {
 
 
 
+
+void LoginWidget::on_usernameBox_returnPressed()
+{
+    on_checkLoginButton_clicked();
+}
+
+void LoginWidget::on_passwordBox_returnPressed()
+{
+    on_checkLoginButton_clicked();
+}

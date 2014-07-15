@@ -26,7 +26,6 @@ HEADERS  += mainwindow.h \
     serialwidget.h
 
 FORMS    += pomserialportwidget.ui \
-    serialstep.ui \
     loginwidget.ui \
     serialwidget.ui
 

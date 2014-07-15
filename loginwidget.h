@@ -13,6 +13,7 @@
 #include <QTimer>
 
 #define NetworkWaitTime 5000 // The time we wait for a network reply in milliseconds
+#define LoginScriptURL "http://go3project.com/scripts/user/SE_CheckLogin.php"
 
 namespace Ui {
 class LoginWidget;
@@ -44,6 +45,10 @@ signals:
 private slots:
 	void updateProgressBar();
 	void on_checkLoginButton_clicked();
+	
+	void on_usernameBox_returnPressed();
+	
+	void on_passwordBox_returnPressed();
 	
 private:
 	Ui::LoginWidget *ui;
