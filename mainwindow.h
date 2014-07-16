@@ -35,7 +35,11 @@ public:
 
 public slots:
 	void updateStatus(QString text);
-	void onLogin(UserInfo user);
+	void onLogin(UserInfo user);  // Called as soon as the user has successfully logged in
+	void onSerialSetupComplete();  // Called as soon as the POM serial configuration is complete
+	void onTransmitComplete();  // Called as soon as the instrument has successfully transmitted data
+	void onCarbonProcessed();  // Called as soon as a carbon file has been found & processed
+	void onUploadComplete();  // Called as soon as the KML is made and uploaded
 
 private:
     Ui::MainWindow *ui;

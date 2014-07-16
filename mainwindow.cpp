@@ -90,7 +90,7 @@ void MainWindow::updateStatus(QString text) {
 
 
 
-void MainWindow::onLogin(UserInfo user){
+void MainWindow::onLogin(UserInfo user) {
 	
 	this->userInfo = user;
 	
@@ -99,11 +99,27 @@ void MainWindow::onLogin(UserInfo user){
 
 
 
+void MainWindow::onSerialSetupComplete() {
+	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
+}
 
 
 
+void MainWindow::onTransmitComplete() {
+	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
+}
 
 
+
+void MainWindow::onCarbonProcessed() {
+	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
+}
+
+
+
+void MainWindow::onUploadComplete() {
+	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
+}
 
 
 

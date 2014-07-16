@@ -31,6 +31,8 @@ LoginWidget::~LoginWidget()
 
 bool LoginWidget::login(QString username, QString password) {
 	
+	if (user.LoggedIn) return true;  // They're already logged in, this is a duplicate call.
+	
 	log("Logging in...");
 	
 	ui->checkLoginButton->setEnabled(false);
