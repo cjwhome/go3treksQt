@@ -52,6 +52,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	
 	// Connect local logging aliases
 	connect(loginWidget, &LoginWidget::log, logger, &Logger::log);
+	connect(serialWidget, &SerialWidget::log, logger, &Logger::log);
 	
 	// Other connections
 	connect(loginWidget, &LoginWidget::loginSuccessful, this, &MainWindow::onLogin);
@@ -73,7 +74,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	show();
 	
 	// Start the processing sequence by checking for login settings.  If we do find settings, try them - login() will take over
-	// program execution at that point.  If the credentials are valid, we'll pass right on through to 
+	// program execution at that point.  If the credentials are valid, we'll pass right over to serialWidget.
 	if (settings->value("login/Valid").toBool())
 		loginWidget->login(settings->value("login/Username").toString(), settings->value("login/Password").toString());
 	else;  // Else do nothing, just wait at the password screen for user to enter stuff
@@ -133,6 +134,7 @@ void MainWindow::onUploadComplete() {
 
 void MainWindow::reconfigure() {
 	logger->log("Resetting configuration.  Application will quit in 10 seconds; simply re-open and start over.");
+	
 	loadDefaultSettings();
 	
 	QEventLoop loop;

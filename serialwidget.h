@@ -15,6 +15,9 @@ public:
 	explicit SerialWidget(QWidget *parent = 0);
 	~SerialWidget();
 	
+signals:
+	void log(QString text);
+	
 public slots:
 	void connectToDevice();
 	

@@ -32,7 +32,6 @@ public:
 	QAction *resetAct;
 	QAction *quitAct;
 	
-	//pomSerialPortWidget pomdevice;
 	Logger *logger;
 	LoginWidget *loginWidget;
 	SerialWidget *serialWidget;
