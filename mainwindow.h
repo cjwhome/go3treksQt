@@ -11,6 +11,8 @@
 #include <QAction>
 #include <QMenuBar>
 #include <QStatusBar>
+#include <QSettings>
+#include <QDateTime>
 
 namespace Ui {
 class MainWindow;
@@ -23,6 +25,8 @@ class MainWindow : public QMainWindow
 public:
 	explicit MainWindow(QWidget *parent = 0);
 	~MainWindow();
+	
+	QSettings *settings;
 	
 	// File Menu Actions
 	QAction *resetAct;
@@ -40,6 +44,8 @@ public slots:
 	void onTransmitComplete();  // Called as soon as the instrument has successfully transmitted data
 	void onCarbonProcessed();  // Called as soon as a carbon file has been found & processed
 	void onUploadComplete();  // Called as soon as the KML is made and uploaded
+	void reconfigure();  // Called by the "Reconfigure" menu option
+	void quit();
 
 private:
     Ui::MainWindow *ui;
@@ -48,6 +54,8 @@ private:
 	QMenu *fileMenu;
 	
 	UserInfo userInfo;
+	
+	void loadDefaultSettings();  // Called by the "Reconfigure" menu option and when setting default settings
 	
 };
 

@@ -12,3 +12,16 @@ SerialWidget::~SerialWidget()
 {
 	delete ui;
 }
+
+
+
+void SerialWidget::connectToDevice() {
+	
+	//SerialStep* serialStep = new SerialStep(this);
+	
+	//connect(pomdevice, pomSerialPortWidget::log, logger, Logger::log);
+	
+	//if(pomdevice->findPomPort())
+	//	pomdevice->pomConnect();
+	//qDebug()<<"Found Port";
+}

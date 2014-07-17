@@ -35,6 +35,9 @@ bool LoginWidget::login(QString username, QString password) {
 	
 	log("Logging in...");
 	
+	ui->usernameBox->setText(username);
+	ui->passwordBox->setText(password);  // TODO: Remove this when we switch to a password system
+	
 	ui->checkLoginButton->setEnabled(false);
 	ui->usernameBox->setEnabled(false);
 	ui->passwordBox->setEnabled(false);
@@ -110,6 +113,8 @@ bool LoginWidget::login(QString username, QString password) {
 	
 	log("Logged in.  Hello, "+user.RealName+"!");
 	
+	emit loginSuccessful(user);
+	
 	return true;
 }
 
@@ -124,11 +129,7 @@ void LoginWidget::on_checkLoginButton_clicked()
 		return;
 	}
 	
-    bool status = login(ui->usernameBox->text(), ui->passwordBox->text());
-	
-	if ( ! status) return;
-	
-	emit loginSuccessful(user);
+    login(ui->usernameBox->text(), ui->passwordBox->text());
 }
 
 UserInfo LoginWidget::getUserInfo() {

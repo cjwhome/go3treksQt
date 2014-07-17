@@ -15,6 +15,9 @@ public:
 	explicit SerialWidget(QWidget *parent = 0);
 	~SerialWidget();
 	
+public slots:
+	void connectToDevice();
+	
 private:
 	Ui::SerialWidget *ui;
 };

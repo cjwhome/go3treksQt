@@ -2,14 +2,18 @@
 #define LOGGER_H
 
 #include <QObject>
-#include <QList>
-#include <QString>
+#include <QStringList>
+#include <QStandardPaths>
+#include <QDir>
+#include <QFile>
 
 class Logger : public QObject
 {
 	Q_OBJECT
 public:
 	explicit Logger(QObject *parent = 0);
+	~Logger();
+	bool writeLog();
 	
 signals:
 	void logUpdated(QString text);
@@ -18,7 +22,8 @@ public slots:
 	void log(QString text);
 	
 private:
-	QList<QString> logs;
+	QStringList logs;
+	bool logHasBeenWritten;
 	
 };
 
