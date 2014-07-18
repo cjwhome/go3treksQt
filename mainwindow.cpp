@@ -10,7 +10,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	if (settings->contains("ExecutionCount"))
 		settings->setValue("ExecutionCount", settings->value("ExecutionCount").toInt() + 1);
 	else loadDefaultSettings();  // No settings; let's go ahead and set defaults
-		
 	settings->sync();  // Save them
 	
 	
@@ -99,7 +98,7 @@ void MainWindow::onLogin(UserInfo user) {
 	settings->setValue("login/Username", user.Username);
 	settings->setValue("login/Password", user.Password);
 	
-	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
+	mainWidgetStack->setCurrentIndex(1);
 	
 	if (settings->value("serial/Valid").toBool())
 		serialWidget->connectToDevice();
@@ -109,25 +108,31 @@ void MainWindow::onLogin(UserInfo user) {
 
 
 void MainWindow::onSerialSetupComplete() {
-	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
+	mainWidgetStack->setCurrentIndex(2);
 }
 
 
 
 void MainWindow::onTransmitComplete() {
-	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
+	mainWidgetStack->setCurrentIndex(3);
 }
 
 
 
 void MainWindow::onCarbonProcessed() {
-	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
+	mainWidgetStack->setCurrentIndex(4);
 }
 
 
 
 void MainWindow::onUploadComplete() {
-	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
+	mainWidgetStack->setCurrentIndex(5);
+}
+
+
+
+void MainWindow::returnToStart() {  // For when they've successfully uploaded a KML file and want to make another one
+	mainWidgetStack->setCurrentIndex(3);
 }
 
 
