@@ -77,7 +77,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	// program execution at that point.  If the credentials are valid, we'll pass right over to serialWidget.
 	if (settings->value("login/Valid").toBool())
 		loginWidget->login(settings->value("login/Username").toString(), settings->value("login/Password").toString());
-	else;  // Else do nothing, just wait at the password screen for user to enter stuff
+    else; // Else do nothing, just wait at the password screen for user to enter stuff
 }
 
 
@@ -100,10 +100,12 @@ void MainWindow::onLogin(UserInfo user) {
 	settings->setValue("login/Password", user.Password);
 	
 	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
-	
-	if (settings->value("serial/Valid").toBool())
-		serialWidget->connectToDevice();
-	else;  // Else do nothing, just wait for user to configure the serial connection
+
+    //if (settings->value("serial/Valid").toBool())
+        if(serialWidget->connectToDevice())
+            logger->log("Connected to POM Device.");
+    //else;  // Else do nothing, just wait for user to configure the serial connection
+
 }
 
 

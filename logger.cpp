@@ -21,8 +21,8 @@ bool Logger::writeLog() {
 	// Ensure log directory exists (it may not)
 	if ( ! QDir(path).mkpath(path)) return false;
 	
-	QFile logFile (path+"/log.log");
-	
+    QFile logFile (path+"/GO3Treks_log.log");
+    qDebug()<<"writing log file";
 	if ( ! logFile.open(QIODevice::ReadWrite | QIODevice::Text)) return false;  // The Text flag localizes line endings
 	
 	// Move to end
