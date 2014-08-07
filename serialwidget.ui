@@ -15,9 +15,12 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
+    <widget class="QTextEdit" name="transmitDisplay"/>
+   </item>
+   <item>
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>yay</string>
+      <string/>
      </property>
     </widget>
    </item>

@@ -16,14 +16,12 @@ void Logger::log(QString text) {
 bool Logger::writeLog() {
 	
 	// Get log location
-	QString path = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    //QString path = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+
 	
-	// Ensure log directory exists (it may not)
-	if ( ! QDir(path).mkpath(path)) return false;
-	
-    QFile logFile (path+"/GO3Treks_log.log");
-    qDebug()<<"writing log file";
-	if ( ! logFile.open(QIODevice::ReadWrite | QIODevice::Text)) return false;  // The Text flag localizes line endings
+    logFile.setFileName("GO3Treks_log.log");
+
+    if ( ! logFile.open(QIODevice::ReadWrite)) return false;  // The Text flag localizes line endings
 	
 	// Move to end
 	if ( ! logFile.seek(logFile.size())) return false;
@@ -35,6 +33,7 @@ bool Logger::writeLog() {
 	if (x == -1) return false;
 	else {
 		logHasBeenWritten = true;
+        qDebug() <<"Wrote log file";
 		return true;
 	}
 }

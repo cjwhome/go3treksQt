@@ -25,6 +25,7 @@ public slots:
 private:
 	QStringList logs;
 	bool logHasBeenWritten;
+    QFile logFile;
 	
 };
 

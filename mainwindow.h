@@ -2,10 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "pomserialportwidget.h"
 #include "logger.h"
 #include "loginwidget.h"
 #include "serialwidget.h"
+#include "ozonedatawidget.h"
+#include <QTime>
 #include <QStackedWidget>
 #include <QMenu>
 #include <QAction>
@@ -31,20 +32,26 @@ public:
 	// File Menu Actions
 	QAction *resetAct;
 	QAction *quitAct;
+    QAction *syncTimeAct;
 	
 	Logger *logger;
 	LoginWidget *loginWidget;
 	SerialWidget *serialWidget;
+    OzoneDataWidget *ozoneDataWidget;
 
 public slots:
 	void updateStatus(QString text);
 	void onLogin(UserInfo user);  // Called as soon as the user has successfully logged in
-	void onSerialSetupComplete();  // Called as soon as the POM serial configuration is complete
-	void onTransmitComplete();  // Called as soon as the instrument has successfully transmitted data
-	void onCarbonProcessed();  // Called as soon as a carbon file has been found & processed
-	void onUploadComplete();  // Called as soon as the KML is made and uploaded
-	void reconfigure();  // Called by the "Reconfigure" menu option
+    void onFoundPortComplete(QString portName);
+
+    void onTransmitComplete(QFile *fp);  // Called as soon as the instrument has successfully transmitted data
+    void onOzoneProcessed();    // Called as soon as ozone data has been processed (validated gps data and start and end date and times
+    void onCarbonProcessed();   // Called as soon as a carbon file has been found & processed
+    void onUploadComplete();    // Called as soon as the KML is made and uploaded
+    void reconfigure();         // Called by the "Reconfigure" menu option
+    void synchronizePOMTime();
 	void quit();
+    void delay();
 
 private:
     Ui::MainWindow *ui;

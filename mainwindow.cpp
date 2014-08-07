@@ -22,6 +22,10 @@ MainWindow::MainWindow(QWidget *parent) :
 	//connect(quitAct, SIGNAL(triggered()), this, SLOT(notImplemented()));
 	fileMenu->addAction(resetAct);
 	
+    syncTimeAct = new QAction("&Sync Time", this);
+    syncTimeAct->setStatusTip(tr("Synchronize POM time with Computer Time"));
+    fileMenu->addAction(syncTimeAct);
+
 	quitAct = new QAction("&Quit", this);
 	quitAct->setMenuRole(QAction::QuitRole);
 	quitAct->setShortcuts(QKeySequence::Quit);
@@ -29,20 +33,20 @@ MainWindow::MainWindow(QWidget *parent) :
 	//connect(quitAct, SIGNAL(triggered()), this, SLOT(notImplemented()));
 	fileMenu->addAction(quitAct);
 	
+
 	
 	// Initialize components
 	logger = new Logger(this);
 	loginWidget = new LoginWidget(this);
 	serialWidget = new SerialWidget(this);
+    ozoneDataWidget = new OzoneDataWidget(this);
 	
 
-	
-	
-	
 	/// Widget Stack ///
 	mainWidgetStack = new QStackedWidget(this);
 	mainWidgetStack->addWidget(loginWidget);
 	mainWidgetStack->addWidget(serialWidget);
+    mainWidgetStack->addWidget(ozoneDataWidget);
 	//mainWidgetStack->addWidget(TEMPTBD2);
 	
 	this->setCentralWidget(mainWidgetStack);
@@ -53,11 +57,15 @@ MainWindow::MainWindow(QWidget *parent) :
 	// Connect local logging aliases
 	connect(loginWidget, &LoginWidget::log, logger, &Logger::log);
 	connect(serialWidget, &SerialWidget::log, logger, &Logger::log);
+    connect(ozoneDataWidget, &OzoneDataWidget::log, logger, &Logger::log);
 	
-	// Other connections
+    // Connect success signals
 	connect(loginWidget, &LoginWidget::loginSuccessful, this, &MainWindow::onLogin);
+    connect(serialWidget, &SerialWidget::foundPortSuccessful, this, &MainWindow::onFoundPortComplete);
+    connect(serialWidget, &SerialWidget::transmitSuccessful, this, &MainWindow::onTransmitComplete);
 	connect(quitAct, SIGNAL(triggered()), this, SLOT(quit()));
 	connect(resetAct, SIGNAL(triggered()), this, SLOT(reconfigure()));
+    connect(syncTimeAct, SIGNAL(triggered()), this, SLOT(synchronizePOMTime()));
 	
 	logger->log(QDateTime::currentDateTime().toString("[yyyy/MM/dd hh:mm:ss] ")+
 				"Application initialized! Execution number "+
@@ -92,6 +100,7 @@ void MainWindow::updateStatus(QString text) {
 
 
 void MainWindow::onLogin(UserInfo user) {
+    bool found;
 	
 	this->userInfo = user;
 	
@@ -100,32 +109,32 @@ void MainWindow::onLogin(UserInfo user) {
 	settings->setValue("login/Password", user.Password);
 	
 	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
-
-    //if (settings->value("serial/Valid").toBool())
-        if(serialWidget->connectToDevice())
-            logger->log("Connected to POM Device.");
-    //else;  // Else do nothing, just wait for user to configure the serial connection
+    found=false;
+    while(!found){
+        found = serialWidget->findPomPort();
+    }
 
 }
 
+void MainWindow::onFoundPortComplete(QString portName) {
+    logger->log("Found POM port: ");
+    serialWidget->connectPOM();
+}
 
 
-void MainWindow::onSerialSetupComplete() {
+void MainWindow::onTransmitComplete(QFile *fp) {
 	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
+    logger->log("Transmitted Data\n");
+    ozoneDataWidget->processOzoneData(fp);
 }
 
-
-
-void MainWindow::onTransmitComplete() {
-	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
+void MainWindow::onOzoneProcessed(){
+    mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
 }
-
-
 
 void MainWindow::onCarbonProcessed() {
 	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
 }
-
 
 
 void MainWindow::onUploadComplete() {
@@ -146,13 +155,18 @@ void MainWindow::reconfigure() {
 	quit();
 }
 
+void MainWindow::synchronizePOMTime() {
+    logger->log("Synchronizing the POM time with the computers system time");
+
+}
 
 
 void MainWindow::loadDefaultSettings() {
 	settings->setValue("ExecutionCount", 1);
 	settings->setValue("login/Valid", false);
-	settings->setValue("login/Username", "");
-	settings->setValue("login/Password", "");
+    settings->setValue("login/Username", "");
+    settings->setValue("login/Password", "");
+
 	settings->setValue("serial/Valid", false);
 	settings->sync();
 }
@@ -163,6 +177,13 @@ void MainWindow::quit() {
 	qApp->exit();
 }
 
+
+void MainWindow::delay()
+{
+    QTime dieTime= QTime::currentTime().addSecs(3);
+    while( QTime::currentTime() < dieTime )
+    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+}
 
 
 

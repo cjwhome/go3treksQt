@@ -14,20 +14,32 @@ SerialWidget::~SerialWidget()
 }
 
 
+bool SerialWidget::findPomPort()
+{
+    serialPortInfoList = QSerialPortInfo::availablePorts();
+    for (int i = 0; i < serialPortInfoList.size(); ++i) {
 
-bool SerialWidget::connectToDevice() {
-	
-	//SerialStep* serialStep = new SerialStep(this);
-
-    //connect(pomdevice, SerialWidget::log, logger, Logger::log);
-	
-    if(this->findPomPort())
-        log("Found POM COM port.");
-    else{
-        log("Unable to find POM port, make sure POM usb is plugged in.  Try to disconnect and reconnect if already plugged in.");
-        return 0;
+        if(QString::compare(QString(serialPortInfoList[i].manufacturer()),"Microchip Technology, Inc.")==0)
+        {
+            POMserialPort.setPort(serialPortInfoList[i]);
+            emit foundPortSuccessful(QString(serialPortInfoList[i].portName()));
+            return true;
+        }
     }
-    if(POMserialPort.open(QIODevice::ReadWrite))
+    log("Could not find POM connection\n");
+    return false;
+}
+
+bool SerialWidget::connectPOM() {
+
+
+    /*if(this->findPomPort())
+        log("Found POM COM port.\n");
+    else{
+        log("Unable to find POM port, make sure POM usb is plugged in.  Try to disconnect and reconnect if already plugged in.\n");
+        return false;
+    }*/
+    if(POMserialPort.open(QIODevice::ReadWrite))        //open the port!
     {
 
         POMserialPort.setBaudRate(19200,QSerialPort::AllDirections);
@@ -37,64 +49,38 @@ bool SerialWidget::connectToDevice() {
         POMserialPort.setParity(QSerialPort::NoParity);
 
         //check if folder exists and create one if not
-        QString combinedPath = QDir(QDir::home()).filePath("POMData");
+        QString combinedPath = QDir(QDir::home()).filePath("GO3TreksData");
         QDir dir(combinedPath);
         if(!dir.exists()){
             dir.mkpath(".");
-            log("Creating Folder");
+            log("Creating Folder.\n");
         }else{
-            log("Found Data Folder.");
+            log("Found Data Folder.\n");
 
         }
         if(QDir::setCurrent(combinedPath))
             log("Set Path.");
-            //XXui->textBrowser->append("Set Path");
+
         //create file with temp name and change the name
         pomfile.setFileName("tempname.txt");
         if(pomfile.open(QIODevice::ReadWrite)){
-            //XXui->textBrowser->append("Created new file");
-            //pomfile.rename("newname.txt");
-            //pomfile.write("blah blah");
-            //pomfile.close();
+            log("Opened ozone file for writing\n");
         }else{
-            //XXui->textBrowser->append("Could not open file");
-            return 0;
+            log("Could not open ozone file for writing\n");
+            return false;
         }
-        //XXui->textBrowser->append("Downloading Logged Data");
+
         POMserialPort.write("t");           //send transmit command to get data
         POMserialPort.flush();
         POMserialPort.clear();
         transmittingData = true;
         madeNewFileName = false;
+        logNumber = 0;          //reset for
         connect(&POMserialPort, SIGNAL(readyRead()), this, SLOT(readData()));
-        return 1;
+
+        return true;
     }else
-        return 0;
-	//	pomdevice->pomConnect();
-	//qDebug()<<"Found Port";
-}
-
-bool SerialWidget::findPomPort()
-{
-
-    serialPortInfoList = QSerialPortInfo::availablePorts();
-    for (int i = 0; i < serialPortInfoList.size(); ++i) {
-        /*qDebug() << "- " << i << ": " <<
-            serialPortInfoList[i].portName().toUtf8().constData() << ", " <<
-            serialPortInfoList[i].manufacturer().toUtf8().constData() << ", " <<
-            serialPortInfoList[i].description().toUtf8().constData() << "\n";*/
-            if(QString::compare(QString(serialPortInfoList[i].manufacturer()),"Microchip Technology, Inc.")==0)
-            {
-                POMserialPort.setPort(serialPortInfoList[i]);
-                //ui->textBrowser->append("Found port:"+QString(serialPortInfoList[i].portName()));
-                this->log("texttext");
-                return 1;
-                //qDebug()<<"Found Pom serial port";//<< POMserialPort->portName(); //Microchip Technology, Inc.
-            }
-
-    }
-    //XXui->textBrowser->append("Could not find port");
-    return 0;
+        return false;
 
 }
 
@@ -102,22 +88,23 @@ void SerialWidget::readData()
 {
 
     QByteArray dataLine = POMserialPort.readAll();
+    fields = QString(dataLine).split(QRegExp(","));     //fields are separated by commas
     if(!madeNewFileName)
     {
-        fields = QString(dataLine).split(QRegExp(","));
-        //for(int a=0;a<fields.size();a++)
-        //{
-        //    qDebug()<<"field["<<a<<"]="<<fields[a];
-        //}
         if(fields.size()>10){
             QString newname = QString(fields[10].remove(QChar('/'))) + ".txt";
             pomfile.rename(newname);
             madeNewFileName=true;
-            //XXui->textBrowser->append("Created new name for file");
-            log("Created new name for file.");
+            log("Created new name for file.\n");
             pomfile.open(QIODevice::ReadWrite);
         }
+    }else{
+       if(fields.size()>10)
+       {
+           logNumber = QString(fields[0]).toInt();      //keep track of the last log number
+       }
     }
+
     POMserialPort.flush();
     POMserialPort.clear();
     if(QString::compare(QString(dataLine),"End logged data")>0){
@@ -126,9 +113,12 @@ void SerialWidget::readData()
         transmittingData = false;
         POMserialPort.close();
         pomfile.close();
+        emit transmitSuccessful(&pomfile);
+
     }else if(madeNewFileName){
 
         pomfile.write(dataLine);
+        ui->transmitDisplay->append(dataLine);
         //ui->textEdit->insertPlainText(dataLine);
     }
 

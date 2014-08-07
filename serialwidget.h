@@ -32,9 +32,11 @@ public:
 	
 signals:
 	void log(QString text);
-	
+    void transmitSuccessful(QFile *fp);
+    void foundPortSuccessful(QString portName);
+
 public slots:
-    bool connectToDevice();
+    bool connectPOM();
     void readData();
 	
 private:
@@ -45,6 +47,7 @@ private:
     QStringList fields;
     bool transmittingData;
     bool madeNewFileName;
+    int logNumber;
 };
 
 #endif // SERIALWIDGET_H
