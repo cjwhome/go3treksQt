@@ -13,6 +13,51 @@ SerialWidget::~SerialWidget()
 	delete ui;
 }
 
+bool SerialWidget::setPOMTime()
+{
+
+    if(POMserialPort.open(QIODevice::ReadWrite) && disconnect(&POMserialPort, SIGNAL(readyRead()), this, SLOT(readData())))
+    {
+        QDateTime currentTime = QDateTime::currentDateTime();
+
+        log("Current Date and Time: "+ currentTime.toString("hh:mm:ss dd/MM/yy"));
+        POMserialPort.write("m");           //send menu command to enter menu
+        POMserialPort.flush();
+        POMserialPort.clear();
+        delay();
+        POMserialPort.write("c");           //send menu command to set time
+        POMserialPort.flush();
+        POMserialPort.clear();
+        delay();
+        QString str = currentTime.toString("hhmmss");
+        QByteArray ba = str.toLocal8Bit();
+        const char *c_str = ba.data();
+        //POMserialPort.write();
+        POMserialPort.write(c_str);
+        delay();
+        POMserialPort.write("d");           //send menu command to set date
+        POMserialPort.flush();
+        POMserialPort.clear();
+        delay();
+        str = currentTime.toString("ddMMyy");
+        ba = str.toLocal8Bit();
+        const char *d_str = ba.data();
+        //POMserialPort.write();
+        POMserialPort.write(d_str);
+        delay();
+        POMserialPort.write("x");           //send menu command to exit menu
+        delay();
+        POMserialPort.flush();
+        POMserialPort.clear();
+        POMserialPort.close();
+
+        connect(&POMserialPort, SIGNAL(readyRead()), this, SLOT(readData()));
+        log("Set Date and time to PC time\n");
+    }else{
+        log("Unable to open port to set time\n");
+        return false;
+    }
+}
 
 bool SerialWidget::findPomPort()
 {
@@ -122,6 +167,13 @@ void SerialWidget::readData()
         //ui->textEdit->insertPlainText(dataLine);
     }
 
+}
+
+void SerialWidget::delay()
+{
+    QTime dieTime= QTime::currentTime().addSecs(2);
+    while( QTime::currentTime() < dieTime )
+    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 }
 
 

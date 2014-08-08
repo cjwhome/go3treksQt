@@ -26,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
     syncTimeAct->setStatusTip(tr("Synchronize POM time with Computer Time"));
     fileMenu->addAction(syncTimeAct);
 
+
 	quitAct = new QAction("&Quit", this);
 	quitAct->setMenuRole(QAction::QuitRole);
 	quitAct->setShortcuts(QKeySequence::Quit);
@@ -63,9 +64,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(loginWidget, &LoginWidget::loginSuccessful, this, &MainWindow::onLogin);
     connect(serialWidget, &SerialWidget::foundPortSuccessful, this, &MainWindow::onFoundPortComplete);
     connect(serialWidget, &SerialWidget::transmitSuccessful, this, &MainWindow::onTransmitComplete);
+    connect(ozoneDataWidget, &OzoneDataWidget::processSuccessful, this, &MainWindow::onOzoneProcessed);
 	connect(quitAct, SIGNAL(triggered()), this, SLOT(quit()));
 	connect(resetAct, SIGNAL(triggered()), this, SLOT(reconfigure()));
     connect(syncTimeAct, SIGNAL(triggered()), this, SLOT(synchronizePOMTime()));
+    syncTimeAct->setDisabled(true);             //disable this ability until the POM port has been found
 	
 	logger->log(QDateTime::currentDateTime().toString("[yyyy/MM/dd hh:mm:ss] ")+
 				"Application initialized! Execution number "+
@@ -119,6 +122,7 @@ void MainWindow::onLogin(UserInfo user) {
 void MainWindow::onFoundPortComplete(QString portName) {
     logger->log("Found POM port: ");
     serialWidget->connectPOM();
+    syncTimeAct->setDisabled(false);
 }
 
 
@@ -130,6 +134,7 @@ void MainWindow::onTransmitComplete(QFile *fp) {
 
 void MainWindow::onOzoneProcessed(){
     mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
+    logger->log("Processed Ozone Data Successfully\n");
 }
 
 void MainWindow::onCarbonProcessed() {
@@ -157,6 +162,7 @@ void MainWindow::reconfigure() {
 
 void MainWindow::synchronizePOMTime() {
     logger->log("Synchronizing the POM time with the computers system time");
+    serialWidget->setPOMTime();
 
 }
 

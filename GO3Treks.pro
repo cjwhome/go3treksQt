@@ -17,18 +17,21 @@ SOURCES += main.cpp\
     logger.cpp \
     loginwidget.cpp \
     serialwidget.cpp \
-    ozonedatawidget.cpp
+    ozonedatawidget.cpp \
+    carbondatawidget.cpp
 
 HEADERS  += mainwindow.h \
     logger.h \
     loginwidget.h \
     serialwidget.h \
-    ozonedatawidget.h
+    ozonedatawidget.h \
+    carbondatawidget.h
 
 FORMS    += \
     loginwidget.ui \
     serialwidget.ui \
-    ozonedatawidget.ui
+    ozonedatawidget.ui \
+    carbondatawidget.ui
 
 OTHER_FILES +=
 

@@ -37,18 +37,15 @@ public:
     void processOzoneData(QFile *fp);
     QDateTime getEndDateTime();
     QDateTime getStartDateTime();
-    bool getEndDateTimeValid();
-
+    
 signals:
     void log(QString text);
-    void processSuccessful();
 
 private:
     Ui::OzoneDataWidget *ui;
     QDateTime startDateTime;
     QDateTime endDateTime;
     QFile *working_file;
-    bool endDateTimeValid;
 };
 
 #endif // OZONEDATAWIDGET_H

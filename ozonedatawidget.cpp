@@ -25,6 +25,7 @@ void OzoneDataWidget::processOzoneData(QFile *fp){
         log("Opened ozone File");
         QString line;
         QTextStream in(fp);
+        endDateTimeValid = false;
         int i=0;
         //create a default start time and end time that will be all
         while (!in.atEnd()) {
@@ -47,24 +48,47 @@ void OzoneDataWidget::processOzoneData(QFile *fp){
                         startDateTime = startDateTime.addYears(100);
                         ui->startTimeOutput->setText(startDateTime.toString());
                         endDateTime = startDateTime;        //do this here for a starting point for the endtime because it at least has to be greater than the starttime
-                    }
-                    if(!foundEndTime&&foundStartTime){
+
+                    }else{      //found the start time, now keep looking for the end time
+
                         tempDateTime = QDateTime::fromString(fields[DATE_INDEX]+fields[TIME_INDEX], "dd/MM/yyhh:mm:ss");
                         tempDateTime = tempDateTime.addYears(100);
-                        if(tempDateTime > endDateTime)
+                        if(tempDateTime > endDateTime){          //replace if greater
                             endDateTime = tempDateTime;
-
+                            foundEndTime = true;
+                        }
                     }
                }
 
             i++;
         }
+        if(foundStartTime&&foundEndTime){
+            if(startDateTime.addSecs(10)<endDateTime){      //make sure there is a difference
+                endDateTimeValid = true;
+                emit processSuccessful();
+            }else
+                log("No difference between start and end times\n");
+        }else
+            log("Error in finding start and end times\n");
         ui->endTimeOutput->setText(endDateTime.toString());
         fp->close();
     }
 
 
     //qDebug()<<"Processing Ozone Data";
+}
+
+QDateTime OzoneDataWidget::getStartDateTime(){
+    return startDateTime;
+}
+
+QDateTime OzoneDataWidget::getEndDateTime(){
+    return endDateTime;
+}
+
+bool OzoneDataWidget::getEndDateTimeValid(){
+    return endDateTimeValid;
+
 }
 
 void OzoneDataWidget::doNothing(){

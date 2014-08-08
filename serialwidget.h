@@ -15,6 +15,7 @@
 #include <QtSerialPort/QtSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
 #include <QDebug>
+#include <QDateTime>
 
 
 namespace Ui {
@@ -29,6 +30,7 @@ public:
 	explicit SerialWidget(QWidget *parent = 0);
 	~SerialWidget();
     bool findPomPort();
+    bool setPOMTime();
 	
 signals:
 	void log(QString text);
@@ -48,6 +50,7 @@ private:
     bool transmittingData;
     bool madeNewFileName;
     int logNumber;
+    void delay();
 };
 
 #endif // SERIALWIDGET_H
