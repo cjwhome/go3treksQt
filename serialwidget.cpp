@@ -24,29 +24,35 @@ bool SerialWidget::setPOMTime()
         POMserialPort.write("m");           //send menu command to enter menu
         POMserialPort.flush();
         POMserialPort.clear();
-        delay();
+        log("Sent m to POM \n");
+        delay(4);
         POMserialPort.write("c");           //send menu command to set time
         POMserialPort.flush();
         POMserialPort.clear();
-        delay();
+        log("Sent c to POM");
+        delay(2);
         QString str = currentTime.toString("hhmmss");
         QByteArray ba = str.toLocal8Bit();
         const char *c_str = ba.data();
         //POMserialPort.write();
         POMserialPort.write(c_str);
-        delay();
+        log("Sent new time to POM");
+        delay(2);
         POMserialPort.write("d");           //send menu command to set date
         POMserialPort.flush();
         POMserialPort.clear();
-        delay();
+        log("Sent d to POM");
+        delay(2);
         str = currentTime.toString("ddMMyy");
         ba = str.toLocal8Bit();
         const char *d_str = ba.data();
         //POMserialPort.write();
         POMserialPort.write(d_str);
-        delay();
+        log("Sent date to POM.");
+        delay(2);
+        log("Sent x to POM");
         POMserialPort.write("x");           //send menu command to exit menu
-        delay();
+        delay(2);
         POMserialPort.flush();
         POMserialPort.clear();
         POMserialPort.close();
@@ -169,9 +175,9 @@ void SerialWidget::readData()
 
 }
 
-void SerialWidget::delay()
+void SerialWidget::delay(int seconds)
 {
-    QTime dieTime= QTime::currentTime().addSecs(2);
+    QTime dieTime= QTime::currentTime().addSecs(seconds);
     while( QTime::currentTime() < dieTime )
     QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 }

@@ -50,7 +50,7 @@ private:
     bool transmittingData;
     bool madeNewFileName;
     int logNumber;
-    void delay();
+    void delay(int seconds);
 };
 
 #endif // SERIALWIDGET_H
