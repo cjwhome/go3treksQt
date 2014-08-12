@@ -6,6 +6,7 @@
 #include "loginwidget.h"
 #include "serialwidget.h"
 #include "ozonedatawidget.h"
+#include "carbondatawidget.h"
 #include <QTime>
 #include <QStackedWidget>
 #include <QMenu>
@@ -38,6 +39,7 @@ public:
 	LoginWidget *loginWidget;
 	SerialWidget *serialWidget;
     OzoneDataWidget *ozoneDataWidget;
+    CarbonDataWidget *carbonDataWidget;
 
 public slots:
 	void updateStatus(QString text);
@@ -62,6 +64,8 @@ private:
 	UserInfo userInfo;
 	
 	void loadDefaultSettings();  // Called by the "Reconfigure" menu option and when setting default settings
+    QDateTime pomStartTime;
+    QDateTime pomEndTime;
 	
 };
 

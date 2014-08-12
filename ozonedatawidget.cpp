@@ -39,8 +39,9 @@ void OzoneDataWidget::processOzoneData(QFile *fp){
 
             /*****look for valid start and end times*********/
             //first, check to be sure there are gps coordinate in the line (latitude will always have data other than zeros if there was a connection)
-            //if((QString::compare(QString(fields[LAT_INDEX]),"0000.00000")!=0))  //comment this line if we want all data
-               if(fields.size()==POM_TOTAL_FIELDS){
+
+           if(fields.size()==POM_TOTAL_FIELDS){
+               if((QString::compare(QString(fields[LAT_INDEX]),"0000.00000")!=0)){  //comment this line if we want all data
                     if(!foundStartTime){
                         startDateTime = QDateTime::fromString(fields[DATE_INDEX]+fields[TIME_INDEX], "dd/MM/yyhh:mm:ss");
                         foundStartTime = true;
@@ -59,9 +60,11 @@ void OzoneDataWidget::processOzoneData(QFile *fp){
                         }
                     }
                }
+           }
 
-            i++;
-        }
+           i++;
+        }   //while end
+
         if(foundStartTime&&foundEndTime){
             if(startDateTime.addSecs(10)<endDateTime){      //make sure there is a difference
                 endDateTimeValid = true;

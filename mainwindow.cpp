@@ -41,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	loginWidget = new LoginWidget(this);
 	serialWidget = new SerialWidget(this);
     ozoneDataWidget = new OzoneDataWidget(this);
+    carbonDataWidget = new CarbonDataWidget(this);
 	
 
 	/// Widget Stack ///
@@ -48,6 +49,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	mainWidgetStack->addWidget(loginWidget);
 	mainWidgetStack->addWidget(serialWidget);
     mainWidgetStack->addWidget(ozoneDataWidget);
+    mainWidgetStack->addWidget(carbonDataWidget);
 	//mainWidgetStack->addWidget(TEMPTBD2);
 	
 	this->setCentralWidget(mainWidgetStack);
@@ -59,12 +61,15 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(loginWidget, &LoginWidget::log, logger, &Logger::log);
 	connect(serialWidget, &SerialWidget::log, logger, &Logger::log);
     connect(ozoneDataWidget, &OzoneDataWidget::log, logger, &Logger::log);
+    connect(carbonDataWidget, &CarbonDataWidget::log, logger, &Logger::log);
 	
     // Connect success signals
 	connect(loginWidget, &LoginWidget::loginSuccessful, this, &MainWindow::onLogin);
     connect(serialWidget, &SerialWidget::foundPortSuccessful, this, &MainWindow::onFoundPortComplete);
     connect(serialWidget, &SerialWidget::transmitSuccessful, this, &MainWindow::onTransmitComplete);
     connect(ozoneDataWidget, &OzoneDataWidget::processSuccessful, this, &MainWindow::onOzoneProcessed);
+    connect(carbonDataWidget, &CarbonDataWidget::processSuccessful, this, &MainWindow::onCarbonProcessed);
+
 	connect(quitAct, SIGNAL(triggered()), this, SLOT(quit()));
 	connect(resetAct, SIGNAL(triggered()), this, SLOT(reconfigure()));
     connect(syncTimeAct, SIGNAL(triggered()), this, SLOT(synchronizePOMTime()));
@@ -132,9 +137,15 @@ void MainWindow::onTransmitComplete(QFile *fp) {
     ozoneDataWidget->processOzoneData(fp);
 }
 
-void MainWindow::onOzoneProcessed(){
+void MainWindow::onOzoneProcessed(){ 
+    pomStartTime = ozoneDataWidget->getStartDateTime();
+    pomEndTime = ozoneDataWidget->getEndDateTime();
+    carbonDataWidget->setStartDateTime(pomStartTime);
+    carbonDataWidget->setEndDateTime(pomEndTime);
     mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
     logger->log("Processed Ozone Data Successfully\n");
+
+    //carbonDataWidget->processCarbonData();
 }
 
 void MainWindow::onCarbonProcessed() {
