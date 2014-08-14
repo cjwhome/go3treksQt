@@ -134,6 +134,7 @@ void MainWindow::onFoundPortComplete(QString portName) {
 void MainWindow::onTransmitComplete(QFile *fp) {
 	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
     logger->log("Transmitted Data\n");
+    carbonDataWidget->setPomFileLocation(fp);
     ozoneDataWidget->processOzoneData(fp);
 }
 

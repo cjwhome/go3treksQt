@@ -144,6 +144,7 @@ void SerialWidget::readData()
     {
         if(fields.size()>10){
             QString newname = QString(fields[10].remove(QChar('/'))) + ".txt";
+            pomfile.close();
             pomfile.rename(newname);
             madeNewFileName=true;
             log("Created new name for file.\n");

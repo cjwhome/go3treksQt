@@ -1,11 +1,39 @@
 #ifndef CARBONDATAWIDGET_H
 #define CARBONDATAWIDGET_H
 
+#define MAX_TIME_DIFFERENCE 1000000
+#define MAX_MEASUREMENT_TIME_DIFF_START 10  //start with 10 seconds max, then switch to 60 in case the POM is set to 1 min averaging
+#define MAX_MEASUREMENT_TIME_DIFF_SECOND 60
+
+#define POM_VALID_LINE_FIELDS 12        //log#(0),O3(1),T(2),P(3),Vpdv(4),Vbat(5),Lat(6),Long(7),Alt(8),Qual(9),Date(10,Time(11)
+//POM feild indexes
+#define POM_LOG_INDEX 0                     //log number
+#define POM_O3_INDEX 1                      //ozone
+#define POM_TMP_INDEX 2                     //temperature
+#define POM_PRS_INDEX 3                     //pressure
+#define POM_PDV_INDEX 4                     //photodiode voltage
+#define POM_BTV_INDEX 5                     //battery voltage
+#define POM_LAT_INDEX 6                     //latitude
+#define POM_LONG_INDEX 7                    //longitude
+#define POM_ALT_INDEX 8                     //altitude
+#define POM_QLTY_INDEX 9
+#define POM_DATE_INDEX 10                   //date
+#define POM_TIME_INDEX 11                   //time
+
+#define AETH_VALID_LINE_FIELDS 10       //Date(yyyy/MM/dd)(0);Time(1);Ref(2);Sen(3);ATN(4);Flow(5);Temp(6);Status(7);Battery(8);BC(9)
+//microAeth feild indexes
+#define AETH_DATE_INDEX 0                   //date
+#define AETH_TIME_INDEX 1                   //time
+#define AETH_MEASUREMENT_INDEX 9
+
 #include <QWidget>
 #include <QDir>
 #include <QString>
 #include <QFile>
 #include <QDateTime>
+#include <QTextStream>
+#include <QDataStream>
+
 
 namespace Ui {
 class CarbonDataWidget;
@@ -20,7 +48,8 @@ public:
     ~CarbonDataWidget();
     void setEndDateTime(QDateTime end);
     void setStartDateTime(QDateTime start);
-    void processCarbonData();
+    void setPomFileLocation(QFile *fp);
+    bool processCarbonData();
 
 signals:
     void log(QString text);
@@ -33,7 +62,10 @@ private:
     Ui::CarbonDataWidget *ui;
     QDateTime startDateTime;
     QDateTime endDateTime;
+    QFile *pom_fp;
+    QFile combined_fp;
     bool foundPath;
+    bool foundFile;
 
 };
 
