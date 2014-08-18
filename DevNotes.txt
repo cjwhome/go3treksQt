@@ -1,0 +1,4 @@
+ GO3 Treks Development Notes
+=============================
+
+JP 2014/8/18:  PowerShell code to build static Qt version on Windows:  'PS E:\> .\windows-build-qt-static.ps1 -QtStaticDir "E:\Qt\Static" -QtVersion "5.2.0" -MingwDir "E:\Qt\Tools\mingw48_32"'  (see http://qt-project.org/wiki/How-to-build-a-static-Qt-for-Windows-MinGW )
