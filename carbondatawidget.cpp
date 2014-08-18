@@ -130,7 +130,8 @@ bool CarbonDataWidget::processCarbonData(){
 
 
 
-            QDataStream out(&combined_fp);   // we will serialize the data into the file
+            //QDataStream out(&combined_fp);   // we will serialize the data into the file
+           QTextStream out(&combined_fp);
            //since we are appending a microAeth black carbon measurement to each ozone line, we search the entire ozone file
            //int temp_diff;        //set high first!
 
@@ -159,7 +160,7 @@ bool CarbonDataWidget::processCarbonData(){
                        }
                        if(temp_diff <= max_time_var){
                            ui->textBrowser->append("Found a matching black carbon time stamp at time:" + microLineDateTime.toString());
-                           //pomLine.append(","+microAethFields[AETH_MEASUREMENT_INDEX]);
+                           pomLine.append(","+microAethFields[AETH_MEASUREMENT_INDEX]);
 
                            out<<pomLine+"\n";
                        }
