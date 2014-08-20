@@ -6,6 +6,7 @@
 #include <QStandardPaths>
 #include <QDir>
 #include <QFile>
+#include <QDebug>
 
 class Logger : public QObject
 {
@@ -24,6 +25,7 @@ public slots:
 private:
 	QStringList logs;
 	bool logHasBeenWritten;
+    QFile logFile;
 	
 };
 

@@ -22,7 +22,29 @@
      <property name="rightMargin">
       <number>7</number>
      </property>
-     <item row="7" column="0">
+     <item row="7" column="0" rowspan="2">
+      <widget class="QProgressBar" name="loginProgressBar">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>150</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>150</width>
+         <height>16777215</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="0">
       <spacer name="verticalSpacer">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -35,7 +57,7 @@
        </property>
       </spacer>
      </item>
-     <item row="2" column="0" alignment="Qt::AlignHCenter">
+     <item row="3" column="0" alignment="Qt::AlignHCenter">
       <widget class="QLineEdit" name="usernameBox">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -63,7 +85,7 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="0" alignment="Qt::AlignHCenter">
+     <item row="5" column="0" alignment="Qt::AlignHCenter">
       <widget class="QPushButton" name="checkLoginButton">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -88,31 +110,6 @@
        </property>
        <property name="autoDefault">
         <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0" alignment="Qt::AlignHCenter">
-      <widget class="QLineEdit" name="passwordBox">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>150</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>150</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="placeholderText">
-        <string>Email</string>
        </property>
       </widget>
      </item>
@@ -151,8 +148,24 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="0" alignment="Qt::AlignHCenter">
-      <widget class="QProgressBar" name="loginProgressBar">
+     <item row="6" column="0">
+      <spacer name="verticalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Preferred</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>150</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLineEdit" name="passwordBox">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -171,23 +184,10 @@
          <height>16777215</height>
         </size>
        </property>
+       <property name="placeholderText">
+        <string>Email</string>
+       </property>
       </widget>
-     </item>
-     <item row="5" column="0">
-      <spacer name="verticalSpacer_3">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Preferred</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>150</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
      </item>
     </layout>
    </item>

@@ -14,20 +14,24 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    pomserialportwidget.cpp \
     logger.cpp \
     loginwidget.cpp \
-    serialwidget.cpp
+    serialwidget.cpp \
+    ozonedatawidget.cpp \
+    carbondatawidget.cpp
 
 HEADERS  += mainwindow.h \
-    pomserialportwidget.h \
     logger.h \
     loginwidget.h \
-    serialwidget.h
+    serialwidget.h \
+    ozonedatawidget.h \
+    carbondatawidget.h
 
-FORMS    += pomserialportwidget.ui \
+FORMS    += \
     loginwidget.ui \
-    serialwidget.ui
+    serialwidget.ui \
+    ozonedatawidget.ui \
+    carbondatawidget.ui
 
 OTHER_FILES +=
 

@@ -21,6 +21,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	//connect(quitAct, SIGNAL(triggered()), this, SLOT(notImplemented()));
 	fileMenu->addAction(resetAct);
 	
+    syncTimeAct = new QAction("&Sync Time", this);
+    syncTimeAct->setStatusTip(tr("Synchronize POM time with Computer Time"));
+    fileMenu->addAction(syncTimeAct);
+
+
 	quitAct = new QAction("&Quit", this);
 	quitAct->setMenuRole(QAction::QuitRole);
 	quitAct->setShortcuts(QKeySequence::Quit);
@@ -28,20 +33,22 @@ MainWindow::MainWindow(QWidget *parent) :
 	//connect(quitAct, SIGNAL(triggered()), this, SLOT(notImplemented()));
 	fileMenu->addAction(quitAct);
 	
+
 	
 	// Initialize components
 	logger = new Logger(this);
 	loginWidget = new LoginWidget(this);
 	serialWidget = new SerialWidget(this);
+    ozoneDataWidget = new OzoneDataWidget(this);
+    carbonDataWidget = new CarbonDataWidget(this);
 	
 
-	
-	
-	
 	/// Widget Stack ///
 	mainWidgetStack = new QStackedWidget(this);
 	mainWidgetStack->addWidget(loginWidget);
 	mainWidgetStack->addWidget(serialWidget);
+    mainWidgetStack->addWidget(ozoneDataWidget);
+    mainWidgetStack->addWidget(carbonDataWidget);
 	//mainWidgetStack->addWidget(TEMPTBD2);
 	
 	this->setCentralWidget(mainWidgetStack);
@@ -52,11 +59,20 @@ MainWindow::MainWindow(QWidget *parent) :
 	// Connect local logging aliases
 	connect(loginWidget, &LoginWidget::log, logger, &Logger::log);
 	connect(serialWidget, &SerialWidget::log, logger, &Logger::log);
+    connect(ozoneDataWidget, &OzoneDataWidget::log, logger, &Logger::log);
+    connect(carbonDataWidget, &CarbonDataWidget::log, logger, &Logger::log);
 	
-	// Other connections
+    // Connect success signals
 	connect(loginWidget, &LoginWidget::loginSuccessful, this, &MainWindow::onLogin);
+    connect(serialWidget, &SerialWidget::foundPortSuccessful, this, &MainWindow::onFoundPortComplete);
+    connect(serialWidget, &SerialWidget::transmitSuccessful, this, &MainWindow::onTransmitComplete);
+    connect(ozoneDataWidget, &OzoneDataWidget::processSuccessful, this, &MainWindow::onOzoneProcessed);
+    connect(carbonDataWidget, &CarbonDataWidget::processSuccessful, this, &MainWindow::onCarbonProcessed);
+
 	connect(quitAct, SIGNAL(triggered()), this, SLOT(quit()));
 	connect(resetAct, SIGNAL(triggered()), this, SLOT(reconfigure()));
+    connect(syncTimeAct, SIGNAL(triggered()), this, SLOT(synchronizePOMTime()));
+    syncTimeAct->setDisabled(true);             //disable this ability until the POM port has been found
 	
 	logger->log(QDateTime::currentDateTime().toString("[yyyy/MM/dd hh:mm:ss] ")+
 				"Application initialized! Execution number "+
@@ -76,7 +92,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	// program execution at that point.  If the credentials are valid, we'll pass right over to serialWidget.
 	if (settings->value("login/Valid").toBool())
 		loginWidget->login(settings->value("login/Username").toString(), settings->value("login/Password").toString());
-	else;  // Else do nothing, just wait at the password screen for user to enter stuff
+    else; // Else do nothing, just wait at the password screen for user to enter stuff
 }
 
 
@@ -91,6 +107,7 @@ void MainWindow::updateStatus(QString text) {
 
 
 void MainWindow::onLogin(UserInfo user) {
+    bool found;
 	
 	this->userInfo = user;
 	
@@ -98,31 +115,42 @@ void MainWindow::onLogin(UserInfo user) {
 	settings->setValue("login/Username", user.Username);
 	settings->setValue("login/Password", user.Password);
 	
-	mainWidgetStack->setCurrentIndex(1);
+	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
 	
-	if (settings->value("serial/Valid").toBool())
-		serialWidget->connectToDevice();
-	else;  // Else do nothing, just wait for user to configure the serial connection
+    found=false;
+    while(!found){
+        found = serialWidget->findPomPort();
+    }
+}
+
+void MainWindow::onFoundPortComplete(QString portName) {
+    logger->log("Found POM port: ");
+    serialWidget->connectPOM();
+    syncTimeAct->setDisabled(false);
 }
 
 
-
-void MainWindow::onSerialSetupComplete() {
-	mainWidgetStack->setCurrentIndex(2);
+void MainWindow::onTransmitComplete(QFile *fp) {
+	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
+    logger->log("Transmitted Data\n");
+    carbonDataWidget->setPomFileLocation(fp);
+    ozoneDataWidget->processOzoneData(fp);
 }
 
+void MainWindow::onOzoneProcessed(){ 
+    pomStartTime = ozoneDataWidget->getStartDateTime();
+    pomEndTime = ozoneDataWidget->getEndDateTime();
+    carbonDataWidget->setStartDateTime(pomStartTime);
+    carbonDataWidget->setEndDateTime(pomEndTime);
+    mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
+    logger->log("Processed Ozone Data Successfully\n");
 
-
-void MainWindow::onTransmitComplete() {
-	mainWidgetStack->setCurrentIndex(3);
+    //carbonDataWidget->processCarbonData();
 }
-
-
 
 void MainWindow::onCarbonProcessed() {
 	mainWidgetStack->setCurrentIndex(4);
 }
-
 
 
 void MainWindow::onUploadComplete() {
@@ -149,13 +177,19 @@ void MainWindow::reconfigure() {
 	quit();
 }
 
+void MainWindow::synchronizePOMTime() {
+    logger->log("Synchronizing the POM time with the computers system time");
+    serialWidget->setPOMTime();
+
+}
 
 
 void MainWindow::loadDefaultSettings() {
 	settings->setValue("ExecutionCount", 1);
 	settings->setValue("login/Valid", false);
-	settings->setValue("login/Username", "");
-	settings->setValue("login/Password", "");
+    settings->setValue("login/Username", "");
+    settings->setValue("login/Password", "");
+
 	settings->setValue("serial/Valid", false);
 	settings->sync();
 }
@@ -166,6 +200,13 @@ void MainWindow::quit() {
 	qApp->exit();
 }
 
+
+void MainWindow::delay()
+{
+    QTime dieTime= QTime::currentTime().addSecs(3);
+    while( QTime::currentTime() < dieTime )
+    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+}
 
 
 
