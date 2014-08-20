@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file alias="TreksLogo">res/TreksLogo.png</file>
+        <file>res/kml_template.kml</file>
     </qresource>
 </RCC>

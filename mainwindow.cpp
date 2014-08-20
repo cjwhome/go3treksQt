@@ -149,7 +149,11 @@ void MainWindow::onOzoneProcessed(){
 }
 
 void MainWindow::onCarbonProcessed() {
-	mainWidgetStack->setCurrentIndex(4);
+	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
+    comboFp = carbonDataWidget->getComboFp();
+    logger->log("Created Valid Combo File Successfully.\n");
+    kmlMakerWidget->setComboFP(comboFp);
+    kmlMakerWidget->createKML();
 }
 
 

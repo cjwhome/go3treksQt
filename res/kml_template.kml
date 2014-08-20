@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>GO3 Treks</name>
+	<description>This is a GO3 Trek</description>
+
+<!-- Begin with a set of style definitions. -->
+	
+<!-- This is the ozone LineStyle.  LineStyle sets the width and color of the line.  PolyStyle sets the transparency of the otherwise grey fill beneath the extruded line.  The first two digits of the color determine the transparency.  Perfectly clear is "00".  Perfectly solid is "ff". The color is an inverted hex color bbggrr (BGR instead of RGB in HTML) -->
+<Style id="OzoneFence">
+      <LineStyle>
+        <width>3</width>
+		<color>ff0000ff</color>
+      </LineStyle>
+	  <PolyStyle>
+      <color>990000ff</color>
+      <colorMode>normal</colorMode>
+    </PolyStyle>
+    </Style>
+	
+<Style id="BlackCarbonFence">
+      <LineStyle>
+        <width>3</width>
+		<color>ff00ffff</color>
+      </LineStyle>
+	 <PolyStyle>
+      <color>9900ffff</color>
+      <colorMode>normal</colorMode>
+    </PolyStyle>
+    </Style>
+
+<!-- This is the icon used for each black carbon measurement.  Using "BalloonStyle" get rid of the default "Directions to here"  etc. -->
+ <Style id="OzoneIcon">
+   <LabelStyle>
+    <color>ffffffff</color>
+   </LabelStyle>	
+	<BalloonStyle>
+       <text>$[description]</text>
+     </BalloonStyle>  
+      <IconStyle>
+         <color></color>
+         <colorMode>normal</colorMode>
+		 <scale>0.4</scale>
+         <Icon>
+			<href>http://go3project.com/images/red_point.png</href>
+         </Icon>
+		<hotSpot x="0.5" y="0.5" xunits="fraction" yunits="fraction" />
+      </IconStyle>
+	</Style>
+	
+<!-- This is the icon used for each ozone measurement. -->  
+    <Style id="BlackCarbonIcon">
+	 <LabelStyle>
+       <color>ffffffff</color>
+   </LabelStyle>	
+	<BalloonStyle>
+       <text>$[description]</text>
+     </BalloonStyle>  
+      <IconStyle>
+         <color>ff00ffff</color>
+         <colorMode>normal</colorMode>
+         <scale>0.4</scale>
+         <Icon>
+             <href>http://go3project.com/images/yellow_point.png</href>
+         </Icon>
+		  <hotSpot x="0.5" y="0.5" xunits="fraction" yunits="fraction" />
+      </IconStyle>
+   </Style>
+	
+<!-- Data go into folders.  We will make 2 folders so that each set of data can be turned "on" (displayed) and "off" not displayed.  Both will be displayed initially. -->
+
+
+	
+</Document>
+</kml>
