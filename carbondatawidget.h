@@ -4,6 +4,7 @@
 #define MAX_TIME_DIFFERENCE 1000000
 #define MAX_MEASUREMENT_TIME_DIFF_START 10  //start with 10 seconds max, then switch to 60 in case the POM is set to 1 min averaging
 #define MAX_MEASUREMENT_TIME_DIFF_SECOND 60
+#define MIN_COMBO_LINES 1               //minimum number of lines to create a valid combo file
 
 #define POM_VALID_LINE_FIELDS 12        //log#(0),O3(1),T(2),P(3),Vpdv(4),Vbat(5),Lat(6),Long(7),Alt(8),Qual(9),Date(10,Time(11)
 //POM feild indexes
@@ -50,6 +51,7 @@ public:
     void setStartDateTime(QDateTime start);
     void setPomFileLocation(QFile *fp);
     bool processCarbonData();
+    QFile * getComboFp();
 
 signals:
     void log(QString text);
@@ -66,6 +68,7 @@ private:
     QFile combined_fp;
     bool foundPath;
     bool foundFile;
+    bool comboFileValid;
 
 };
 

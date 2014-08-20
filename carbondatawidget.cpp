@@ -101,8 +101,8 @@ bool CarbonDataWidget::processCarbonData(){
                current_microAeth_file.close();
                return 0;
            }
-
-           combined_fp.setFileName("combined_file.txt");
+           QString newname = "combo-"+startDateTime.toString("ddMMyy_hhmmss")+"-"+endDateTime.toString("hhmmss")+".txt";
+           combined_fp.setFileName(newname);
            if(combined_fp.open(QIODevice::ReadWrite))
                ui->textBrowser->append("Opened new file for combining data.");
            else{
@@ -127,7 +127,8 @@ bool CarbonDataWidget::processCarbonData(){
            QDateTime pomLineDateTime;
            QDateTime microLineDateTime;
            int max_time_var = MAX_MEASUREMENT_TIME_DIFF_START;
-
+           int combo_lines = 0;     //counts number of lines appended to combo file
+           comboFileValid = false;
 
 
             //QDataStream out(&combined_fp);   // we will serialize the data into the file
@@ -159,6 +160,7 @@ bool CarbonDataWidget::processCarbonData(){
                            }
                        }
                        if(temp_diff <= max_time_var){
+                           combo_lines++;
                            ui->textBrowser->append("Found a matching black carbon time stamp at time:" + microLineDateTime.toString());
                            pomLine.append(","+microAethFields[AETH_MEASUREMENT_INDEX]);
 
@@ -168,11 +170,23 @@ bool CarbonDataWidget::processCarbonData(){
                }
            }
 
-            combined_fp.close();
+           combined_fp.close();
            current_microAeth_file.close();
            pom_fp->close();
+           if(combo_lines>MIN_COMBO_LINES){
+               comboFileValid = true;
+               emit processSuccessful();
+               //QString newname = "combo-"+startDateTime.toString("ddMMyy_hhmmss")+"-"+endDateTime.toString("hhmmss")+".txt";
+               /*if(combined_fp.rename(newname)){
+                ui->textBrowser->append("Renamed File with start and end dates.");
+                log("Renamed combo file.");
+               }else{
+                   ui->textBrowser->append("Could not rename file.");
+                   log("Could not rename combo file - filename possibly already exists?");
+               }*/
 
-
+               return 1;
+            }
 
        }
 
@@ -205,4 +219,8 @@ void CarbonDataWidget::setStartDateTime(QDateTime start){
 
 void CarbonDataWidget::setPomFileLocation(QFile *fp){
     pom_fp = fp;
+}
+
+QFile * CarbonDataWidget::getComboFp(){
+    return &combined_fp;
 }

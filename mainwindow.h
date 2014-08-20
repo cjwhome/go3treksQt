@@ -7,6 +7,7 @@
 #include "serialwidget.h"
 #include "ozonedatawidget.h"
 #include "carbondatawidget.h"
+#include "kmlmakerwidget.h"
 #include <QTime>
 #include <QStackedWidget>
 #include <QMenu>
@@ -40,6 +41,7 @@ public:
 	SerialWidget *serialWidget;
     OzoneDataWidget *ozoneDataWidget;
     CarbonDataWidget *carbonDataWidget;
+    KmlMakerWidget *kmlMakerWidget;
 
 public slots:
 	void updateStatus(QString text);
@@ -66,6 +68,7 @@ private:
 	void loadDefaultSettings();  // Called by the "Reconfigure" menu option and when setting default settings
     QDateTime pomStartTime;
     QDateTime pomEndTime;
+    QFile *comboFp;               //file pointer for the combo file
 	
 };
 

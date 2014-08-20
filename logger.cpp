@@ -10,7 +10,7 @@ void Logger::log(QString text) {
 	if (text.isEmpty()) return;
 	
 	emit logUpdated(text);
-	logs.append(text);
+    logs.append(text);
 }
 
 bool Logger::writeLog() {
