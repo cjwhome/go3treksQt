@@ -15,6 +15,8 @@
 #define TIME_INDEX 11                   //time
 #define BC_INDEX 12                     //black carbon
 
+#define MAX_POINTS 8192                 //maximum stored points in POM
+
 #include <QWidget>
 #include <QFile>
 #include <QDir>

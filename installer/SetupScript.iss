@@ -21,9 +21,9 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
-InfoBeforeFile=E:\HAKA\2B\Treks\installer\INTRODUCTION.txt
-InfoAfterFile=E:\HAKA\2B\Treks\installer\FINISHED.txt
-OutputDir=E:\HAKA\2B\Treks\installer\output
+InfoBeforeFile=C:\Qtprojects\GO3Treks\installer\INTRODUCTION.txt
+InfoAfterFile=C:\Qtprojects\GO3Treks\installer\FINISHED.txt
+OutputDir=C:\Qtprojects\GO3Treks\installer\output
 OutputBaseFilename=GO3TreksInstaller
 Compression=lzma
 SolidCompression=yes
@@ -35,8 +35,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "E:\HAKA\2B\build-GO3Treks-Desktop_Qt_5_2_0_MinGW_32bit-Debug\debug\GO3Treks.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\HAKA\2B\Treks\res\TreksLogo.png"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Qtprojects\build-GO3Treks-Static-Release\release\GO3Treks.exe"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "C:\Treks\res\TreksLogo.png"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

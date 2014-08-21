@@ -47,6 +47,16 @@ QString KmlMakerWidget::convertCoordinate(QString str){
 
 
 bool KmlMakerWidget::createKML(){
+
+    struct MeasurementPoint
+    {
+        double ozone;
+        double blackCarbon;
+        QString lon;
+        QString lat;
+        QString alt;
+    };
+
     //QFileInfo fi(*tempFp);
    // QDir::setCurrent(fi.path());
     QFile *newFile = new QFile();
@@ -64,7 +74,7 @@ bool KmlMakerWidget::createKML(){
 
     //newFile->setFileName("blah.txt");     //
 
-    if(newFile->open(QIODevice::ReadWrite))
+    if(newFile->open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text))
         log("Created and opened new kml file successfully.");
     else{
         log("Unable to create new kml file.");
@@ -76,8 +86,8 @@ bool KmlMakerWidget::createKML(){
     QString dataLine;
     QString trekName("GO3 Treks");             //get this from the user information?
     QString description = "This is a GO3 Trek"; //we can put the time duration (start and end times) and city/school name in here
-    QString latitude;
-    QString longitude;
+    QString lookAtLatitude;
+    QString lookAtLongitude;
     QString tempString;
 
     //get gps coordinates of first point to use for the lookat view
@@ -86,12 +96,31 @@ bool KmlMakerWidget::createKML(){
     tempString = dataFields.at(LAT_INDEX);
     //ui->textBrowser->append("Here");
     //separate degrees from rest of string
-    latitude = convertCoordinate(tempString);
-
+    lookAtLatitude = convertCoordinate(tempString);
     tempString = dataFields.at(LONG_INDEX);
+    lookAtLongitude = convertCoordinate(tempString);
 
-    longitude = convertCoordinate(tempString);
+    MeasurementPoint mPoint[MAX_POINTS];
+    long i = 0;
+    while(!in.atEnd()){
 
+    //for(i=0;i<5;i++){
+       dataLine = in.readLine();
+       dataFields = dataLine.split(QRegExp(","));
+
+       tempString = dataFields.at(O3_INDEX);
+       mPoint[i].ozone = tempString.toDouble();
+       tempString = dataFields.at(LONG_INDEX);
+       mPoint[i].lon = convertCoordinate(tempString);
+       tempString = dataFields.at(LAT_INDEX);
+       mPoint[i].lat = convertCoordinate(tempString);
+       mPoint[i].alt = dataFields.at(ALT_INDEX);
+       tempString = dataFields.at(BC_INDEX);
+       mPoint[i].blackCarbon = tempString.toDouble();
+       i++;
+    }
+    log("Created "+QString::number(i)+" placemarks in KML File.");
+    ui->textBrowser->append("Created "+QString::number(i)+" placemarks in KML File.");
 
     /***********************writing the kml file!!*********************/
     out<<"<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -188,11 +217,11 @@ bool KmlMakerWidget::createKML(){
     out<<"      <LookAt>";
     out<<"\n";
     out<<"        <longitude>";
-    out<<longitude;           //<-104.985433;
+    out<<lookAtLongitude;           //<-104.985433;
     out<<"</longitude>";
     out<<"\n";
     out<<"        <latitude>";
-    out<<latitude;           //39.736846;
+    out<<lookAtLatitude;           //39.736846;
     out<<"</latitude>";
     out<<"\n";
     out<<"        <altitude>";
@@ -214,7 +243,85 @@ bool KmlMakerWidget::createKML(){
     out<<"      </LookAt>";
     out<<"\n";
 
+    //<!-- The following opens the main folder so that both Ozone and Black Carbon Folders appear -->
+    out<<"<open>1</open>";
+    out<<"\n";
+    //<!-- Folder for ozone data. -->
+    out<<"<Folder>";
+    out<<"\n";
+    //<!-- Placemarks -->
+    out<<"      <name>Ozone</name>";
+    out<<"\n";
+    out<<"      <description>Ozone Trek Data</description>";
+    out<<"\n";
+    //<!-- Do LookAt again in each folder so that you can click on that folder and reposition in case you have moved around on the map. -->
 
+    out<<"      <LookAt>";
+    out<<"\n";
+    out<<"        <longitude>";
+    out<<lookAtLongitude;
+    out<<"</longitude>";
+    out<<"\n";
+    out<<"        <latitude>";
+    out<<lookAtLatitude;
+    out<<"</latitude>";
+    out<<"\n";
+    out<<"        <altitude>";
+    out<<500;
+    out<<"</altitude>";
+    out<<"\n";
+    out<<"        <heading>0</heading>";
+    out<<"\n";
+    out<<"        <tilt>60</tilt>";
+    out<<"\n";
+    out<<"        <range>200</range>";
+    out<<"\n";
+    out<<"      </LookAt>";
+    out<<"\n";
+    //<!-- Draw "Ozone Fence" -->
+    out<<"<Placemark>";
+    out<<"\n";
+    out<<"          <name>Ozone</name>";
+    out<<"\n";
+    out<<"          <visibility>1</visibility>";
+    out<<"\n";
+    out<<"          <styleUrl>#OzoneFence</styleUrl>";
+    out<<"\n";
+    out<<"          <LineString>";
+    out<<"\n";
+    out<<"            <extrude>1</extrude>";
+    out<<"\n";
+    out<<"            <tessellate>0</tessellate>";
+    out<<"\n";
+    out<<"            <altitudeMode>relativeToGround</altitudeMode>";
+    out<<"\n";
+    out<<"                <coordinates>";
+    out<<"\n";
+
+    for(int count=0;count<i;count++){
+        out<<mPoint[count].lon;
+        out<<",";
+        out<<mPoint[count].lat;
+        out<<",";
+        out<<mPoint[count].ozone;
+        out<<"\n";
+    }
+    //<!-- Coordinates and ozone measurements:  Longitude, Latitude, Ozone -->
+
+    /*                  -104.984865,39.736841,20.0
+                      -104.985115,39.736845,14.0
+                      -104.985389,39.736846,19.5
+                      -104.985619,39.736868,7.5
+                      -104.985876,39.736877,10.0*/
+    out<<"                </coordinates>";
+    out<<"\n";
+    out<<"     </LineString>";
+    out<<"\n";
+    out<<"</Placemark>";
+    out<<"\n";
+
+
+    out<<"</Folder>";
     out<<"</Document>";
     out<<"\n";
     out<<"</kml>";

@@ -42,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	serialWidget = new SerialWidget(this);
     ozoneDataWidget = new OzoneDataWidget(this);
     carbonDataWidget = new CarbonDataWidget(this);
+    kmlMakerWidget = new KmlMakerWidget(this);
 	
 
 	/// Widget Stack ///
@@ -50,7 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	mainWidgetStack->addWidget(serialWidget);
     mainWidgetStack->addWidget(ozoneDataWidget);
     mainWidgetStack->addWidget(carbonDataWidget);
-	//mainWidgetStack->addWidget(TEMPTBD2);
+    mainWidgetStack->addWidget(kmlMakerWidget);
 	
 	this->setCentralWidget(mainWidgetStack);
 	
@@ -62,6 +63,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(serialWidget, &SerialWidget::log, logger, &Logger::log);
     connect(ozoneDataWidget, &OzoneDataWidget::log, logger, &Logger::log);
     connect(carbonDataWidget, &CarbonDataWidget::log, logger, &Logger::log);
+    connect(kmlMakerWidget, &KmlMakerWidget::log, logger, &Logger::log);
 	
     // Connect success signals
 	connect(loginWidget, &LoginWidget::loginSuccessful, this, &MainWindow::onLogin);

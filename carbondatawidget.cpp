@@ -103,7 +103,7 @@ bool CarbonDataWidget::processCarbonData(){
            }
            QString newname = "combo-"+startDateTime.toString("ddMMyy_hhmmss")+"-"+endDateTime.toString("hhmmss")+".txt";
            combined_fp.setFileName(newname);
-           if(combined_fp.open(QIODevice::ReadWrite))
+           if(combined_fp.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text))
                ui->textBrowser->append("Opened new file for combining data.");
            else{
                ui->textBrowser->append("Could not open combined file.");
