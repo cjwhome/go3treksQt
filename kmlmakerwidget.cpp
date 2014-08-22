@@ -138,6 +138,49 @@ bool KmlMakerWidget::createKML(){
     out<<"</description>";
     out<<"\n";
 
+    //!-- This is the ozone LineStyle.  LineStyle sets the width and color of the line.  PolyStyle sets the transparency of the otherwise grey fill beneath the extruded line.  The first two digits of the color determine the transparency.  Perfectly clear is "00".  Perfectly solid is "ff". The color is an inverted hex color bbggrr (BGR instead of RGB in HTML) -->
+    out<<"<Style id=\"OzoneFence\">";
+    out<<"\n";
+    out<<"      <LineStyle>";
+    out<<"\n";
+    out<<"        <width>3</width>";
+    out<<"\n";
+    out<<"        <color>ff0000ff</color>";
+    out<<"\n";
+    out<<"      </LineStyle>";
+    out<<"\n";
+    out<<"      <PolyStyle>";
+    out<<"\n";
+    out<<"      <color>990000ff</color>";
+    out<<"\n";
+    out<<"      <colorMode>normal</colorMode>";
+    out<<"\n";
+    out<<"    </PolyStyle>";
+    out<<"\n";
+    out<<"    </Style>";
+    out<<"\n";
+
+    out<<"<Style id=\"BlackCarbonFence\">";
+    out<<"\n";
+    out<<"      <LineStyle>";
+    out<<"\n";
+    out<<"        <width>3</width>";
+    out<<"\n";
+    out<<"        <color>ff00ffff</color>";
+    out<<"\n";
+    out<<"      </LineStyle>";
+    out<<"\n";
+    out<<"     <PolyStyle>";
+    out<<"\n";
+    out<<"      <color>9900ffff</color>";
+    out<<"\n";
+    out<<"      <colorMode>normal</colorMode>";
+    out<<"\n";
+    out<<"    </PolyStyle>";
+    out<<"\n";
+    out<<"    </Style>";
+    out<<"\n";
+
     //<!-- This is the icon used for each ozone measurement-->
     out<<"<Style id=\"OzoneIcon\">";
     out<<"\n";
@@ -298,7 +341,9 @@ bool KmlMakerWidget::createKML(){
     out<<"                <coordinates>";
     out<<"\n";
 
-    for(int count=0;count<i;count++){
+    //<!-- Coordinates and ozone measurements:  Longitude, Latitude, Ozone -->
+    int count;
+    for(count=0;count<i;count++){
         out<<mPoint[count].lon;
         out<<",";
         out<<mPoint[count].lat;
@@ -306,13 +351,145 @@ bool KmlMakerWidget::createKML(){
         out<<mPoint[count].ozone;
         out<<"\n";
     }
-    //<!-- Coordinates and ozone measurements:  Longitude, Latitude, Ozone -->
 
-    /*                  -104.984865,39.736841,20.0
-                      -104.985115,39.736845,14.0
-                      -104.985389,39.736846,19.5
-                      -104.985619,39.736868,7.5
-                      -104.985876,39.736877,10.0*/
+    for(count=0;count<i;count++){
+        out<<"<Placemark>";
+        out<<"\n";
+        out<<"        <name></name>";
+        out<<"\n";
+        out<<"        <Point>";
+        out<<"\n";
+        out<<"        <altitudeMode>relativeToGround</altitudeMode>";
+        out<<"\n";
+        out<<"          <coordinates>";
+        out<<mPoint[count].lon;
+        out<<",";
+        out<<mPoint[count].lat;
+        out<<",";
+        out<<20.0;
+        out<<"</coordinates>";
+        out<<"\n";
+        out<<"        </Point>";
+        out<<"\n";
+        out<<"        <styleUrl>#OzoneIcon</styleUrl>";
+        out<<"\n";
+        out<<"        <description>";
+        out<<"Ozone = ";
+        out<<mPoint[i].ozone;
+        out<<" ppb</description>";
+        out<<"\n";
+        out<<"     </Placemark>";
+        out<<"\n";
+    }
+
+
+    out<<"                </coordinates>";
+    out<<"\n";
+    out<<"     </LineString>";
+    out<<"\n";
+    out<<"</Placemark>";
+    out<<"\n";
+
+
+    //<!-- The following opens the main folder so that both Ozone and Black Carbon Folders appear -->
+    out<<"<open>1</open>";
+    out<<"\n";
+    //<!-- Folder for black carbon data. -->
+    out<<"<Folder>";
+    out<<"\n";
+    //<!-- Placemarks -->
+    out<<"      <name>Black Carbon</name>";
+    out<<"\n";
+    out<<"      <description>Black Carbon Trek Data</description>";
+    out<<"\n";
+    //<!-- Do LookAt again in each folder so that you can click on that folder and reposition in case you have moved around on the map. -->
+
+    out<<"      <LookAt>";
+    out<<"\n";
+    out<<"        <longitude>";
+    out<<lookAtLongitude;
+    out<<"</longitude>";
+    out<<"\n";
+    out<<"        <latitude>";
+    out<<lookAtLatitude;
+    out<<"</latitude>";
+    out<<"\n";
+    out<<"        <altitude>";
+    out<<500;
+    out<<"</altitude>";
+    out<<"\n";
+    out<<"        <heading>0</heading>";
+    out<<"\n";
+    out<<"        <tilt>60</tilt>";
+    out<<"\n";
+    out<<"        <range>200</range>";
+    out<<"\n";
+    out<<"      </LookAt>";
+    out<<"\n";
+    //<!-- Draw "Black Carbon Fence" -->
+    out<<"<Placemark>";
+    out<<"\n";
+    out<<"          <name>Black Carbon</name>";
+    out<<"\n";
+    out<<"          <visibility>1</visibility>";
+    out<<"\n";
+    out<<"          <styleUrl>#BlackCarbonFence</styleUrl>";
+    out<<"\n";
+    out<<"          <LineString>";
+    out<<"\n";
+    out<<"            <extrude>1</extrude>";
+    out<<"\n";
+    out<<"            <tessellate>0</tessellate>";
+    out<<"\n";
+    out<<"            <altitudeMode>relativeToGround</altitudeMode>";
+    out<<"\n";
+    out<<"                <coordinates>";
+    out<<"\n";
+
+    //<!-- Coordinates and black carbon measurements:  Longitude, Latitude, Ozone -->
+
+    for(count=0;count<i;count++){
+        out<<mPoint[count].lon;
+        out<<",";
+        out<<mPoint[count].lat;
+        out<<",";
+        out<<mPoint[count].blackCarbon;
+        out<<"\n";
+    }
+
+    for(count=0;count<i;count++){
+        out<<"<Placemark>";
+        out<<"\n";
+        out<<"        <name></name>";
+        out<<"\n";
+        out<<"        <Point>";
+        out<<"\n";
+        out<<"        <altitudeMode>relativeToGround";
+        out<<"\n";
+        out<<"</altitudeMode>";
+        out<<"\n";
+        out<<"          <coordinates>";
+        out<<mPoint[count].lon;
+        out<<",";
+        out<<mPoint[count].lat;
+        out<<",";
+        out<<mPoint[i].blackCarbon;
+        out<<"</coordinates>";
+        out<<"\n";
+        out<<"        </Point>";
+        out<<"\n";
+        out<<"        <styleUrl>#blackCarbonIcon</styleUrl>";
+        out<<"\n";
+        out<<"        <description>";
+        out<<"Black Carbon = ";
+        out<<mPoint[i].blackCarbon;
+        out<<" ng/m3</description>";
+        out<<"\n";
+        out<<"     </Placemark>";
+        out<<"\n";
+    }
+
+
     out<<"                </coordinates>";
     out<<"\n";
     out<<"     </LineString>";
@@ -322,6 +499,7 @@ bool KmlMakerWidget::createKML(){
 
 
     out<<"</Folder>";
+    out<<"\n";
     out<<"</Document>";
     out<<"\n";
     out<<"</kml>";
