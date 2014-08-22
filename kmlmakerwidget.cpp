@@ -390,6 +390,10 @@ bool KmlMakerWidget::createKML(){
     out<<"</Placemark>";
     out<<"\n";
 
+    out<<"</Folder>";
+
+
+
 
     //<!-- The following opens the main folder so that both Ozone and Black Carbon Folders appear -->
     out<<"<open>1</open>";
@@ -464,9 +468,7 @@ bool KmlMakerWidget::createKML(){
         out<<"\n";
         out<<"        <Point>";
         out<<"\n";
-        out<<"        <altitudeMode>relativeToGround";
-        out<<"\n";
-        out<<"</altitudeMode>";
+        out<<"        <altitudeMode>relativeToGround</altitudeMode>";
         out<<"\n";
         out<<"          <coordinates>";
         out<<mPoint[count].lon;
@@ -506,6 +508,8 @@ bool KmlMakerWidget::createKML(){
 
     newFile->close();
     tempFp->close();
+
+    QDesktopServices::openUrl(QUrl("file:///C:/Users/Craig/GO3TreksData/AE51-S5-819-1309/combo-110814_080742-081502.kml"));
     return 1;
     //start
 

@@ -23,6 +23,8 @@
 #include <QFileInfo>
 #include <QTextStream>
 #include <qxmlstream.h>
+#include <QDesktopServices>
+#include <QUrl>
 
 namespace Ui {
 class KmlMakerWidget;
