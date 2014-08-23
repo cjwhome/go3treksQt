@@ -87,7 +87,6 @@ while (file_exists($filename)) {
 	else die('{"Response":"Failure","Errors":["File could not be saved because more than 10 copies exist"]}');
 }
 
-echo('FILE NOT SAVED BECAUSE YOU ARE IN DEBUG MODE\n<br>');
 file_put_contents($filename, $kml);
 
 $title = MI_sqlsan(htmlentities($request['TrekName'].' ('.$request['TrekCity'].', '.$request['TrekState'].')'));
@@ -112,7 +111,7 @@ or die('{"Response":"Failure","Errors":["Insertion error: '.htmlentities($db->er
 $response = array(
 	'Response' => 'Success',
 	'Data' => array(
-		'BlogURL' => 'google.com'
+		'BlogURL' => BLOGURLPREFIX.$db->insert_id
 	)
 );
 
