@@ -13,6 +13,8 @@ require(__DIR__.'/../MI.php');
 
 define('TREKSCATEGORY', 20);  // Inserted as the "category" field on each blog post
 define('TREKSDIRECTORY', '/var/www/treks/');  // Where treks KML is saved
+define('TREKSDIRURL', 'http://go3project.com/treks/');
+define('BLOGURLPREFIX', 'http://go3project.com/network2/index.php/blogs/1/');
 
 $db->select_db('socialengine');
 
@@ -35,6 +37,9 @@ if( ! isset($request['Username']) || strlen($request['Username'])==0) $errors[] 
 if( ! isset($request['Password']) || strlen($request['Password'])==0) $errors[] = 'Password not specified';
 if( ! isset($request['KML']) || strlen($request['KML'])==0) $errors[] = 'No KML included';
 if( ! isset($request['TrekName']) || strlen($request['TrekName'])==0) $errors[] = 'Trek name not specified';
+if( ! isset($request['TrekCity']) || strlen($request['TrekCity'])==0) $errors[] = 'Trek city not specified';
+if( ! isset($request['TrekState']) || strlen($request['TrekState'])==0) $errors[] = 'Trek state not specified';
+if( ! isset($request['TrekDescription']) || strlen($request['TrekDescription'])==0) $errors[] = 'Trek description not specified';
 if( ! isset($request['TrekStartTime']) || strlen($request['TrekStartTime'])==0) $errors[] = 'Trek start time not specified';
 if( ! isset($request['TrekEndTime']) || strlen($request['TrekEndTime'])==0) $errors[] = 'Trek end time not specified';
 
@@ -83,9 +88,24 @@ while (file_exists($filename)) {
 }
 
 echo('FILE NOT SAVED BECAUSE YOU ARE IN DEBUG MODE\n<br>');
-//file_put_contents($filename, $kml);
+file_put_contents($filename, $kml);
 
+$title = MI_sqlsan(htmlentities($request['TrekName'].' ('.$request['TrekCity'].', '.$request['TrekState'].')'));
+$body = MI_sqlsan('<p>'.htmlentities($request['TrekDescription']) .
+	"</p>\n<p>&nbsp;</p>\n" .
+	"<p>Start time: THIS NEEDS TO BE FILLED WITH THE TIME, BUT WE'LL HAVE TO DEAL WITH TIMEZONE OFFSETS</p>\n" .
+	"<p>End time: THIS NEEDS TO BE FILLED WITH THE TIME, BUT WE'LL HAVE TO DEAL WITH TIMEZONE OFFSETS</p>\n<p>&nbsp;</p>\n" .
+	'<script src="http://www.gmodules.com/ig/ifr?url=http://dl.google.com/developers/maps/embedkmlgadget.xml&amp;up_kml_url=' .
+	urlencode(TREKSDIRURL.substr($filename, strlen(TREKSDIRECTORY))) .
+	'&amp;up_view_mode=maps&amp;up_earth_2d_fallback=0&amp;up_earth_fly_from_space=1&amp;up_earth_show_nav_controls=1&amp;up_earth_show_buildings=1&amp;up_earth_show_terrain=1&amp;up_earth_show_roads=1&amp;up_earth_show_borders=1&amp;up_earth_sphere=earth&amp;up_maps_zoom_out=0&amp;up_maps_default_type=map&amp;synd=open&amp;w=500&amp;h=400&amp;title=Trek%20Map&amp;border=%23ffffff%7C3px%2C1px+solid+%23999999&amp;output=js"></script>');
+$date = date('Y-m-d H:i:s');
 
+$db->query(
+	'INSERT INTO `engine4_blog_blogs`
+		 (title,    body,    owner_type, owner_id,      category_id,       creation_date, modified_date)
+	VALUES' .
+		"('$title', '$body', 'user',     {$user['ID']}, ".TREKSCATEGORY.", '$date',       '$date');")
+or die('{"Response":"Failure","Errors":["Insertion error: '.htmlentities($db->error).'"]}');
 
 
 
