@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     serialwidget.cpp \
     ozonedatawidget.cpp \
     carbondatawidget.cpp \
-    kmlmakerwidget.cpp
+    kmlmakerwidget.cpp \
+    blogwidget.cpp
 
 HEADERS  += mainwindow.h \
     logger.h \
@@ -27,14 +28,16 @@ HEADERS  += mainwindow.h \
     serialwidget.h \
     ozonedatawidget.h \
     carbondatawidget.h \
-    kmlmakerwidget.h
+    kmlmakerwidget.h \
+    blogwidget.h
 
 FORMS    += \
     loginwidget.ui \
     serialwidget.ui \
     ozonedatawidget.ui \
     carbondatawidget.ui \
-    kmlmakerwidget.ui
+    kmlmakerwidget.ui \
+    blogwidget.ui
 
 OTHER_FILES +=
 

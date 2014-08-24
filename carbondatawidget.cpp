@@ -203,6 +203,51 @@ bool CarbonDataWidget::processCarbonData(){
 
 }
 
+/*bool CarbonDataWidget::averageCarbonData()
+{
+    if(combined_fp.open(QIODevice::ReadWrite))
+        ui->textBrowser->append("Opened combo file for averaging bc data.");
+    else{
+        ui->textBrowser->append("Could not open combined file to average bc data.");
+        return 0;
+    }
+
+    QTextStream comboIn(combined_fp);
+
+     while(!comboIn.atEnd())
+    {
+        QString line = comboIn.readLine();
+
+
+        newFileData.append(line);
+
+
+        newFileData.append('\n');                  //Append the newline again, because in.readLine() ignored it
+
+    }
+
+    inFile.close();
+
+    QFile outFile(combined_fp);
+    if(!outFile.open(QIODevice::WriteOnly | QIODevice::Truncate)){
+        log("Unable to reopen combo file to write averaged data.");
+        return 0;
+    }
+
+    if(outFile.resize())
+        log("Deleted contents of combined file to replace with averaged data.");
+
+
+    //Write the data to the output file
+    QTextStream out(&outFile);
+    out << newFileData;
+    outFile.close();
+
+
+
+}
+*/
+
 void CarbonDataWidget::on_pushButton_clicked()
 {
     if(processCarbonData())

@@ -8,6 +8,7 @@
 #include "ozonedatawidget.h"
 #include "carbondatawidget.h"
 #include "kmlmakerwidget.h"
+#include "blogwidget.h"
 #include <QTime>
 #include <QStackedWidget>
 #include <QMenu>
@@ -42,6 +43,7 @@ public:
     OzoneDataWidget *ozoneDataWidget;
     CarbonDataWidget *carbonDataWidget;
     KmlMakerWidget *kmlMakerWidget;
+    BlogWidget *blogWidget;
 
 public slots:
 	void updateStatus(QString text);
@@ -51,6 +53,7 @@ public slots:
     void onTransmitComplete(QFile *fp);  // Called as soon as the instrument has successfully transmitted data
     void onOzoneProcessed();    // Called as soon as ozone data has been processed (validated gps data and start and end date and times
     void onCarbonProcessed();   // Called as soon as a carbon file has been found & processed
+    void onKmlProcessed();
     void onUploadComplete();    // Called as soon as the KML is made and uploaded
     void reconfigure();         // Called by the "Reconfigure" menu option
     void synchronizePOMTime();
@@ -69,6 +72,7 @@ private:
     QDateTime pomStartTime;
     QDateTime pomEndTime;
     QFile *comboFp;               //file pointer for the combo file
+    QFile *kmlFp;
 	
 };
 

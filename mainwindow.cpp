@@ -43,7 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ozoneDataWidget = new OzoneDataWidget(this);
     carbonDataWidget = new CarbonDataWidget(this);
     kmlMakerWidget = new KmlMakerWidget(this);
-	
+    blogWidget = new BlogWidget(this);
 
 	/// Widget Stack ///
 	mainWidgetStack = new QStackedWidget(this);
@@ -52,6 +52,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mainWidgetStack->addWidget(ozoneDataWidget);
     mainWidgetStack->addWidget(carbonDataWidget);
     mainWidgetStack->addWidget(kmlMakerWidget);
+    mainWidgetStack->addWidget(blogWidget);
 	
 	this->setCentralWidget(mainWidgetStack);
 	
@@ -64,6 +65,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ozoneDataWidget, &OzoneDataWidget::log, logger, &Logger::log);
     connect(carbonDataWidget, &CarbonDataWidget::log, logger, &Logger::log);
     connect(kmlMakerWidget, &KmlMakerWidget::log, logger, &Logger::log);
+    connect(blogWidget, &BlogWidget::log, logger, &Logger::log);
 	
     // Connect success signals
 	connect(loginWidget, &LoginWidget::loginSuccessful, this, &MainWindow::onLogin);
@@ -71,6 +73,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(serialWidget, &SerialWidget::transmitSuccessful, this, &MainWindow::onTransmitComplete);
     connect(ozoneDataWidget, &OzoneDataWidget::processSuccessful, this, &MainWindow::onOzoneProcessed);
     connect(carbonDataWidget, &CarbonDataWidget::processSuccessful, this, &MainWindow::onCarbonProcessed);
+    connect(kmlMakerWidget, &KmlMakerWidget::processSuccessful, this, &MainWindow::onKmlProcessed);
 
 	connect(quitAct, SIGNAL(triggered()), this, SLOT(quit()));
 	connect(resetAct, SIGNAL(triggered()), this, SLOT(reconfigure()));
@@ -127,7 +130,7 @@ void MainWindow::onLogin(UserInfo user) {
 }
 
 void MainWindow::onFoundPortComplete(QString portName) {
-    logger->log("Found POM port: ");
+    logger->log("Found POM port: "+portName+".");
     serialWidget->connectPOM();
     syncTimeAct->setDisabled(false);
 }
@@ -135,7 +138,7 @@ void MainWindow::onFoundPortComplete(QString portName) {
 
 void MainWindow::onTransmitComplete(QFile *fp) {
 	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
-    logger->log("Transmitted Data\n");
+    logger->log("Transmitted Data.");
     carbonDataWidget->setPomFileLocation(fp);
     ozoneDataWidget->processOzoneData(fp);
 }
@@ -146,21 +149,25 @@ void MainWindow::onOzoneProcessed(){
     carbonDataWidget->setStartDateTime(pomStartTime);
     carbonDataWidget->setEndDateTime(pomEndTime);
     mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
-    logger->log("Processed Ozone Data Successfully\n");
+    logger->log("Processed Ozone Data Successfully.");
 
     //carbonDataWidget->processCarbonData();
 }
 
-void MainWindow::onCarbonProcessed() {
+void MainWindow::onCarbonProcessed(){
 	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
     comboFp = carbonDataWidget->getComboFp();
-    logger->log("Created Valid Combo File Successfully.\n");
+    logger->log("Created Valid Combo File Successfully.");
     kmlMakerWidget->setComboFP(comboFp);
     kmlMakerWidget->createKML();
-
-
 }
 
+void MainWindow::onKmlProcessed(){
+    mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
+    kmlFp = kmlMakerWidget->getKMLfp();
+    logger->log("Created Valid KML File Successfully.");
+
+}
 
 void MainWindow::onUploadComplete() {
 	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);

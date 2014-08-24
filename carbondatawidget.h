@@ -52,6 +52,7 @@ public:
     void setPomFileLocation(QFile *fp);
     bool processCarbonData();
     QFile * getComboFp();
+   // bool averageCarbonData();
 
 signals:
     void log(QString text);

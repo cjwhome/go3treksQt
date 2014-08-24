@@ -101,10 +101,14 @@ bool KmlMakerWidget::createKML(){
     lookAtLongitude = convertCoordinate(tempString);
 
     MeasurementPoint mPoint[MAX_POINTS];
+#if AVERAGE_BLACK_CARBON
+    double bc_array[6];
+    double bc_avg;
+#endif
     long i = 0;
     while(!in.atEnd()){
 
-    //for(i=0;i<5;i++){
+
        dataLine = in.readLine();
        dataFields = dataLine.split(QRegExp(","));
 
@@ -115,8 +119,24 @@ bool KmlMakerWidget::createKML(){
        tempString = dataFields.at(LAT_INDEX);
        mPoint[i].lat = convertCoordinate(tempString);
        mPoint[i].alt = dataFields.at(ALT_INDEX);
-       tempString = dataFields.at(BC_INDEX);
+       tempString = dataFields.at(BC_INDEX); 
+#if AVERAGE_BLACK_CARBON
+       bc_array[0]=bc_array[1];
+       bc_array[1]=bc_array[2];
+       bc_array[2]=bc_array[3];
+       bc_array[3]=bc_array[4];
+       bc_array[4]=bc_array[5];
+       bc_array[5]=tempString.toDouble();
+       bc_avg = (bc_array[0] + bc_array[1] + bc_array[2] + bc_array[3] + bc_array[4] + bc_array[5])/6;
+       if(i<5){
+           mPoint[i].blackCarbon = 0;
+       }else{
+           mPoint[i].blackCarbon = bc_avg;
+       }
+
+#else
        mPoint[i].blackCarbon = tempString.toDouble();
+#endif
        i++;
     }
     log("Created "+QString::number(i)+" placemarks in KML File.");
@@ -509,9 +529,13 @@ bool KmlMakerWidget::createKML(){
     newFile->close();
     tempFp->close();
 
-    QDesktopServices::openUrl(QUrl("file:///C:/Users/Craig/GO3TreksData/AE51-S5-819-1309/combo-110814_080742-081502.kml"));
+
+    QString filePath = "file:///"+ QFileInfo(*newFile).absolutePath();
+    filePath.append("/"+newFile->fileName());
+    QDesktopServices::openUrl(QUrl(filePath));
+    emit processSuccessful();
     return 1;
-    //start
+
 
 }
 

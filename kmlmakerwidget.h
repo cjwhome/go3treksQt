@@ -16,6 +16,7 @@
 #define BC_INDEX 12                     //black carbon
 
 #define MAX_POINTS 8192                 //maximum stored points in POM
+#define AVERAGE_BLACK_CARBON 1
 
 #include <QWidget>
 #include <QFile>
@@ -43,7 +44,7 @@ public:
 
 signals:
     void log(QString text);
-    void kmlSuccessful();
+    void processSuccessful();
 
 private:
     Ui::KmlMakerWidget *ui;
