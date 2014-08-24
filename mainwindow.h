@@ -55,6 +55,8 @@ public slots:
     void onCarbonProcessed();   // Called as soon as a carbon file has been found & processed
     void onKmlProcessed();
     void onUploadComplete();    // Called as soon as the KML is made and uploaded
+	
+	void returnToStart();
     void reconfigure();         // Called by the "Reconfigure" menu option
     void synchronizePOMTime();
 	void quit();

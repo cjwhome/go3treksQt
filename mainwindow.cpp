@@ -10,7 +10,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	if (settings->contains("ExecutionCount"))
 		settings->setValue("ExecutionCount", settings->value("ExecutionCount").toInt() + 1);
 	else loadDefaultSettings();  // No settings; let's go ahead and set defaults
-		
 	settings->sync();  // Save them
 	
 	
@@ -122,11 +121,11 @@ void MainWindow::onLogin(UserInfo user) {
 	settings->setValue("login/Password", user.Password);
 	
 	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
+	
     found=false;
     while(!found){
         found = serialWidget->findPomPort();
     }
-
 }
 
 void MainWindow::onFoundPortComplete(QString portName) {
@@ -166,11 +165,17 @@ void MainWindow::onKmlProcessed(){
     mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
     kmlFp = kmlMakerWidget->getKMLfp();
     logger->log("Created Valid KML File Successfully.");
-
+}
+void MainWindow::onUploadComplete() {
+    mainWidgetStack->setCurrentIndex(5);
 }
 
-void MainWindow::onUploadComplete() {
-	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
+
+
+
+void MainWindow::returnToStart() {  // For when they've successfully uploaded a KML file and want to make another one
+	mainWidgetStack->setCurrentIndex(3);
+
 }
 
 
