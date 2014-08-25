@@ -112,8 +112,7 @@ bool LoginWidget::login(QString username, QString password) {
 	user.RealName = dataBuf["UserDisplayName"].toString();
 	user.Password = password;
 	
-	//if (APP_VERSION < dataBuf["MinVersion"].toDouble()) {
-	if (true) {
+	if (QString(APP_VERSION).toDouble() < dataBuf["MinVersion"].toDouble()) {
 		UpdateRequiredDialog * dialog = new UpdateRequiredDialog();
 		log("Program out of date!  Version "+dataBuf["MinVersion"].toString()+" required.");
 		dialog->exec();

@@ -9,6 +9,7 @@
 #include "carbondatawidget.h"
 #include "kmlmakerwidget.h"
 #include "blogwidget.h"
+#include "reconfiguredialog.h"
 #include "defines.h"
 #include <QTime>
 #include <QStackedWidget>

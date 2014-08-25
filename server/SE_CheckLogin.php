@@ -47,7 +47,7 @@ $response = array(
 		'UserEmail' => $r['email'],
 		'UserDisplayName' => $r['displayname'],
 		'MinVersion' => MIN_REQ_VERSION,
-		'CurrentTime' => time();
+		'CurrentTime' => time()
 	)
 );
 

@@ -4,19 +4,19 @@
 #include <QDialog>
 
 namespace Ui {
-class reconfiguredialog;
+class ReconfigureDialog;
 }
 
-class reconfiguredialog : public QDialog
+class ReconfigureDialog : public QDialog
 {
 	Q_OBJECT
 	
 public:
-	explicit reconfiguredialog(QWidget *parent = 0);
-	~reconfiguredialog();
+	explicit ReconfigureDialog(QWidget *parent = 0);
+	~ReconfigureDialog();
 	
 private:
-	Ui::reconfiguredialog *ui;
+	Ui::ReconfigureDialog *ui;
 };
 
 #endif // RECONFIGUREDIALOG_H

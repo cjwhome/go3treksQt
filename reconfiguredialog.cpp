@@ -1,14 +1,14 @@
 #include "reconfiguredialog.h"
 #include "ui_reconfiguredialog.h"
 
-reconfiguredialog::reconfiguredialog(QWidget *parent) :
+ReconfigureDialog::ReconfigureDialog(QWidget *parent) :
 	QDialog(parent),
-	ui(new Ui::reconfiguredialog)
+	ui(new Ui::ReconfigureDialog)
 {
 	ui->setupUi(this);
 }
 
-reconfiguredialog::~reconfiguredialog()
+ReconfigureDialog::~ReconfigureDialog()
 {
 	delete ui;
 }

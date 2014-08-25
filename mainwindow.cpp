@@ -181,13 +181,11 @@ void MainWindow::returnToStart() {  // For when they've successfully uploaded a 
 
 
 void MainWindow::reconfigure() {
+	ReconfigureDialog * dialog = new ReconfigureDialog();
+	dialog->exec();
 	logger->log("Resetting configuration.  Application will quit in 10 seconds; simply re-open and start over.");
 	
 	loadDefaultSettings();
-	
-	QEventLoop loop;
-	QTimer::singleShot(10000, &loop, SLOT(quit()));
-	loop.exec();
 	
 	quit();
 }
