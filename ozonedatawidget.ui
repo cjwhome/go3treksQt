@@ -13,68 +13,39 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QLabel" name="startTimeLabel">
-   <property name="geometry">
-    <rect>
-     <x>50</x>
-     <y>30</y>
-     <width>81</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Start Date/Time:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="startTimeOutput">
-   <property name="geometry">
-    <rect>
-     <x>160</x>
-     <y>30</y>
-     <width>171</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>dd/mm/yy hh:mm:ss</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="endTimeLabel">
-   <property name="geometry">
-    <rect>
-     <x>50</x>
-     <y>60</y>
-     <width>81</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>End Date/Time:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="endTimeOutput">
-   <property name="geometry">
-    <rect>
-     <x>160</x>
-     <y>60</y>
-     <width>161</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>dd/mm/yy hh:mm:ss</string>
-   </property>
-  </widget>
-  <widget class="QTextBrowser" name="fileData">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>90</y>
-     <width>256</width>
-     <height>192</height>
-    </rect>
-   </property>
-  </widget>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="2" column="0" colspan="2">
+    <widget class="QTextBrowser" name="fileData"/>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLabel" name="endTimeOutput">
+     <property name="text">
+      <string>dd/mm/yy hh:mm:ss</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="endTimeLabel">
+     <property name="text">
+      <string>End Date/Time:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLabel" name="startTimeOutput">
+     <property name="text">
+      <string>dd/mm/yy hh:mm:ss</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="startTimeLabel">
+     <property name="text">
+      <string>Start Date/Time:</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

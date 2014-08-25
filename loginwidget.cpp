@@ -1,5 +1,6 @@
 #include "loginwidget.h"
 #include "ui_loginwidget.h"
+#include "updaterequireddialog.h"
 
 LoginWidget::LoginWidget(QWidget *parent) :
 	QWidget(parent),
@@ -111,11 +112,21 @@ bool LoginWidget::login(QString username, QString password) {
 	user.RealName = dataBuf["UserDisplayName"].toString();
 	user.Password = password;
 	
-	log("Logged in.  Hello, "+user.RealName+"!");
-	
-	emit loginSuccessful(user);
-	
-	return true;
+	//if (APP_VERSION < dataBuf["MinVersion"].toDouble()) {
+	if (true) {
+		UpdateRequiredDialog * dialog = new UpdateRequiredDialog();
+		log("Program out of date!  Version "+dataBuf["MinVersion"].toString()+" required.");
+		dialog->exec();
+		qApp->exit();
+		return false;
+	}
+	else {
+		log("Logged in.  Hello, "+user.RealName+"!");
+		
+		emit loginSuccessful(user);
+		
+		return true;
+	}
 }
 
 void LoginWidget::on_checkLoginButton_clicked()

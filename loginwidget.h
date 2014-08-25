@@ -12,6 +12,7 @@
 #include <QJsonArray>
 #include <QTimer>
 #include <QPixmap>
+#include "defines.h"
 
 #define LoginScriptURL "http://go3project.com/scripts/user/SE_CheckLogin.php"
 

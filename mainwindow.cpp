@@ -80,7 +80,7 @@ MainWindow::MainWindow(QWidget *parent) :
     syncTimeAct->setDisabled(true);             //disable this ability until the POM port has been found
 	
 	logger->log(QDateTime::currentDateTime().toString("[yyyy/MM/dd hh:mm:ss] ")+
-				"Application initialized! Execution number "+
+				"Application initialized!  Treks version " APP_VERSION ". Execution number "+
 				QString::number(settings->value("ExecutionCount").toInt())
 	);
 	connect(logger, &Logger::logUpdated, this, &MainWindow::updateStatus);  // Make log updates show in status bar

@@ -13,16 +13,11 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QTextBrowser" name="textBrowser">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>60</y>
-     <width>256</width>
-     <height>192</height>
-    </rect>
-   </property>
-  </widget>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QTextBrowser" name="textBrowser"/>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

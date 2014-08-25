@@ -33,7 +33,7 @@ bool Logger::writeLog() {
 	if (x == -1) return false;
 	else {
 		logHasBeenWritten = true;
-        qDebug() <<"Wrote log file";
+        //qDebug() <<"Wrote log file";
 		return true;
 	}
 }
