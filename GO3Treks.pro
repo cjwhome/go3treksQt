@@ -20,7 +20,9 @@ SOURCES += main.cpp\
     ozonedatawidget.cpp \
     carbondatawidget.cpp \
     kmlmakerwidget.cpp \
-    blogwidget.cpp
+    blogwidget.cpp \
+    updaterequireddialog.cpp \
+    reconfiguredialog.cpp
 
 HEADERS  += mainwindow.h \
     logger.h \
@@ -29,7 +31,10 @@ HEADERS  += mainwindow.h \
     ozonedatawidget.h \
     carbondatawidget.h \
     kmlmakerwidget.h \
-    blogwidget.h
+    blogwidget.h \
+    updaterequireddialog.h \
+    defines.h \
+    reconfiguredialog.h
 
 FORMS    += \
     loginwidget.ui \
@@ -37,7 +42,9 @@ FORMS    += \
     ozonedatawidget.ui \
     carbondatawidget.ui \
     kmlmakerwidget.ui \
-    blogwidget.ui
+    blogwidget.ui \
+    updaterequireddialog.ui \
+    reconfiguredialog.ui
 
 OTHER_FILES +=
 
