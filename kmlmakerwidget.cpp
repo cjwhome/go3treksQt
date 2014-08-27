@@ -372,6 +372,13 @@ bool KmlMakerWidget::createKML(){
         out<<"\n";
     }
 
+    out<<"                </coordinates>";
+    out<<"\n";
+    out<<"     </LineString>";
+    out<<"\n";
+    out<<"</Placemark>";
+    out<<"\n";
+
     for(count=0;count<i;count++){
         out<<"<Placemark>";
         out<<"\n";
@@ -386,7 +393,7 @@ bool KmlMakerWidget::createKML(){
         out<<",";
         out<<mPoint[count].lat;
         out<<",";
-        out<<20.0;
+        out<<mPoint[count].ozone;
         out<<"</coordinates>";
         out<<"\n";
         out<<"        </Point>";
@@ -395,24 +402,14 @@ bool KmlMakerWidget::createKML(){
         out<<"\n";
         out<<"        <description>";
         out<<"Ozone = ";
-        out<<mPoint[i].ozone;
+        out<<mPoint[count].ozone;
         out<<" ppb</description>";
         out<<"\n";
         out<<"     </Placemark>";
         out<<"\n";
     }
 
-
-    out<<"                </coordinates>";
-    out<<"\n";
-    out<<"     </LineString>";
-    out<<"\n";
-    out<<"</Placemark>";
-    out<<"\n";
-
     out<<"</Folder>";
-
-
 
 
     //<!-- The following opens the main folder so that both Ozone and Black Carbon Folders appear -->
@@ -480,6 +477,12 @@ bool KmlMakerWidget::createKML(){
         out<<mPoint[count].blackCarbon;
         out<<"\n";
     }
+    out<<"                </coordinates>";
+    out<<"\n";
+    out<<"     </LineString>";
+    out<<"\n";
+    out<<"</Placemark>";
+    out<<"\n";
 
     for(count=0;count<i;count++){
         out<<"<Placemark>";
@@ -495,7 +498,7 @@ bool KmlMakerWidget::createKML(){
         out<<",";
         out<<mPoint[count].lat;
         out<<",";
-        out<<mPoint[i].blackCarbon;
+        out<<mPoint[count].blackCarbon;
         out<<"</coordinates>";
         out<<"\n";
         out<<"        </Point>";
@@ -504,21 +507,12 @@ bool KmlMakerWidget::createKML(){
         out<<"\n";
         out<<"        <description>";
         out<<"Black Carbon = ";
-        out<<mPoint[i].blackCarbon;
+        out<<mPoint[count].blackCarbon;
         out<<" ng/m3</description>";
         out<<"\n";
         out<<"     </Placemark>";
         out<<"\n";
     }
-
-
-    out<<"                </coordinates>";
-    out<<"\n";
-    out<<"     </LineString>";
-    out<<"\n";
-    out<<"</Placemark>";
-    out<<"\n";
-
 
     out<<"</Folder>";
     out<<"\n";
