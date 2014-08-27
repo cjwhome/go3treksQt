@@ -11,6 +11,7 @@
 #include "blogwidget.h"
 #include "reconfiguredialog.h"
 #include "defines.h"
+#include "uploadwidget.h"
 #include <QTime>
 #include <QStackedWidget>
 #include <QMenu>
@@ -46,6 +47,8 @@ public:
     CarbonDataWidget *carbonDataWidget;
     KmlMakerWidget *kmlMakerWidget;
     BlogWidget *blogWidget;
+	UploadWidget *uploadWidget;
+	
 
 public slots:
 	void updateStatus(QString text);

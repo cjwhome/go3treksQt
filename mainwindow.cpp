@@ -43,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
     carbonDataWidget = new CarbonDataWidget(this);
     kmlMakerWidget = new KmlMakerWidget(this);
     blogWidget = new BlogWidget(this);
+	uploadWidget = new UploadWidget(this);
 
 	/// Widget Stack ///
 	mainWidgetStack = new QStackedWidget(this);
@@ -52,6 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mainWidgetStack->addWidget(carbonDataWidget);
     mainWidgetStack->addWidget(kmlMakerWidget);
     mainWidgetStack->addWidget(blogWidget);
+	mainWidgetStack->addWidget(uploadWidget);
 	
 	this->setCentralWidget(mainWidgetStack);
 	
@@ -65,6 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(carbonDataWidget, &CarbonDataWidget::log, logger, &Logger::log);
     connect(kmlMakerWidget, &KmlMakerWidget::log, logger, &Logger::log);
     connect(blogWidget, &BlogWidget::log, logger, &Logger::log);
+	connect(uploadWidget, &UploadWidget::log, logger, &Logger::log);
 	
     // Connect success signals
 	connect(loginWidget, &LoginWidget::loginSuccessful, this, &MainWindow::onLogin);
@@ -167,7 +170,7 @@ void MainWindow::onKmlProcessed(){
     logger->log("Created Valid KML File Successfully.");
 }
 void MainWindow::onUploadComplete() {
-    mainWidgetStack->setCurrentIndex(5);
+    logger->log("well look at that.  everything worked.  what a miracle.  [ICP plays in the distance]");
 }
 
 
@@ -175,7 +178,6 @@ void MainWindow::onUploadComplete() {
 
 void MainWindow::returnToStart() {  // For when they've successfully uploaded a KML file and want to make another one
 	mainWidgetStack->setCurrentIndex(3);
-
 }
 
 
@@ -183,7 +185,7 @@ void MainWindow::returnToStart() {  // For when they've successfully uploaded a 
 void MainWindow::reconfigure() {
 	ReconfigureDialog * dialog = new ReconfigureDialog();
 	dialog->exec();
-	logger->log("Resetting configuration.  Application will quit in 10 seconds; simply re-open and start over.");
+	logger->log("Settings cleared");
 	
 	loadDefaultSettings();
 	
@@ -191,7 +193,7 @@ void MainWindow::reconfigure() {
 }
 
 void MainWindow::synchronizePOMTime() {
-    logger->log("Synchronizing the POM time with the computers system time");
+    logger->log("Synchronizing the POM time with the computer's system time");
     serialWidget->setPOMTime();
 
 }

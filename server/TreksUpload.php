@@ -65,11 +65,12 @@ if ( ! preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $request['KML'])) $errors[] = 'KML
 // Long strings seem to fail with php's base64decode, so this takes care of that issue.
 $kml = '';
 $len = strlen($request['KML']);
-for ($i=0; $i < ceil(strlen($len)/256); $i++)
-	$kml .= base64_decode(substr($request['KML'],$i*256,256));
-//$kml = mb_convert_encoding( $request['KML'], 'UTF-8', 'BASE64');
-
-if(strlen($kml)==0) $errors[] = 'KML base64 decoding failed';
+for ($i=0; $i < ceil(strlen($len)/256); $i++) {
+	$temp = base64_decode(substr($request['KML'],$i*256,256));
+	if ($temp === false) die('{"Response":"Failure","Errors":["KML base64 decoding failed"]}');
+	$kml .= $temp;
+}
+if(strlen($kml)==0) $errors[] = 'KML base64 decoding failed (empty return)';
 
 if ( ! empty($errors)) die('{"Response":"Failure","Errors":["'.implode('","', $errors).'"]}');
 
