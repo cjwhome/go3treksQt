@@ -17,6 +17,7 @@
 
 #define MAX_POINTS 8192                 //maximum stored points in POM
 #define AVERAGE_BLACK_CARBON 1
+#define BC_SCALING_FACTOR 0.04
 
 #include <QWidget>
 #include <QFile>
