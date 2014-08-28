@@ -28,12 +28,12 @@ if ( ! $request) die('{"Response":"Failure","Errors":["Syntax unparsable"]}');
 
 $errors = array();
 
-if ( ! isset($request['Username']) || strlen($request['Username'])==0) $errors[] = 'Username not specified';
-if ( ! isset($request['Password']) || strlen($request['Password'])==0) $errors[] = 'Password not specified';
+if ( ! isset($request['Email']) || strlen($request['Email'])==0) $errors[] = 'Email not specified';
+//if ( ! isset($request['Password']) || strlen($request['Password'])==0) $errors[] = 'Password not specified';
 
 if ( ! empty($errors)) die('{"Response":"Failure","Errors":["'.implode('","', $errors).'"]}');
 
-$res = $db->query("SELECT `user_id`, `username`, `displayname`, `email` FROM `engine4_users` WHERE `username` = '".MI_sqlsan($request['Username'])."' AND `email`='".MI_sqlsan($request['Password'])."';");
+$res = $db->query("SELECT `user_id`, `displayname`, `email` FROM `engine4_users` WHERE `email`='".MI_sqlsan($request['Email'])."';");
 
 if( ! $res->num_rows) die('{"Response":"Failure","Errors":["No user exists with the specified credentials"]}');
 
@@ -43,7 +43,6 @@ $response = array(
 	'Response' => 'Success',
 	'Data' => array(
 		'UserID' => $r['user_id'],
-		'Username' => $r['username'],
 		'UserEmail' => $r['email'],
 		'UserDisplayName' => $r['displayname'],
 		'MinVersion' => MIN_REQ_VERSION,

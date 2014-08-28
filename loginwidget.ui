@@ -52,7 +52,7 @@
       </widget>
      </item>
      <item alignment="Qt::AlignHCenter">
-      <widget class="QLineEdit" name="passwordBox">
+      <widget class="QLineEdit" name="emailBox">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -77,7 +77,10 @@
       </widget>
      </item>
      <item alignment="Qt::AlignHCenter">
-      <widget class="QLineEdit" name="usernameBox">
+      <widget class="QLineEdit" name="passwordBox">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -100,7 +103,7 @@
         <bool>true</bool>
        </property>
        <property name="placeholderText">
-        <string>Username</string>
+        <string>[leave this empty]</string>
        </property>
       </widget>
      </item>

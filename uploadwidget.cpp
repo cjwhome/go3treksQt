@@ -24,7 +24,7 @@ bool UploadWidget::upload(UserInfo userInfo, QFile *kmlFile, TrekInfo trekInfo) 
 	// Load the data into a QVariantMap (QMap<QString,QVariant>)
 	QVariantMap requestData;
 	
-	requestData.insert("Username", userInfo.Username);
+	requestData.insert("Email", userInfo.Email);
 	requestData.insert("Password", userInfo.Password);
 	requestData.insert("TrekName", trekInfo.Name);
 	requestData.insert("TrekCity", trekInfo.City);

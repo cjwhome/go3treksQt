@@ -33,8 +33,8 @@ if( ! $request) die('{"Response":"Failure","Errors":["Syntax unparsable"]}');
 
 $errors = array();
 
-if( ! isset($request['Username']) || strlen($request['Username'])==0) $errors[] = 'Username not specified';
-if( ! isset($request['Password']) || strlen($request['Password'])==0) $errors[] = 'Password not specified';
+if( ! isset($request['Email']) || strlen($request['Email'])==0) $errors[] = 'Email not specified';
+//if( ! isset($request['Password']) || strlen($request['Password'])==0) $errors[] = 'Password not specified';
 if( ! isset($request['KML']) || strlen($request['KML'])==0) $errors[] = 'No KML included';
 if( ! isset($request['TrekName']) || strlen($request['TrekName'])==0) $errors[] = 'Trek name not specified';
 if( ! isset($request['TrekCity']) || strlen($request['TrekCity'])==0) $errors[] = 'Trek city not specified';
@@ -44,7 +44,7 @@ if( ! isset($request['TrekEndTime']) || strlen($request['TrekEndTime'])==0) $err
 
 if( ! empty($errors)) die('{"Response":"Failure","Errors":["'.implode('","', $errors).'"]}');
 
-$res = $db->query("SELECT `user_id`, `username`, `displayname`, `email` FROM `engine4_users` WHERE `username` = '".MI_sqlsan($request['Username'])."' AND `email`='".MI_sqlsan($request['Password'])."';");
+$res = $db->query("SELECT `user_id`, `displayname`, `email` FROM `engine4_users` WHERE `email`='".MI_sqlsan($request['Email'])."';");
 
 if( ! $res->num_rows) die('{"Response":"Failure","Errors":["No user exists with the specified credentials"]}');
 
@@ -52,9 +52,8 @@ $r = $res->fetch_assoc();
 
 $user = array(
 	'ID' => $r['user_id'],
-	'Name' => $r['username'],
-	'DisplayName' => $r['displayname'],
-	'Email' => $r['email']
+	'Email' => $r['email'],
+	'DisplayName' => $r['displayname']
 );
 
 if( ! isset($request['KML']) || strlen($request['KML'])==0) $errors[] = 'No KML included';

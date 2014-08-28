@@ -30,6 +30,5 @@ void BlogWidget::on_uploadButton_clicked()
 	
 	
 	
-	
 	emit blogWritten(trekInfo);
 }

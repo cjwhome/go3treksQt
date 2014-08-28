@@ -27,6 +27,7 @@
 #include <qxmlstream.h>
 #include <QDesktopServices>
 #include <QUrl>
+#include "defines.h"
 
 namespace Ui {
 class KmlMakerWidget;

@@ -101,7 +101,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	// Start the processing sequence by checking for login settings.  If we do find settings, try them - login() will take over
 	// program execution at that point.  If the credentials are valid, we'll pass right over to serialWidget.
 	if (settings->value("login/Valid").toBool())
-		loginWidget->login(settings->value("login/Username").toString(), settings->value("login/Password").toString());
+		loginWidget->login(settings->value("login/Email").toString(), settings->value("login/Password").toString());
     else; // Else do nothing, just wait at the password screen for user to enter stuff
 }
 
@@ -122,7 +122,7 @@ void MainWindow::onLogin(UserInfo user) {
 	this->userInfo = user;
 	
 	settings->setValue("login/Valid", true);
-	settings->setValue("login/Username", user.Username);
+	settings->setValue("login/Email", user.Email);
 	settings->setValue("login/Password", user.Password);
 	
 	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
@@ -208,7 +208,7 @@ void MainWindow::synchronizePOMTime() {
 void MainWindow::loadDefaultSettings() {
 	settings->setValue("ExecutionCount", 1);
 	settings->setValue("login/Valid", false);
-    settings->setValue("login/Username", "");
+    settings->setValue("login/Email", "");
     settings->setValue("login/Password", "");
 
 	settings->setValue("serial/Valid", false);
