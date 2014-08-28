@@ -13,7 +13,7 @@ UploadWidget::~UploadWidget()
 	delete ui;
 }
 
-bool UploadWidget::upload(UserInfo userInfo, QFile kmlFile, TrekInfo trekInfo) {
+bool UploadWidget::upload(UserInfo userInfo, QFile *kmlFile, TrekInfo trekInfo) {
 	
 	// Prepare stuff
 	ui->viewPostButton->setEnabled(false);
@@ -28,13 +28,12 @@ bool UploadWidget::upload(UserInfo userInfo, QFile kmlFile, TrekInfo trekInfo) {
 	requestData.insert("Password", userInfo.Password);
 	requestData.insert("TrekName", trekInfo.Name);
 	requestData.insert("TrekCity", trekInfo.City);
-	requestData.insert("TrekState", trekInfo.State);
 	requestData.insert("TrekDescription", trekInfo.Description);
 	requestData.insert("TrekStartTime", trekInfo.StartTime);
 	requestData.insert("TrekEndTime", trekInfo.EndTime);
 	
 	// Base-64 encode KML data
-	requestData.insert("KML", kmlFile.readAll().toBase64());
+	requestData.insert("KML", kmlFile->readAll().toBase64());
 	ui->uploadProgressBar->setValue(UP_KML_ENCODED);
 	
 	// Convert QVariantMap to QJsonObject to QJsonDocument to QByteArray
@@ -72,13 +71,13 @@ bool UploadWidget::upload(UserInfo userInfo, QFile kmlFile, TrekInfo trekInfo) {
 	}
 	
 	if ( ! reply->isFinished()) {
-		log(QString("Network upload failure; KML saved at '").append(kmlFile.fileName()).append("'"));
+		log(QString("Network upload failure; KML saved at '").append(kmlFile->fileName()).append("'"));
 		log("Connection timed out.  Contact GO3 to manually upload the file.");
 		return false;
 	}
 	
 	if (reply->error() != QNetworkReply::NoError) {
-		log(QString("Network upload failure; KML saved at '").append(kmlFile.fileName()).append("'"));
+		log(QString("Network upload failure; KML saved at '").append(kmlFile->fileName()).append("'"));
 		log("Request failed!  Error: "+reply->errorString());
 		log("Network error.  Contact GO3 to manually upload the file.");
 		return false;
@@ -87,7 +86,7 @@ bool UploadWidget::upload(UserInfo userInfo, QFile kmlFile, TrekInfo trekInfo) {
 	// Parse the reply as JSON
 	QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
 	if (response.isNull()) {
-		log(QString("Network upload failure; KML saved at '").append(kmlFile.fileName()).append("'"));
+		log(QString("Network upload failure; KML saved at '").append(kmlFile->fileName()).append("'"));
 		log("The response could not be parsed as valid JSON.");
 		log("Network error.  Contact GO3 to manually upload the file.");
 		return false;
@@ -102,7 +101,7 @@ bool UploadWidget::upload(UserInfo userInfo, QFile kmlFile, TrekInfo trekInfo) {
 			if (i != 0) errorBuf.append(", ");
 			errorBuf.append(errors[i].toString());
 		}
-		log(QString("Network upload failure; KML saved at '").append(kmlFile.fileName()).append("'"));
+		log(QString("Network upload failure; KML saved at '").append(kmlFile->fileName()).append("'"));
 		log("Server said the following: "+errorBuf+".");
 		log("Server error.  Contact GO3 to manually upload the file.");
 		return false;
@@ -112,6 +111,7 @@ bool UploadWidget::upload(UserInfo userInfo, QFile kmlFile, TrekInfo trekInfo) {
 	blogUrl = dataBuf["BlogURL"].toString();
 	log("Upload successful!  Check out your blog post to see the trek.");
 	ui->viewPostButton->setEnabled(true);
+	emit uploadSuccessful(blogUrl);
 	return true;
 }
 

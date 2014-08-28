@@ -38,7 +38,6 @@ if( ! isset($request['Password']) || strlen($request['Password'])==0) $errors[] 
 if( ! isset($request['KML']) || strlen($request['KML'])==0) $errors[] = 'No KML included';
 if( ! isset($request['TrekName']) || strlen($request['TrekName'])==0) $errors[] = 'Trek name not specified';
 if( ! isset($request['TrekCity']) || strlen($request['TrekCity'])==0) $errors[] = 'Trek city not specified';
-if( ! isset($request['TrekState']) || strlen($request['TrekState'])==0) $errors[] = 'Trek state not specified';
 if( ! isset($request['TrekDescription']) || strlen($request['TrekDescription'])==0) $errors[] = 'Trek description not specified';
 if( ! isset($request['TrekStartTime']) || strlen($request['TrekStartTime'])==0) $errors[] = 'Trek start time not specified';
 if( ! isset($request['TrekEndTime']) || strlen($request['TrekEndTime'])==0) $errors[] = 'Trek end time not specified';
@@ -60,7 +59,7 @@ $user = array(
 
 if( ! isset($request['KML']) || strlen($request['KML'])==0) $errors[] = 'No KML included';
 
-if ( ! preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $request['KML'])) $errors[] = 'KML was not correctly base64-encoded';
+//if ( ! preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $request['KML'])) $errors[] = 'KML was not correctly base64-encoded';
 
 // Long strings seem to fail with php's base64decode, so this takes care of that issue.
 $kml = '';
@@ -90,8 +89,8 @@ while (file_exists($filename)) {
 
 file_put_contents($filename, $kml);
 
-$title = MI_sqlsan(htmlentities($request['TrekName'].' ('.$request['TrekCity'].', '.$request['TrekState'].')'));
-$body = MI_sqlsan('<p>'.htmlentities($request['TrekDescription']) .
+$title = MI_sqlsan(htmlentities("{$request['TrekName']} ({$request['TrekCity']})"));
+$body = MI_sqlsan('<p>'.nl2br(htmlentities($request['TrekDescription'])) .
 	"</p>\n<p>&nbsp;</p>\n" .
 	"<p>Start time: THIS NEEDS TO BE FILLED WITH THE TIME, BUT WE'LL HAVE TO DEAL WITH TIMEZONE OFFSETS</p>\n" .
 	"<p>End time: THIS NEEDS TO BE FILLED WITH THE TIME, BUT WE'LL HAVE TO DEAL WITH TIMEZONE OFFSETS</p>\n<p>&nbsp;</p>\n" .

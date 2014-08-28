@@ -22,12 +22,12 @@
       </font>
      </property>
      <property name="text">
-      <string>Trek City (or Town)</string>
+      <string>Trek city, state (e.g., &quot;Boulder, CO&quot;)</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QLineEdit" name="lineEdit"/>
+    <widget class="QLineEdit" name="cityBox"/>
    </item>
    <item>
     <spacer name="verticalSpacer_2">
@@ -43,14 +43,14 @@
     </spacer>
    </item>
    <item>
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="nameBox">
      <property name="font">
       <font>
        <pointsize>12</pointsize>
       </font>
      </property>
      <property name="text">
-      <string>Trek Nickname (ex: &quot;factory&quot; or &quot;near highway&quot;)</string>
+      <string>Trek nickname (e.g., &quot;Factory&quot; or &quot;Near highway&quot;)</string>
      </property>
     </widget>
    </item>
@@ -78,12 +78,19 @@
       </font>
      </property>
      <property name="text">
-      <string>Blog (Write a summary of your trek)</string>
+      <string>Blog (a summary of your trek, where you went, and what you saw)</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QPlainTextEdit" name="plainTextEdit"/>
+    <widget class="QPlainTextEdit" name="descBox"/>
+   </item>
+   <item alignment="Qt::AlignRight">
+    <widget class="QPushButton" name="uploadButton">
+     <property name="text">
+      <string>Upload</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

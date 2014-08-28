@@ -76,6 +76,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ozoneDataWidget, &OzoneDataWidget::processSuccessful, this, &MainWindow::onOzoneProcessed);
     connect(carbonDataWidget, &CarbonDataWidget::processSuccessful, this, &MainWindow::onCarbonProcessed);
     connect(kmlMakerWidget, &KmlMakerWidget::processSuccessful, this, &MainWindow::onKmlProcessed);
+	connect(blogWidget, &BlogWidget::blogWritten, this, &MainWindow::onBlogWritten);
+	connect(uploadWidget, &UploadWidget::uploadSuccessful, this, &MainWindow::onUploadComplete);
 
 	connect(quitAct, SIGNAL(triggered()), this, SLOT(quit()));
 	connect(resetAct, SIGNAL(triggered()), this, SLOT(reconfigure()));
@@ -105,6 +107,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 MainWindow::~MainWindow() {
+	settings->sync();
 }
 
 
@@ -115,7 +118,6 @@ void MainWindow::updateStatus(QString text) {
 
 
 void MainWindow::onLogin(UserInfo user) {
-    bool found;
 	
 	this->userInfo = user;
 	
@@ -125,7 +127,7 @@ void MainWindow::onLogin(UserInfo user) {
 	
 	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
 	
-    found=false;
+    bool found=false;
     while(!found){
         found = serialWidget->findPomPort();
     }
@@ -168,9 +170,14 @@ void MainWindow::onKmlProcessed(){
     mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
     kmlFp = kmlMakerWidget->getKMLfp();
     logger->log("Generated KML file");
+
 }
+void MainWindow::onBlogWritten() {
+	logger->log("ntoehusnaotehu");
+}
+
 void MainWindow::onUploadComplete() {
-    logger->log("well look at that.  everything worked.  what a miracle.  [ICP plays in the distance]");
+    logger->log("well look at that. everything worked. what a miracle. [ICP plays in the distance]");
 }
 
 
@@ -195,7 +202,6 @@ void MainWindow::reconfigure() {
 void MainWindow::synchronizePOMTime() {
     logger->log("Synchronizing the POM time with the computer's system time");
     serialWidget->setPOMTime();
-
 }
 
 

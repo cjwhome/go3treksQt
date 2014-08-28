@@ -10,7 +10,6 @@ class BlogWidget;
 struct TrekInfo {
 	QString Name;
 	QString City;
-	QString State;
 	QString Description;
 	uint StartTime;
 	uint EndTime;
@@ -23,11 +22,15 @@ class BlogWidget : public QWidget
 public:
     explicit BlogWidget(QWidget *parent = 0);
     ~BlogWidget();
+	TrekInfo trekInfo;
 
 signals:
     void log(QString text);
-    void blogSuccessful();
+    void blogWritten(TrekInfo trekInfo);
 
+private slots:
+	void on_uploadButton_clicked();
+	
 private:
     Ui::BlogWidget *ui;
 };

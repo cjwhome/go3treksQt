@@ -39,10 +39,11 @@ public:
 	QUrl blogUrl;
 	
 public slots:
-	bool upload(UserInfo userInfo, QFile kmlFile, TrekInfo trekInfo);
+	bool upload(UserInfo userInfo, QFile *kmlFile, TrekInfo trekInfo);
 	
 signals:
 	void log(QString text);
+	void uploadSuccessful(QUrl blogUrl);
 	
 private slots:
 	void on_viewPostButton_clicked();
