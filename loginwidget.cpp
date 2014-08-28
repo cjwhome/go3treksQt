@@ -30,17 +30,17 @@ LoginWidget::~LoginWidget()
 	delete ui;
 }
 
-bool LoginWidget::login(QString username, QString password) {
+bool LoginWidget::login(QString email, QString password) {
 	
 	if (user.LoggedIn) return true;  // They're already logged in, this is a duplicate call.
 	
 	log("Logging in...");
 	
-	ui->usernameBox->setText(username);
+	ui->emailBox->setText(email);
 	ui->passwordBox->setText(password);  // TODO: Remove this when we switch to a password system
 	
 	ui->checkLoginButton->setEnabled(false);
-	ui->usernameBox->setEnabled(false);
+	ui->emailBox->setEnabled(false);
 	ui->passwordBox->setEnabled(false);
 	ui->loginProgressBar->setMaximum(0);  // Sets the progress bar to "working" animation
 	
@@ -51,7 +51,7 @@ bool LoginWidget::login(QString username, QString password) {
 	r.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
 	
 	// Build the POST data to be fed into the request
-	QString requestString("{\"Username\":\"" + username + "\",\"Password\":\"" + password + "\"}");
+	QString requestString("{\"Email\":\"" + email + "\",\"Password\":\"" + password + "\"}");
 	QByteArray postData;
 	QUrlQuery q;
     q.addQueryItem("Request", requestString);
@@ -69,8 +69,9 @@ bool LoginWidget::login(QString username, QString password) {
 	}
 	
 	ui->checkLoginButton->setEnabled(true);
-	ui->usernameBox->setEnabled(true);
-	ui->passwordBox->setEnabled(true);
+	ui->emailBox->setEnabled(true);
+	// TODO:  FIX THIS
+	//ui->passwordBox->setEnabled(true);
 	ui->loginProgressBar->setMaximum(1);  // Reset progress bar to blank state
 	
 	if ( ! reply->isFinished()) {
@@ -107,7 +108,6 @@ bool LoginWidget::login(QString username, QString password) {
 	QJsonObject dataBuf = resOb["Data"].toObject();
 	user.LoggedIn = true;
 	user.UserID = dataBuf["UserID"].toString();
-	user.Username = dataBuf["Username"].toString();
 	user.Email = dataBuf["UserEmail"].toString();
 	user.RealName = dataBuf["UserDisplayName"].toString();
 	user.Password = password;
@@ -130,16 +130,17 @@ bool LoginWidget::login(QString username, QString password) {
 
 void LoginWidget::on_checkLoginButton_clicked()
 {
-	if (ui->usernameBox->text().isEmpty()) {
-		log("You must enter a username!");
-		return;
-	}
-	if (ui->passwordBox->text().isEmpty()) {
+	if (ui->emailBox->text().isEmpty()) {
 		log("You must enter an email!");
 		return;
 	}
+	// TODO: Fix this
+	/*if (ui->passwordBox->text().isEmpty()) {
+		log("You must enter a password!");
+		return;
+	}*/
 	
-    login(ui->usernameBox->text(), ui->passwordBox->text());
+    login(ui->emailBox->text(), ui->passwordBox->text());
 }
 
 UserInfo LoginWidget::getUserInfo() {
@@ -163,7 +164,7 @@ UserInfo LoginWidget::getUserInfo() {
 
 
 
-void LoginWidget::on_usernameBox_returnPressed()
+void LoginWidget::on_emailBox_returnPressed()
 {
     on_checkLoginButton_clicked();
 }

@@ -23,9 +23,8 @@ class LoginWidget;
 struct UserInfo {
 	bool LoggedIn;
 	QString UserID;
-	QString Username;
-	QString Password;
 	QString Email;
+	QString Password;
 	QString RealName;
 };
 
@@ -36,7 +35,7 @@ class LoginWidget : public QWidget
 public:
 	explicit LoginWidget(QWidget *parent = 0);
 	~LoginWidget();
-	bool login(QString username, QString password);
+	bool login(QString email, QString password);
 	UserInfo getUserInfo();
 	
 signals:
@@ -45,7 +44,7 @@ signals:
 	
 private slots:
 	void on_checkLoginButton_clicked();
-	void on_usernameBox_returnPressed();  // Just calls on_checkLoginButton_clicked();
+	void on_emailBox_returnPressed();  // Just calls on_checkLoginButton_clicked();
 	void on_passwordBox_returnPressed();  // Just calls on_checkLoginButton_clicked();
 	
 private:

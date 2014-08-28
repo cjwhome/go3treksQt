@@ -2,6 +2,7 @@
 #define BLOGWIDGET_H
 
 #include <QWidget>
+#include <QLabel>
 
 namespace Ui {
 class BlogWidget;
