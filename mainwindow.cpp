@@ -159,7 +159,7 @@ void MainWindow::onOzoneProcessed(){
 void MainWindow::onCarbonProcessed(){
 	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
     comboFp = carbonDataWidget->getComboFp();
-    logger->log("Created Valid Combo File Successfully.");
+    logger->log("Generated combo data file");
     kmlMakerWidget->setComboFP(comboFp);
     kmlMakerWidget->createKML();
 }
@@ -167,7 +167,7 @@ void MainWindow::onCarbonProcessed(){
 void MainWindow::onKmlProcessed(){
     mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
     kmlFp = kmlMakerWidget->getKMLfp();
-    logger->log("Created Valid KML File Successfully.");
+    logger->log("Generated KML file");
 }
 void MainWindow::onUploadComplete() {
     logger->log("well look at that.  everything worked.  what a miracle.  [ICP plays in the distance]");

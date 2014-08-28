@@ -7,6 +7,15 @@ namespace Ui {
 class BlogWidget;
 }
 
+struct TrekInfo {
+	QString Name;
+	QString City;
+	QString State;
+	QString Description;
+	uint StartTime;
+	uint EndTime;
+};
+
 class BlogWidget : public QWidget
 {
     Q_OBJECT
