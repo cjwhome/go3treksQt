@@ -140,7 +140,7 @@ bool CarbonDataWidget::processCarbonData(){
                pomLine = pomIn.readLine();                              //read an entire line
                pomFields = pomLine.split(QRegExp(","));                 //separate all fields separated by commas
                if(pomFields.size() == POM_VALID_LINE_FIELDS){           //make sure it is a measurement line and not other strings
-                  if((QString::compare(QString(pomFields[POM_LAT_INDEX]),"0000.00000")!=0)){
+                  if((QString::compare(QString(pomFields[POM_LAT_INDEX]),"0000.00000")!=0)&&(QString::compare(QString(pomFields[POM_LONG_INDEX]),"0000.0000")!=0)&&(pomFields[POM_LAT_INDEX].size()>MIN_LAT_SIZE)){
                       pomLineDateTime = QDateTime::fromString(pomFields[POM_DATE_INDEX]+pomFields[POM_TIME_INDEX], "dd/MM/yyhh:mm:ss");
                       pomLineDateTime = pomLineDateTime.addYears(100);
                        //now, find a close match black carbon measurement in the microAeth file...

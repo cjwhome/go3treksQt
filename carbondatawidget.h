@@ -27,6 +27,8 @@
 #define AETH_TIME_INDEX 1                   //time
 #define AETH_MEASUREMENT_INDEX 9
 
+#define MIN_LAT_SIZE 9      //minimum number of characters in the latitude string (for checking bad transmitted data from pom gps)
+
 #include <QWidget>
 #include <QDir>
 #include <QString>

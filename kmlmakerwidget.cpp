@@ -128,6 +128,7 @@ bool KmlMakerWidget::createKML(){
        bc_array[4]=bc_array[5];
        bc_array[5]=tempString.toDouble();
        bc_avg = (bc_array[0] + bc_array[1] + bc_array[2] + bc_array[3] + bc_array[4] + bc_array[5])/6;
+       bc_avg *= BC_SCALING_FACTOR;
        if(i<5){
            mPoint[i].blackCarbon = 0;
        }else{
@@ -372,6 +373,13 @@ bool KmlMakerWidget::createKML(){
         out<<"\n";
     }
 
+    out<<"                </coordinates>";
+    out<<"\n";
+    out<<"     </LineString>";
+    out<<"\n";
+    out<<"</Placemark>";
+    out<<"\n";
+
     for(count=0;count<i;count++){
         out<<"<Placemark>";
         out<<"\n";
@@ -386,7 +394,7 @@ bool KmlMakerWidget::createKML(){
         out<<",";
         out<<mPoint[count].lat;
         out<<",";
-        out<<20.0;
+        out<<mPoint[count].ozone;
         out<<"</coordinates>";
         out<<"\n";
         out<<"        </Point>";
@@ -395,24 +403,14 @@ bool KmlMakerWidget::createKML(){
         out<<"\n";
         out<<"        <description>";
         out<<"Ozone = ";
-        out<<mPoint[i].ozone;
+        out<<mPoint[count].ozone;
         out<<" ppb</description>";
         out<<"\n";
         out<<"     </Placemark>";
         out<<"\n";
     }
 
-
-    out<<"                </coordinates>";
-    out<<"\n";
-    out<<"     </LineString>";
-    out<<"\n";
-    out<<"</Placemark>";
-    out<<"\n";
-
     out<<"</Folder>";
-
-
 
 
     //<!-- The following opens the main folder so that both Ozone and Black Carbon Folders appear -->
@@ -470,7 +468,7 @@ bool KmlMakerWidget::createKML(){
     out<<"                <coordinates>";
     out<<"\n";
 
-    //<!-- Coordinates and black carbon measurements:  Longitude, Latitude, Ozone -->
+    //<!-- Coordinates and black carbon measurements:  Longitude, Latitude, black carbon -->
 
     for(count=0;count<i;count++){
         out<<mPoint[count].lon;
@@ -480,6 +478,12 @@ bool KmlMakerWidget::createKML(){
         out<<mPoint[count].blackCarbon;
         out<<"\n";
     }
+    out<<"                </coordinates>";
+    out<<"\n";
+    out<<"     </LineString>";
+    out<<"\n";
+    out<<"</Placemark>";
+    out<<"\n";
 
     for(count=0;count<i;count++){
         out<<"<Placemark>";
@@ -495,30 +499,21 @@ bool KmlMakerWidget::createKML(){
         out<<",";
         out<<mPoint[count].lat;
         out<<",";
-        out<<mPoint[i].blackCarbon;
+        out<<mPoint[count].blackCarbon;
         out<<"</coordinates>";
         out<<"\n";
         out<<"        </Point>";
         out<<"\n";
-        out<<"        <styleUrl>#blackCarbonIcon</styleUrl>";
+        out<<"        <styleUrl>#BlackCarbonIcon</styleUrl>";
         out<<"\n";
         out<<"        <description>";
         out<<"Black Carbon = ";
-        out<<mPoint[i].blackCarbon;
+        out<<mPoint[count].blackCarbon/BC_SCALING_FACTOR;
         out<<" ng/m3</description>";
         out<<"\n";
         out<<"     </Placemark>";
         out<<"\n";
     }
-
-
-    out<<"                </coordinates>";
-    out<<"\n";
-    out<<"     </LineString>";
-    out<<"\n";
-    out<<"</Placemark>";
-    out<<"\n";
-
 
     out<<"</Folder>";
     out<<"\n";
