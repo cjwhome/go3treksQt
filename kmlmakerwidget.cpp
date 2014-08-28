@@ -475,7 +475,10 @@ bool KmlMakerWidget::createKML(){
         out<<",";
         out<<mPoint[count].lat;
         out<<",";
-        out<<mPoint[count].blackCarbon;
+        if(mPoint[count].blackCarbon<0)         //we don't want to use negative values for altitude!
+            out<<0.0;
+        else
+            out<<mPoint[count].blackCarbon;
         out<<"\n";
     }
     out<<"                </coordinates>";
@@ -499,7 +502,10 @@ bool KmlMakerWidget::createKML(){
         out<<",";
         out<<mPoint[count].lat;
         out<<",";
-        out<<mPoint[count].blackCarbon;
+        if(mPoint[count].blackCarbon<0)         //we don't want to use negative values for altitude!
+            out<<0.0;
+        else
+            out<<mPoint[count].blackCarbon;
         out<<"</coordinates>";
         out<<"\n";
         out<<"        </Point>";
