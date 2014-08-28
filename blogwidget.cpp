@@ -28,7 +28,9 @@ void BlogWidget::on_uploadButton_clicked()
 		return;
 	}
 	
-	
+	trekInfo.City = ui->cityBox->text();
+	trekInfo.Name = ui->nameBox->text();
+	trekInfo.Description = ui->descBox->toPlainText();
 	
 	emit blogWritten(trekInfo);
 }

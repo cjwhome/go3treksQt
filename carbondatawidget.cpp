@@ -78,7 +78,7 @@ bool CarbonDataWidget::processCarbonData(){
                log("Could not find any microAeth files whose dates came close.\n");
                ui->textBrowser->append("Could not find any microAeth files whose dates came close.\n");
                return 0;
-           }else{
+           } else {
                log("\nFound closest microAeth file to POM start time: "+foundFilePath+" with a time difference of "+QString::number(min_secs)+" Seconds.");
                ui->textBrowser->append("\nFound closest microAeth file to POM start time: "+foundFilePath+" with a time difference of "+QString::number(min_secs)+" Seconds.");
            }

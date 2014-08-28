@@ -33,6 +33,14 @@ namespace Ui {
 class KmlMakerWidget;
 }
 
+struct KmlInfo {
+	bool dataLoaded;
+	bool trekInfoLoaded;
+	QFile *file;
+	qint64 descriptionLocation;
+	qint64 nameLocation;
+};
+
 class KmlMakerWidget : public QWidget
 {
     Q_OBJECT
@@ -43,6 +51,7 @@ public:
     void setComboFP(QFile *fp);
     bool createKML();
     QFile * getKMLfp();
+	KmlInfo info;
 
 signals:
     void log(QString text);

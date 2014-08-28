@@ -154,7 +154,7 @@ bool KmlMakerWidget::createKML(){
     out<<"<Document>";
     out<<"\n";
     out<<"<name>";
-    out<<trekName;
+    info.nameLocation = out.pos();
     out<<"</name>";
     out<<"\n";
     out<<"<description>";
