@@ -2,7 +2,7 @@
 #define CARBONDATAWIDGET_H
 
 #define MAX_TIME_DIFFERENCE 1000000
-#define MAX_MEASUREMENT_TIME_DIFF_START 10  //start with 10 seconds max, then switch to 60 in case the POM is set to 1 min averaging
+#define MAX_MEASUREMENT_TIME_DIFF_START 15  //start with 10 seconds max, then switch to 60 in case the POM is set to 1 min averaging
 #define MAX_MEASUREMENT_TIME_DIFF_SECOND 60
 #define MIN_COMBO_LINES 1               //minimum number of lines to create a valid combo file
 

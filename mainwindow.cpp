@@ -127,9 +127,16 @@ void MainWindow::onLogin(UserInfo user) {
 	
 	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
 	
+<<<<<<< HEAD
+    found=false;
+    while(!found){ 
+=======
     bool found=false;
     while(!found){
+>>>>>>> 310b06279fae0da210c76c1eeb905a0bda4b67f8
         found = serialWidget->findPomPort();
+        //delay();
+        //logger->log("Please connect POM usb to computer.");
     }
 }
 

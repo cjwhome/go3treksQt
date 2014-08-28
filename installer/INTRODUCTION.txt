@@ -1,1 +1,9 @@
-hey you're installing me
+Software Highlights:
+	GO3Treks allows you to: 
+	*Connect to your Personal Ozone Monitor (POM)
+	*Download a logged "Trek"
+	*Combine ozone data with microAeth black carbon data
+	*Automatically create a .kml file to be viewed in Google Earth
+	*Allow you to enter a "blog" to summarize your "Trek"
+	*Upload the .kml file and "Trek" to www.GO3project.com
+	

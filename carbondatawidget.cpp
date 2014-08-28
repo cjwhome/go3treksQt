@@ -137,6 +137,7 @@ bool CarbonDataWidget::processCarbonData(){
            //int temp_diff;        //set high first!
 
            while(!pomIn.atEnd()){
+               microAethIn.seek(0);
                pomLine = pomIn.readLine();                              //read an entire line
                pomFields = pomLine.split(QRegExp(","));                 //separate all fields separated by commas
                if(pomFields.size() == POM_VALID_LINE_FIELDS){           //make sure it is a measurement line and not other strings
@@ -144,18 +145,19 @@ bool CarbonDataWidget::processCarbonData(){
                       pomLineDateTime = QDateTime::fromString(pomFields[POM_DATE_INDEX]+pomFields[POM_TIME_INDEX], "dd/MM/yyhh:mm:ss");
                       pomLineDateTime = pomLineDateTime.addYears(100);
                        //now, find a close match black carbon measurement in the microAeth file...
-                      //ui->textBrowser->append("POM TIME: "+pomLineDateTime.toString("dd/MM/yy,hh:mm:ss"));
+                     // ui->textBrowser->append("POM TIME: "+pomLineDateTime.toString("dd/MM/yyyy,hh:mm:ss"));
                       temp_diff = 120;      //reset before each search
                        while((temp_diff > max_time_var) && (!microAethIn.atEnd())){       //keep searching until find one or at end of file
                            microAethLine = microAethIn.readLine();
                            microAethFields = microAethLine.split(QRegExp(";"));     //micro uses semicolon
-
+                            //ui->textBrowser->append("POM TIME: "+pomLineDateTime.toString("dd/MM/yyyy,hh:mm:ss"));
                            if((microAethFields.size() == AETH_VALID_LINE_FIELDS)&&(microAethFields[AETH_TIME_INDEX]!="Time")){
                                microLineDateTime = QDateTime::fromString(microAethFields[AETH_DATE_INDEX]+microAethFields[AETH_TIME_INDEX],"yyyy/MM/ddhh:mm:ss");
+
                                temp_diff = pomLineDateTime.secsTo(microLineDateTime);                             //absolute value of difference
                                if(temp_diff<0)
                                    temp_diff = microLineDateTime.secsTo(pomLineDateTime);
-                               //ui->textBrowser->append("   POM_TIME: "+ pomLineDateTime.toString("dd/MM/yyyy,hh:mm:ss")+", BC_TIME: " + microLineDateTime.toString("dd/MM/yyyy,hh:mm:ss") + ", diff="+QString::number(temp_diff)+" seconds");
+                               ui->textBrowser->append("   POM_TIME: "+ pomLineDateTime.toString("dd/MM/yyyy,hh:mm:ss")+", BC_TIME: " + microLineDateTime.toString("dd/MM/yyyy,hh:mm:ss") + ", diff="+QString::number(temp_diff)+" seconds");
 
                            }
                        }
@@ -251,7 +253,7 @@ bool CarbonDataWidget::processCarbonData(){
 void CarbonDataWidget::on_pushButton_clicked()
 {
     if(processCarbonData())
-        log("Yay, processed the carbon data!\n");
+        log("Processed the carbon data successfully\n");
 }
 
 void CarbonDataWidget::setEndDateTime(QDateTime end){
