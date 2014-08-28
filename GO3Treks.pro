@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     kmlmakerwidget.cpp \
     blogwidget.cpp \
     updaterequireddialog.cpp \
-    reconfiguredialog.cpp
+    reconfiguredialog.cpp \
+    uploadwidget.cpp
 
 HEADERS  += mainwindow.h \
     logger.h \
@@ -34,7 +35,8 @@ HEADERS  += mainwindow.h \
     blogwidget.h \
     updaterequireddialog.h \
     defines.h \
-    reconfiguredialog.h
+    reconfiguredialog.h \
+    uploadwidget.h
 
 FORMS    += \
     loginwidget.ui \
@@ -44,7 +46,8 @@ FORMS    += \
     kmlmakerwidget.ui \
     blogwidget.ui \
     updaterequireddialog.ui \
-    reconfiguredialog.ui
+    reconfiguredialog.ui \
+    uploadwidget.ui
 
 OTHER_FILES +=
 

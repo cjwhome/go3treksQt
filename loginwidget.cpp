@@ -59,7 +59,7 @@ bool LoginWidget::login(QString username, QString password) {
 	
 	QNetworkReply *reply = nwam->post(r, postData);  // Actually send the request
 	
-	// Wait 30 seconds or untl we've got a response, whichever comes first
+	// Wait 30 seconds or until we've got a response, whichever comes first
 	int timePassed = 0;
 	while ( ! reply->isFinished() && timePassed < 30000) {
 		QEventLoop loop;
@@ -114,7 +114,7 @@ bool LoginWidget::login(QString username, QString password) {
 	
 	if (QString(APP_VERSION).toDouble() < dataBuf["MinVersion"].toDouble()) {
 		UpdateRequiredDialog * dialog = new UpdateRequiredDialog();
-		log("Program out of date!  Version "+dataBuf["MinVersion"].toString()+" required.");
+		log("Program out of date!  Version "+QString::number(dataBuf["MinVersion"].toDouble())+" required.");
 		dialog->exec();
 		qApp->exit();
 		return false;

@@ -43,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
     carbonDataWidget = new CarbonDataWidget(this);
     kmlMakerWidget = new KmlMakerWidget(this);
     blogWidget = new BlogWidget(this);
+	uploadWidget = new UploadWidget(this);
 
 	/// Widget Stack ///
 	mainWidgetStack = new QStackedWidget(this);
@@ -52,6 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mainWidgetStack->addWidget(carbonDataWidget);
     mainWidgetStack->addWidget(kmlMakerWidget);
     mainWidgetStack->addWidget(blogWidget);
+	mainWidgetStack->addWidget(uploadWidget);
 	
 	this->setCentralWidget(mainWidgetStack);
 	
@@ -65,6 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(carbonDataWidget, &CarbonDataWidget::log, logger, &Logger::log);
     connect(kmlMakerWidget, &KmlMakerWidget::log, logger, &Logger::log);
     connect(blogWidget, &BlogWidget::log, logger, &Logger::log);
+	connect(uploadWidget, &UploadWidget::log, logger, &Logger::log);
 	
     // Connect success signals
 	connect(loginWidget, &LoginWidget::loginSuccessful, this, &MainWindow::onLogin);
@@ -73,6 +76,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ozoneDataWidget, &OzoneDataWidget::processSuccessful, this, &MainWindow::onOzoneProcessed);
     connect(carbonDataWidget, &CarbonDataWidget::processSuccessful, this, &MainWindow::onCarbonProcessed);
     connect(kmlMakerWidget, &KmlMakerWidget::processSuccessful, this, &MainWindow::onKmlProcessed);
+	connect(blogWidget, &BlogWidget::blogWritten, this, &MainWindow::onBlogWritten);
+	connect(uploadWidget, &UploadWidget::uploadSuccessful, this, &MainWindow::onUploadComplete);
 
 	connect(quitAct, SIGNAL(triggered()), this, SLOT(quit()));
 	connect(resetAct, SIGNAL(triggered()), this, SLOT(reconfigure()));
@@ -102,6 +107,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 MainWindow::~MainWindow() {
+	settings->sync();
 }
 
 
@@ -112,7 +118,6 @@ void MainWindow::updateStatus(QString text) {
 
 
 void MainWindow::onLogin(UserInfo user) {
-    bool found;
 	
 	this->userInfo = user;
 	
@@ -122,8 +127,13 @@ void MainWindow::onLogin(UserInfo user) {
 	
 	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
 	
+<<<<<<< HEAD
     found=false;
     while(!found){ 
+=======
+    bool found=false;
+    while(!found){
+>>>>>>> 310b06279fae0da210c76c1eeb905a0bda4b67f8
         found = serialWidget->findPomPort();
         //delay();
         //logger->log("Please connect POM usb to computer.");
@@ -158,7 +168,7 @@ void MainWindow::onOzoneProcessed(){
 void MainWindow::onCarbonProcessed(){
 	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
     comboFp = carbonDataWidget->getComboFp();
-    logger->log("Created Valid Combo File Successfully.");
+    logger->log("Generated combo data file");
     kmlMakerWidget->setComboFP(comboFp);
     kmlMakerWidget->createKML();
 }
@@ -166,10 +176,15 @@ void MainWindow::onCarbonProcessed(){
 void MainWindow::onKmlProcessed(){
     mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
     kmlFp = kmlMakerWidget->getKMLfp();
-    logger->log("Created Valid KML File Successfully.");
+    logger->log("Generated KML file");
+
 }
+void MainWindow::onBlogWritten() {
+	logger->log("ntoehusnaotehu");
+}
+
 void MainWindow::onUploadComplete() {
-    mainWidgetStack->setCurrentIndex(5);
+    logger->log("well look at that. everything worked. what a miracle. [ICP plays in the distance]");
 }
 
 
@@ -177,7 +192,6 @@ void MainWindow::onUploadComplete() {
 
 void MainWindow::returnToStart() {  // For when they've successfully uploaded a KML file and want to make another one
 	mainWidgetStack->setCurrentIndex(3);
-
 }
 
 
@@ -185,7 +199,7 @@ void MainWindow::returnToStart() {  // For when they've successfully uploaded a 
 void MainWindow::reconfigure() {
 	ReconfigureDialog * dialog = new ReconfigureDialog();
 	dialog->exec();
-	logger->log("Resetting configuration.  Application will quit in 10 seconds; simply re-open and start over.");
+	logger->log("Settings cleared");
 	
 	loadDefaultSettings();
 	
@@ -193,9 +207,8 @@ void MainWindow::reconfigure() {
 }
 
 void MainWindow::synchronizePOMTime() {
-    logger->log("Synchronizing the POM time with the computers system time");
+    logger->log("Synchronizing the POM time with the computer's system time");
     serialWidget->setPOMTime();
-
 }
 
 

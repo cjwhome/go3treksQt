@@ -11,6 +11,7 @@
 #include "blogwidget.h"
 #include "reconfiguredialog.h"
 #include "defines.h"
+#include "uploadwidget.h"
 #include <QTime>
 #include <QStackedWidget>
 #include <QMenu>
@@ -46,6 +47,8 @@ public:
     CarbonDataWidget *carbonDataWidget;
     KmlMakerWidget *kmlMakerWidget;
     BlogWidget *blogWidget;
+	UploadWidget *uploadWidget;
+	
 
 public slots:
 	void updateStatus(QString text);
@@ -56,6 +59,7 @@ public slots:
     void onOzoneProcessed();    // Called as soon as ozone data has been processed (validated gps data and start and end date and times
     void onCarbonProcessed();   // Called as soon as a carbon file has been found & processed
     void onKmlProcessed();
+	void onBlogWritten();
     void onUploadComplete();    // Called as soon as the KML is made and uploaded
 	
 	void returnToStart();
