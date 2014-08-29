@@ -547,7 +547,7 @@ void KmlMakerWidget::setComboFP(QFile *fp){
 }
 
 QFile * KmlMakerWidget::getKMLfp(){
-	return &kmlFp;
+	return tempFp;
 }
 
 bool KmlMakerWidget::writeMetas(QString name, QString desc) {
