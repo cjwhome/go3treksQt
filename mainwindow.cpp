@@ -189,7 +189,7 @@ void MainWindow::onBlogRequested() {
 void MainWindow::onBlogWritten(TrekInfo passedTrekInfo) {
 	trekInfo = passedTrekInfo;
 	if ( ! kmlMakerWidget->writeMetas(trekInfo.Name, trekInfo.Description)) {
-		log("Postprocessing failed, contact GO3 support");
+		logger->log("Postprocessing failed, contact GO3 support");
 		return;
 	}
 	

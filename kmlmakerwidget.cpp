@@ -602,5 +602,12 @@ void KmlMakerWidget::on_uploadButton_clicked()
 {
     ui->uploadButton->setEnabled(false);
 	uploadPressed = true;
+	
+	if ( ! kmlFp.open(QIODevice::ReadWrite)) {
+		ui->textBrowser->append("You must first close any application using the KML file!");
+		return;
+	}
+	kmlFp.close();
+	
 	emit initiateUpload();
 }
