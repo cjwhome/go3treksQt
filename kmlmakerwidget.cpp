@@ -589,13 +589,13 @@ void KmlMakerWidget::on_openButton_clicked()
 	uploadPressed = false;
 	
 	// Wait a minute (literally)
-	QTime finalTime = QTime::currentTime().addSecs(60);
+	/*QTime finalTime = QTime::currentTime().addSecs(60);
 	while (finalTime > QTime::currentTime() && !uploadPressed) {
 		QEventLoop loop;
 		QTimer::singleShot(100, &loop, SLOT(quit()));
 		loop.exec();
 	}
-	qApp->alert(this, 0);
+	qApp->alert(this, 0);*/
 }
 
 void KmlMakerWidget::on_uploadButton_clicked()
