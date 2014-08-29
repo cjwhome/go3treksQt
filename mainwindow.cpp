@@ -76,6 +76,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ozoneDataWidget, &OzoneDataWidget::processSuccessful, this, &MainWindow::onOzoneProcessed);
     connect(carbonDataWidget, &CarbonDataWidget::processSuccessful, this, &MainWindow::onCarbonProcessed);
     connect(kmlMakerWidget, &KmlMakerWidget::processSuccessful, this, &MainWindow::onKmlProcessed);
+	connect(kmlMakerWidget, &KmlMakerWidget::initiateUpload, this, &MainWindow::onBlogRequested);
 	connect(blogWidget, &BlogWidget::blogWritten, this, &MainWindow::onBlogWritten);
 	connect(uploadWidget, &UploadWidget::uploadSuccessful, this, &MainWindow::onUploadComplete);
 
