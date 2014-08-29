@@ -33,6 +33,7 @@ bool UploadWidget::upload(UserInfo userInfo, QFile *kmlFile, TrekInfo trekInfo) 
 	requestData.insert("TrekEndTime", trekInfo.EndTime);
 	
 	// Base-64 encode KML data
+	kmlFile->open(QIODevice::ReadOnly | QIODevice::Text);
 	requestData.insert("KML", kmlFile->readAll().toBase64());
 	ui->uploadProgressBar->setValue(UP_KML_ENCODED);
 	
