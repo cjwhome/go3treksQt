@@ -53,8 +53,8 @@ bool KmlMakerWidget::createKML() {
 	
 	struct MeasurementPoint
 	{
-		double ozone;
-		double blackCarbon;
+		int ozone;
+		int blackCarbon;
 		QString lon;
 		QString lat;
 		QString alt;
