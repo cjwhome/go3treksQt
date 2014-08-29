@@ -27,6 +27,8 @@
 #include <qxmlstream.h>
 #include <QDesktopServices>
 #include <QUrl>
+#include <QTime>
+#include <QTimer>
 #include "defines.h"
 
 namespace Ui {
@@ -51,17 +53,25 @@ public:
     void setComboFP(QFile *fp);
     bool createKML();
     QFile * getKMLfp();
+	bool writeMetas(QString name, QString desc);
 	KmlInfo info;
 
 signals:
     void log(QString text);
     void processSuccessful();
+	void initiateUpload();
 
+private slots:
+	void on_openButton_clicked();
+	
+	void on_uploadButton_clicked();
+	
 private:
     Ui::KmlMakerWidget *ui;
     QFile *tempFp;
     QFile kmlFp;
     QString convertCoordinate(QString str);
+	bool uploadPressed;
 };
 
 #endif // KMLMAKERWIDGET_H

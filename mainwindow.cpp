@@ -154,6 +154,7 @@ void MainWindow::onOzoneProcessed(){
     pomEndTime = ozoneDataWidget->getEndDateTime();
     carbonDataWidget->setStartDateTime(pomStartTime);
     carbonDataWidget->setEndDateTime(pomEndTime);
+	blogWidget->setTimes(pomStartTime, pomEndTime);
     mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
     logger->log("Processed Ozone Data Successfully.");
 
@@ -172,9 +173,23 @@ void MainWindow::onKmlProcessed(){
     mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
     kmlFp = kmlMakerWidget->getKMLfp();
     logger->log("Generated KML file");
-
+	
+	// Wait a minute (literally)
+	/*QTime finalTime = QTime::currentTime().addSecs(60);
+	while (finalTime > QTime::currentTime()) {
+		QEventLoop loop;
+		QTimer::singleShot(100, &loop, SLOT(quit()));
+		loop.exec();
+	}*/
 }
-void MainWindow::onBlogWritten() {
+void MainWindow::onBlogRequested() {
+	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
+}
+
+void MainWindow::onBlogWritten(TrekInfo passedTrekInfo) {
+	trekInfo = passedTrekInfo;
+	kmlMakerWidget->writeMetas(trekInfo.Name, trekInfo.Description);
+	
 	logger->log("ntoehusnaotehu");
 }
 

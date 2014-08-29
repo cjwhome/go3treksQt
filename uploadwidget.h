@@ -36,10 +36,8 @@ class UploadWidget : public QWidget
 public:
 	explicit UploadWidget(QWidget *parent = 0);
 	~UploadWidget();
-	QUrl blogUrl;
-	
-public slots:
 	bool upload(UserInfo userInfo, QFile *kmlFile, TrekInfo trekInfo);
+	QUrl blogUrl;
 	
 signals:
 	void log(QString text);

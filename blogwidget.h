@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QLabel>
+#include <QDateTime>
 
 namespace Ui {
 class BlogWidget;
@@ -12,8 +13,8 @@ struct TrekInfo {
 	QString Name;
 	QString City;
 	QString Description;
-	uint StartTime;
-	uint EndTime;
+	QDateTime StartTime;
+	QDateTime EndTime;
 };
 
 class BlogWidget : public QWidget
@@ -24,6 +25,7 @@ public:
     explicit BlogWidget(QWidget *parent = 0);
     ~BlogWidget();
 	TrekInfo trekInfo;
+	void setTimes(QDateTime start, QDateTime end);
 
 signals:
     void log(QString text);

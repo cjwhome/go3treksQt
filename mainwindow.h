@@ -20,6 +20,7 @@
 #include <QStatusBar>
 #include <QSettings>
 #include <QDateTime>
+#include <QTime>
 
 namespace Ui {
 class MainWindow;
@@ -49,6 +50,9 @@ public:
     BlogWidget *blogWidget;
 	UploadWidget *uploadWidget;
 	
+	UserInfo userInfo;
+	TrekInfo trekInfo;
+	
 
 public slots:
 	void updateStatus(QString text);
@@ -58,8 +62,9 @@ public slots:
     void onTransmitComplete(QFile *fp);  // Called as soon as the instrument has successfully transmitted data
     void onOzoneProcessed();    // Called as soon as ozone data has been processed (validated gps data and start and end date and times
     void onCarbonProcessed();   // Called as soon as a carbon file has been found & processed
-    void onKmlProcessed();
-	void onBlogWritten();
+    void onKmlProcessed();  // Called as soon as KML is generated, but before the user has had a chance to look at it yet
+	void onBlogRequested();  // Called when the user presses the "Upload" button, switches to BlogWidget
+	void onBlogWritten(TrekInfo passedTrekInfo);
     void onUploadComplete();    // Called as soon as the KML is made and uploaded
 	
 	void returnToStart();
@@ -73,8 +78,6 @@ private:
 	
 	QStackedWidget *mainWidgetStack;
 	QMenu *fileMenu;
-	
-	UserInfo userInfo;
 	
 	void loadDefaultSettings();  // Called by the "Reconfigure" menu option and when setting default settings
     QDateTime pomStartTime;

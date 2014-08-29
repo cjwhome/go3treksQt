@@ -56,7 +56,7 @@ $user = array(
 	'DisplayName' => $r['displayname']
 );
 
-if( ! isset($request['KML']) || strlen($request['KML'])==0) $errors[] = 'No KML included';
+if ( ! isset($request['KML']) || strlen($request['KML'])==0) $errors[] = 'No KML included';
 
 //if ( ! preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $request['KML'])) $errors[] = 'KML was not correctly base64-encoded';
 

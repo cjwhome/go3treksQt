@@ -116,7 +116,7 @@ bool LoginWidget::login(QString email, QString password) {
 		UpdateRequiredDialog * dialog = new UpdateRequiredDialog();
 		log("Program out of date!  Version "+QString::number(dataBuf["MinVersion"].toDouble())+" required.");
 		dialog->exec();
-		qApp->exit();
+		qApp->quit();
 		return false;
 	}
 	else {
