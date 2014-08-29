@@ -551,31 +551,31 @@ QFile * KmlMakerWidget::getKMLfp(){
 }
 
 bool KmlMakerWidget::writeMetas(QString name, QString desc) {
-	if ( ! kmlFp.open(QIODevice::ReadWrite | QIODevice::Text)) {
+	if ( ! tempFp->open(QIODevice::ReadWrite | QIODevice::Text)) {
 		log("Could not open KML file for meta insertion");
 		return false;
 	}
-	if ( ! kmlFp.seek(info.nameLocation)) {
+	if ( ! tempFp->seek(info.nameLocation)) {
 		log("Could not seek to name location");
-		kmlFp.close();
+		tempFp->close();
 		return false;
 	}
-	if ( ! kmlFp.write(name.toHtmlEscaped().toUtf8())) {
+	if ( ! tempFp->write(name.toHtmlEscaped().toUtf8())) {
 		log("Could not insert name");
-		kmlFp.close();
+		tempFp->close();
 		return false;
 	}
-	if ( ! kmlFp.seek(info.descriptionLocation)) {
+	if ( ! tempFp->seek(info.descriptionLocation)) {
 		log("Could not seek to description location");
-		kmlFp.close();
+		tempFp->close();
 		return false;
 	}
-	if ( ! kmlFp.write(desc.toHtmlEscaped().toUtf8())) {
+	if ( ! tempFp->write(desc.toHtmlEscaped().toUtf8())) {
 		log("Could not insert description");
-		kmlFp.close();
+		tempFp->close();
 		return false;
 	}
-	kmlFp.close();
+	tempFp->close();
 	
 	log("Metadata successfully injected");
 	return true;
@@ -583,7 +583,7 @@ bool KmlMakerWidget::writeMetas(QString name, QString desc) {
 
 void KmlMakerWidget::on_openButton_clicked()
 {
-	QDesktopServices::openUrl(QUrl("file:///"+kmlFp.fileName()));
+	QDesktopServices::openUrl(QUrl("file:///"+tempFp->fileName()));
 	ui->openButton->setEnabled(false);
 	ui->uploadButton->setEnabled(true);
 	uploadPressed = false;
@@ -603,11 +603,11 @@ void KmlMakerWidget::on_uploadButton_clicked()
     ui->uploadButton->setEnabled(false);
 	uploadPressed = true;
 	
-	if ( ! kmlFp.open(QIODevice::ReadWrite)) {
+	if ( ! tempFp->open(QIODevice::ReadWrite)) {
 		ui->textBrowser->append("You must first close any application using the KML file!");
 		return;
 	}
-	kmlFp.close();
+	tempFp->close();
 	
 	emit initiateUpload();
 }
