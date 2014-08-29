@@ -25,9 +25,9 @@ $db->select_db('socialengine');
 
 echo '<?xml version="1.0" encoding="UTF-8"?>';
 
-if( ! isset($_GET['Request']) || strlen($_GET['Request'])==0) die('{"Response":"Failure","Errors":["Empty request"]}');
+if( ! isset($_POST['Request']) || strlen($_POST['Request'])==0) die('{"Response":"Failure","Errors":["Empty request"]}');
 
-$request = json_decode($_GET['Request'], true);
+$request = json_decode($_POST['Request'], true);
 
 if( ! $request) die('{"Response":"Failure","Errors":["Syntax unparsable"]}');
 

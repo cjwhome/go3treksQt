@@ -170,7 +170,7 @@ void MainWindow::onCarbonProcessed(){
 }
 
 void MainWindow::onKmlProcessed(){
-    mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
+    //mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
     kmlFp = kmlMakerWidget->getKMLfp();
     logger->log("Generated KML file");
 	
@@ -188,9 +188,12 @@ void MainWindow::onBlogRequested() {
 
 void MainWindow::onBlogWritten(TrekInfo passedTrekInfo) {
 	trekInfo = passedTrekInfo;
-	kmlMakerWidget->writeMetas(trekInfo.Name, trekInfo.Description);
+	if ( ! kmlMakerWidget->writeMetas(trekInfo.Name, trekInfo.Description)) {
+		log("Postprocessing failed, contact GO3 support");
+		return;
+	}
 	
-	logger->log("ntoehusnaotehu");
+	uploadWidget->upload(userInfo,kmlFp,trekInfo);
 }
 
 void MainWindow::onUploadComplete() {

@@ -5,7 +5,7 @@
 ////////////////////////
 
 // Created by JP on 2014-7-8
-// Used by the DDA to determine whether or not login information is correct.
+// Used by the Treks application to retrieve the UserID and ensure a correct login before continuing
 
 //define('MI_dev_mode', true); define('MI_verbose', true);
 define('MI_script_name', 'SE_CheckLogin');
@@ -13,7 +13,7 @@ require(__DIR__.'/../MI.php');
 
 $db->select_db('socialengine');
 
-define('MIN_REQ_VERSION', 1.0);
+define('MIN_REQ_VERSION', 1.0);  // This refers to the Treks application version; users with a version below this will not be able to download
 
 
 /////////////////////
@@ -28,6 +28,7 @@ if ( ! $request) die('{"Response":"Failure","Errors":["Syntax unparsable"]}');
 
 $errors = array();
 
+// NOTE:  Currently, passwords are disabled because we don't know how to actually enable them
 if ( ! isset($request['Email']) || strlen($request['Email'])==0) $errors[] = 'Email not specified';
 //if ( ! isset($request['Password']) || strlen($request['Password'])==0) $errors[] = 'Password not specified';
 
