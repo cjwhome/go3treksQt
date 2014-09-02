@@ -60,10 +60,10 @@ bool KmlMakerWidget::createKML() {
 		QString alt;
 	};
 	
-	//QFileInfo fi(*tempFp);
+    //QFileInfo fi(*kmlFp);
 	// QDir::setCurrent(fi.path());
 	QFile *newFile = new QFile();
-	if(tempFp->open(QIODevice::ReadWrite))
+    if(kmlFp->open(QIODevice::ReadWrite))
 		log("Opened combo file to make KML successfully.");
 	else {
 		log("Could not open combo file to make KML.");
@@ -74,7 +74,7 @@ bool KmlMakerWidget::createKML() {
 	//rename the file with kml in place of .txt of combo file
 	//QString nameParts = comboFp->fileName().split(".");
 	// TODO: This could fail if there are periods in the name
-	newFile->setFileName(tempFp->fileName().split(".").at(0)+".kml");
+    newFile->setFileName(kmlFp->fileName().split(".").at(0)+".kml");
 	
 	//newFile->setFileName("blah.txt");     //
 	
@@ -85,7 +85,7 @@ bool KmlMakerWidget::createKML() {
 		return 0;
 	}
 	QTextStream out(newFile);
-	QTextStream in(tempFp);
+    QTextStream in(kmlFp);
 	QStringList dataFields;
 	QString dataLine;
 	QString trekName("GO3 Treks");  //get this from the user information?
@@ -533,49 +533,49 @@ bool KmlMakerWidget::createKML() {
 	out<<"</kml>";
 	
 	newFile->close();
-	tempFp->close();
+    kmlFp->close();
 	
 	ui->textBrowser->append("\n\nKML generation is complete.  You now have the opportunity to explore your trek so that you can write a more accurate description.  When you're finished, click the 'Upload' button to upload your trek to the GO3 website.");
 	ui->openButton->setEnabled(true);
 	
-	emit processSuccessful();
+    emit processSuccessful();
 	return 1;
 }
 
 void KmlMakerWidget::setComboFP(QFile *fp){
-	tempFp = fp;
+    kmlFp = fp;
 }
 
 QFile * KmlMakerWidget::getKMLfp(){
-	return tempFp;
+    return kmlFp;
 }
 
 bool KmlMakerWidget::writeMetas(QString name, QString desc) {
-	if ( ! tempFp->open(QIODevice::ReadWrite | QIODevice::Text)) {
+    if ( ! kmlFp->open(QIODevice::ReadWrite | QIODevice::Text)) {
 		log("Could not open KML file for meta insertion");
 		return false;
 	}
-	if ( ! tempFp->seek(info.nameLocation)) {
+    if ( ! kmlFp->seek(info.nameLocation)) {
 		log("Could not seek to name location");
-		tempFp->close();
+        kmlFp->close();
 		return false;
 	}
-	if ( ! tempFp->write(name.toHtmlEscaped().toUtf8())) {
+    if ( ! kmlFp->write(name.toHtmlEscaped().toUtf8())) {
 		log("Could not insert name");
-		tempFp->close();
+        kmlFp->close();
 		return false;
 	}
-	if ( ! tempFp->seek(info.descriptionLocation)) {
+    if ( ! kmlFp->seek(info.descriptionLocation)) {
 		log("Could not seek to description location");
-		tempFp->close();
+        kmlFp->close();
 		return false;
 	}
-	if ( ! tempFp->write(desc.toHtmlEscaped().toUtf8())) {
+    if ( ! kmlFp->write(desc.toHtmlEscaped().toUtf8())) {
 		log("Could not insert description");
-		tempFp->close();
+        kmlFp->close();
 		return false;
 	}
-	tempFp->close();
+    kmlFp->close();
 	
 	log("Metadata successfully injected");
 	return true;
@@ -583,7 +583,7 @@ bool KmlMakerWidget::writeMetas(QString name, QString desc) {
 
 void KmlMakerWidget::on_openButton_clicked()
 {
-	QDesktopServices::openUrl(QUrl("file:///"+tempFp->fileName()));
+    QDesktopServices::openUrl(QUrl("file:///"+kmlFp->fileName()));
 	ui->openButton->setEnabled(false);
 	ui->uploadButton->setEnabled(true);
 	uploadPressed = false;
@@ -603,11 +603,11 @@ void KmlMakerWidget::on_uploadButton_clicked()
     ui->uploadButton->setEnabled(false);
 	uploadPressed = true;
 	
-	if ( ! tempFp->open(QIODevice::ReadWrite)) {
+    if ( ! kmlFp->open(QIODevice::ReadWrite)) {
 		ui->textBrowser->append("You must first close any application using the KML file!");
 		return;
 	}
-	tempFp->close();
+    kmlFp->close();
 	
 	emit initiateUpload();
 }

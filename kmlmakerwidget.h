@@ -68,8 +68,8 @@ private slots:
 	
 private:
     Ui::KmlMakerWidget *ui;
-    QFile *tempFp;
-    QFile kmlFp;
+    //QFile *tempFp;
+    QFile *kmlFp;
     QString convertCoordinate(QString str);
 	bool uploadPressed;
 };
