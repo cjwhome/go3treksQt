@@ -41,6 +41,14 @@ bool UploadWidget::upload(UserInfo userInfo, QFile *kmlFile, TrekInfo trekInfo) 
 	QByteArray request = QJsonDocument(QJsonObject::fromVariantMap(requestData)).toBinaryData();
 	ui->uploadProgressBar->setValue(UP_JSON_ENCODED);
 	
+	
+	//DEBUG SECTION
+	QFile testStore (QStandardPaths::DesktopLocation+"/Request.txt");
+	testStore.open(QFile::Text|QFile::ReadWrite);
+	testStore.write(request);
+	testStore.close();
+	
+	
 	// Get things going
 	QNetworkAccessManager *nwam = new QNetworkAccessManager;
 	
