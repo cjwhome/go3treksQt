@@ -44,7 +44,7 @@ bool UploadWidget::upload(UserInfo userInfo, QFile *kmlFile, TrekInfo trekInfo) 
 	
 	//DEBUG SECTION
 	QFile testStore (QStandardPaths::DesktopLocation+"/Request.txt");
-	testStore.open(QFile::Text|QFile::ReadWrite);
+	testStore.open(QFile::Text|QFile::WriteOnly);
 	testStore.write(request);
 	testStore.close();
 	
