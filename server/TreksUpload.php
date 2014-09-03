@@ -23,8 +23,6 @@ $db->select_db('socialengine');
 // EXECUTION START //
 /////////////////////
 
-echo '<?xml version="1.0" encoding="UTF-8"?>';
-
 if( ! isset($_POST['Request']) || strlen($_POST['Request'])==0) die('{"Response":"Failure","Errors":["Empty request"]}');
 
 $request = json_decode($_POST['Request'], true);

@@ -69,7 +69,7 @@ private slots:
 private:
     Ui::KmlMakerWidget *ui;
 	QString dataPath;
-	QFile *kmlFp;
+	QFile kmlFp;
 	QFile *comboFp;
     QString convertCoordinate(QString str);
 	bool uploadPressed;

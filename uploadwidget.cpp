@@ -39,12 +39,12 @@ bool UploadWidget::upload(UserInfo userInfo, QFile *kmlFile, TrekInfo trekInfo) 
 	ui->uploadProgressBar->setValue(UP_KML_ENCODED);
 	
 	// Convert QVariantMap to QJsonObject to QJsonDocument to QByteArray
-	QByteArray request = QJsonDocument(QJsonObject::fromVariantMap(requestData)).toBinaryData();
+	QByteArray request = QJsonDocument(QJsonObject::fromVariantMap(requestData)).toJson(QJsonDocument::Compact);
 	ui->uploadProgressBar->setValue(UP_JSON_ENCODED);
 	
 	
 	//DEBUG SECTION
-	QFile testStore (QStandardPaths::DesktopLocation+"/Request.txt");
+	QFile testStore (dataPath+"Request.txt");
 	testStore.open(QFile::Text|QFile::WriteOnly);
 	testStore.write(request);
 	testStore.close();
@@ -79,7 +79,7 @@ bool UploadWidget::upload(UserInfo userInfo, QFile *kmlFile, TrekInfo trekInfo) 
 			ui->uploadProgressBar->setValue(progressBarValue);
 		}
 	}
-	
+	log("Time passed waiting from reply from web server: " + QString::number(timePassed));
 	if ( ! reply->isFinished()) {
 		log(QString("Network upload failure; KML saved at '").append(kmlFile->fileName()).append("'"));
 		log("Connection timed out.  Contact GO3 to manually upload the file.");

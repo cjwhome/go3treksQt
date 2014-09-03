@@ -50,7 +50,7 @@ bool CarbonDataWidget::processCarbonData(){
 		signed int temp_diff = 0;
 		for (int i=0;i<microAethFiles.size();++i) {
 			//ui->textBrowser->append(microAethFiles.at(i));
-			if (microAethFiles.at(i).endsWith(".dat")||microAethFiles.at(i).endsWith(".csv")) {
+			if (microAethFiles.at(i).endsWith(".dat") || microAethFiles.at(i).endsWith(".csv")) {
 				name_parts_a = microAethFiles.at(i).split("_");      //first, split into two parts (this should be able to be done with 2 tokens)
 				date_with_ext = name_parts_a.at(1);
 				name_parts_b = date_with_ext.split(".");

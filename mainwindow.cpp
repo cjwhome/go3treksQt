@@ -175,7 +175,7 @@ void MainWindow::onCarbonProcessed(){
 }
 
 void MainWindow::onKmlProcessed(){
-    mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
+    //mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
     kmlFp = kmlMakerWidget->getKMLfp();
     logger->log("Generated KML file");
 	
