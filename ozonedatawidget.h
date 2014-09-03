@@ -31,7 +31,7 @@ class OzoneDataWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit OzoneDataWidget(QWidget *parent = 0);
+    explicit OzoneDataWidget(QWidget *parent = 0, QString path = "");
     ~OzoneDataWidget();
     void doNothing();
     void processOzoneData(QFile *fp);
@@ -45,6 +45,7 @@ signals:
 
 private:
     Ui::OzoneDataWidget *ui;
+	QString dataPath;
     QDateTime startDateTime;
     QDateTime endDateTime;
     QFile *working_file;

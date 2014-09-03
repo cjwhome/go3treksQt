@@ -22,7 +22,7 @@ class BlogWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit BlogWidget(QWidget *parent = 0);
+    explicit BlogWidget(QWidget *parent = 0, QString path = "");
     ~BlogWidget();
 	TrekInfo trekInfo;
 	void setTimes(QDateTime start, QDateTime end);
@@ -36,6 +36,7 @@ private slots:
 	
 private:
     Ui::BlogWidget *ui;
+	QString dataPath;
 };
 
 #endif // BLOGWIDGET_H

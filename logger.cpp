@@ -1,9 +1,10 @@
 #include "logger.h"
 
-Logger::Logger(QObject *parent) :
+Logger::Logger(QObject *parent, QString path) :
 	QObject(parent)
 {
 	logHasBeenWritten = false;
+	dataPath = path;
 }
 
 void Logger::log(QString text) {
@@ -16,10 +17,7 @@ void Logger::log(QString text) {
 bool Logger::writeLog() {
 	
 	// Get log location
-    //QString path = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-
-	
-    logFile.setFileName("GO3Treks_log.log");
+    logFile.setFileName(dataPath + "GO3Treks_log.log");
 
     if ( ! logFile.open(QIODevice::ReadWrite)) return false;  // The Text flag localizes line endings
 	

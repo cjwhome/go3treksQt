@@ -1,11 +1,12 @@
 #include "blogwidget.h"
 #include "ui_blogwidget.h"
 
-BlogWidget::BlogWidget(QWidget *parent) :
+BlogWidget::BlogWidget(QWidget *parent, QString path) :
     QWidget(parent),
     ui(new Ui::BlogWidget)
 {
     ui->setupUi(this);
+	dataPath = path;
 }
 
 BlogWidget::~BlogWidget()

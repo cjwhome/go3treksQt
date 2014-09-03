@@ -33,7 +33,7 @@ class LoginWidget : public QWidget
 	Q_OBJECT
 	
 public:
-	explicit LoginWidget(QWidget *parent = 0);
+	explicit LoginWidget(QWidget *parent = 0, QString path = "");
 	~LoginWidget();
 	bool login(QString email, QString password);
 	UserInfo getUserInfo();
@@ -49,6 +49,7 @@ private slots:
 	
 private:
 	Ui::LoginWidget *ui;
+	QString dataPath;
 	UserInfo user;
 };
 

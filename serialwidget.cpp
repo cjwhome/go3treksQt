@@ -1,11 +1,12 @@
 #include "serialwidget.h"
 #include "ui_serialwidget.h"
 
-SerialWidget::SerialWidget(QWidget *parent) :
+SerialWidget::SerialWidget(QWidget *parent, QString path) :
 	QWidget(parent),
 	ui(new Ui::SerialWidget)
 {
 	ui->setupUi(this);
+	dataPath = path;
 }
 
 SerialWidget::~SerialWidget()
@@ -99,29 +100,16 @@ bool SerialWidget::connectPOM() {
 		POMserialPort.setFlowControl(QSerialPort::NoFlowControl);
 		POMserialPort.setParity(QSerialPort::NoParity);
 		
-		//check if folder exists and create one if not
-		QString combinedPath = QDir(QDir::home()).filePath("GO3TreksData");
-		QDir dir(combinedPath);
-		if(!dir.exists()){
-			dir.mkpath(".");
-			log("Creating Folder.\n");
-		} else {
-			log("Found Data Folder.\n");
-			
-		}
-		if(QDir::setCurrent(combinedPath))
-			log("Set Path.");
-		
 		//create file with temp name and change the name
-		pomfile.setFileName("tempname.txt");
-		if(pomfile.open(QIODevice::ReadWrite)){
-			log("Opened ozone file for writing\n");
+		pomfile.setFileName("RawPom.txt");
+		if(pomfile.open(QIODevice::ReadWrite | QIODevice::Truncate)) {
+			log("Downloading instrument data...");
 		} else {
-			log("Could not open ozone file for writing\n");
+			log("Could not open RawPom file for writing\n");
 			return false;
 		}
 		
-		POMserialPort.write("t");           //send transmit command to get data
+		POMserialPort.write("t");  // Send transmit command to get data
 		POMserialPort.flush();
 		POMserialPort.clear();
 		transmittingData = true;
@@ -137,9 +125,8 @@ bool SerialWidget::connectPOM() {
 
 void SerialWidget::readData()
 {
-	
 	QByteArray dataLine = POMserialPort.readAll();
-	fields = QString(dataLine).split(QRegExp(","));     //fields are separated by commas
+	/*fields = QString(dataLine).split(QRegExp(","));     //fields are separated by commas
 	if(!madeNewFileName)
 	{
 		if(fields.size()>10) {
@@ -155,23 +142,21 @@ void SerialWidget::readData()
 		{
 			logNumber = QString(fields[0]).toInt();      //keep track of the last log number
 		}
-	}
+	}*/
 	
 	POMserialPort.flush();
 	POMserialPort.clear();
 	if(QString::compare(QString(dataLine),"End logged data")>0) {
-		//XXui->textBrowser->append("Finished Downloading");
-		log("Finished Downloading.");
+		log("POM data downloaded!");
 		transmittingData = false;
 		POMserialPort.close();
 		pomfile.close();
 		emit transmitSuccessful(&pomfile);
 		
-	} else if(madeNewFileName) {
-		
+	}
+	else {
 		pomfile.write(dataLine);
 		ui->transmitDisplay->append(dataLine);
-		//ui->textEdit->insertPlainText(dataLine);
 	}
 	
 }

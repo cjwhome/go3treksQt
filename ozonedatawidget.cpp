@@ -1,11 +1,12 @@
 #include "ozonedatawidget.h"
 #include "ui_ozonedatawidget.h"
 
-OzoneDataWidget::OzoneDataWidget(QWidget *parent) :
+OzoneDataWidget::OzoneDataWidget(QWidget *parent, QString path) :
     QWidget(parent),
     ui(new Ui::OzoneDataWidget)
 {
     ui->setupUi(this);
+	dataPath = path;
 }
 
 OzoneDataWidget::~OzoneDataWidget()

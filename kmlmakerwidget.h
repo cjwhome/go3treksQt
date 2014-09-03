@@ -48,7 +48,7 @@ class KmlMakerWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit KmlMakerWidget(QWidget *parent = 0);
+    explicit KmlMakerWidget(QWidget *parent = 0, QString path = "");
     ~KmlMakerWidget();
     void setComboFP(QFile *fp);
     bool createKML();
@@ -68,8 +68,9 @@ private slots:
 	
 private:
     Ui::KmlMakerWidget *ui;
-    //QFile *tempFp;
-    QFile *kmlFp;
+	QString dataPath;
+	QFile *kmlFp;
+	QFile *comboFp;
     QString convertCoordinate(QString str);
 	bool uploadPressed;
 };

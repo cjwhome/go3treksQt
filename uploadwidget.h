@@ -34,7 +34,7 @@ class UploadWidget : public QWidget
 	Q_OBJECT
 	
 public:
-	explicit UploadWidget(QWidget *parent = 0);
+	explicit UploadWidget(QWidget *parent = 0, QString path = "");
 	~UploadWidget();
 	bool upload(UserInfo userInfo, QFile *kmlFile, TrekInfo trekInfo);
 	QUrl blogUrl;
@@ -48,6 +48,7 @@ private slots:
 	
 private:
 	Ui::UploadWidget *ui;
+	QString dataPath;
 };
 
 #endif // UPLOADWIDGET_H

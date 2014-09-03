@@ -2,11 +2,12 @@
 #include "ui_loginwidget.h"
 #include "updaterequireddialog.h"
 
-LoginWidget::LoginWidget(QWidget *parent) :
+LoginWidget::LoginWidget(QWidget *parent, QString path) :
 	QWidget(parent),
 	ui(new Ui::LoginWidget)
 {
 	ui->setupUi(this);
+	dataPath = path;
 	
 	ui->label->setAlignment(Qt::AlignCenter);
 	ui->label->setText("Login with your GO<sub>3</sub> Social Network account");

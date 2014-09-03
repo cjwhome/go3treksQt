@@ -1,11 +1,12 @@
 #include "uploadwidget.h"
 #include "ui_uploadwidget.h"
 
-UploadWidget::UploadWidget(QWidget *parent) :
+UploadWidget::UploadWidget(QWidget *parent, QString path) :
 	QWidget(parent),
 	ui(new Ui::UploadWidget)
 {
 	ui->setupUi(this);
+	dataPath = path;
 }
 
 UploadWidget::~UploadWidget()

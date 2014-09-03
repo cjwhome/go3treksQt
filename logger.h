@@ -12,7 +12,7 @@ class Logger : public QObject
 {
 	Q_OBJECT
 public:
-	explicit Logger(QObject *parent = 0);
+	explicit Logger(QObject *parent = 0, QString path = "");
 	~Logger();
 	bool writeLog();
 	
@@ -23,6 +23,7 @@ public slots:
 	void log(QString text);
 	
 private:
+	QString dataPath;
 	QStringList logs;
 	bool logHasBeenWritten;
     QFile logFile;

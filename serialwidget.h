@@ -27,7 +27,7 @@ class SerialWidget : public QWidget
 	Q_OBJECT
 	
 public:
-	explicit SerialWidget(QWidget *parent = 0);
+	explicit SerialWidget(QWidget *parent = 0, QString path = "");
 	~SerialWidget();
     bool findPomPort();
     bool setPOMTime();
@@ -43,6 +43,7 @@ public slots:
 	
 private:
 	Ui::SerialWidget *ui;
+	QString dataPath;
     QList<QSerialPortInfo> serialPortInfoList;
     QSerialPort POMserialPort;
     QFile pomfile;

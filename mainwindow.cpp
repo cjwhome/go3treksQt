@@ -4,6 +4,12 @@ MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent)
 {
 	
+    // Get master working path
+    dataPath = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) + "/GO3 Treks Data/";
+	QDir dir(dataPath);
+	if( ! dir.exists()) dir.mkpath(".");
+	QDir::setCurrent(dataPath);
+
 	settings = new QSettings(parent);  // Load settings
 	
 	// Increment the execution count (more for logs than anything else)
@@ -36,14 +42,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	
 	// Initialize components
-	logger = new Logger(this);
-	loginWidget = new LoginWidget(this);
-	serialWidget = new SerialWidget(this);
-    ozoneDataWidget = new OzoneDataWidget(this);
-    carbonDataWidget = new CarbonDataWidget(this);
-    kmlMakerWidget = new KmlMakerWidget(this);
-    blogWidget = new BlogWidget(this);
-	uploadWidget = new UploadWidget(this);
+	logger = new Logger(this, dataPath);
+	loginWidget = new LoginWidget(this, dataPath);
+	serialWidget = new SerialWidget(this, dataPath);
+    ozoneDataWidget = new OzoneDataWidget(this, dataPath);
+    carbonDataWidget = new CarbonDataWidget(this, dataPath);
+    kmlMakerWidget = new KmlMakerWidget(this, dataPath);
+    blogWidget = new BlogWidget(this, dataPath);
+	uploadWidget = new UploadWidget(this, dataPath);
 
 	/// Widget Stack ///
 	mainWidgetStack = new QStackedWidget(this);
@@ -131,8 +137,6 @@ void MainWindow::onLogin(UserInfo user) {
     bool found=false;
     while(!found){
         found = serialWidget->findPomPort();
-        //delay();
-        //logger->log("Please connect POM usb to computer.");
     }
 }
 
@@ -171,7 +175,7 @@ void MainWindow::onCarbonProcessed(){
 }
 
 void MainWindow::onKmlProcessed(){
-    //mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
+    mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
     kmlFp = kmlMakerWidget->getKMLfp();
     logger->log("Generated KML file");
 	

@@ -52,6 +52,7 @@ public:
 	
 	UserInfo userInfo;
 	TrekInfo trekInfo;
+    QString dataPath;
 	
 
 public slots:

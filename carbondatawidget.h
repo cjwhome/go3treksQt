@@ -47,7 +47,7 @@ class CarbonDataWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit CarbonDataWidget(QWidget *parent = 0);
+    explicit CarbonDataWidget(QWidget *parent = 0, QString path = "");
     ~CarbonDataWidget();
     void setEndDateTime(QDateTime end);
     void setStartDateTime(QDateTime start);
@@ -65,10 +65,12 @@ private slots:
 
 private:
     Ui::CarbonDataWidget *ui;
+	QString dataPath;
+	QString bcPath;
     QDateTime startDateTime;
     QDateTime endDateTime;
-    QFile *pom_fp;
-    QFile combined_fp;
+    QFile *pomFp;
+    QFile comboFp;
     bool foundPath;
     bool foundFile;
     bool comboFileValid;

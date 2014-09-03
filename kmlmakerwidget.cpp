@@ -1,11 +1,12 @@
 #include "kmlmakerwidget.h"
 #include "ui_kmlmakerwidget.h"
 
-KmlMakerWidget::KmlMakerWidget(QWidget *parent) :
+KmlMakerWidget::KmlMakerWidget(QWidget *parent, QString path) :
 QWidget(parent),
 ui(new Ui::KmlMakerWidget)
 {
 	ui->setupUi(this);
+	dataPath = path;
 }
 
 KmlMakerWidget::~KmlMakerWidget()
@@ -62,8 +63,8 @@ bool KmlMakerWidget::createKML() {
 	
     //QFileInfo fi(*kmlFp);
 	// QDir::setCurrent(fi.path());
-	QFile *newFile = new QFile();
-    if(kmlFp->open(QIODevice::ReadWrite))
+	//QFile *newFile = new QFile();
+    if(comboFp->open(QIODevice::ReadOnly | QIODevice::Text))
 		log("Opened combo file to make KML successfully.");
 	else {
 		log("Could not open combo file to make KML.");
@@ -74,22 +75,18 @@ bool KmlMakerWidget::createKML() {
 	//rename the file with kml in place of .txt of combo file
 	//QString nameParts = comboFp->fileName().split(".");
 	// TODO: This could fail if there are periods in the name
-    newFile->setFileName(kmlFp->fileName().split(".").at(0)+".kml");
+    kmlFp->setFileName(dataPath + comboFp->fileName().split(".").at(0)+".kml");
 	
-	//newFile->setFileName("blah.txt");     //
-	
-	if(newFile->open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text))
+	if(kmlFp->open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text))
 		log("Created and opened new kml file successfully.");
 	else {
 		log("Unable to create new kml file.");
 		return 0;
 	}
-	QTextStream out(newFile);
-    QTextStream in(kmlFp);
+	QTextStream out(kmlFp);
+    QTextStream in(comboFp);
 	QStringList dataFields;
 	QString dataLine;
-	QString trekName("GO3 Treks");  //get this from the user information?
-	QString description = "This is a GO3 Trek"; //we can put the time duration (start and end times) and city/school name in here
 	QString lookAtLatitude;
 	QString lookAtLongitude;
 	QString tempString;
@@ -532,7 +529,7 @@ bool KmlMakerWidget::createKML() {
 	out<<"\n";
 	out<<"</kml>";
 	
-	newFile->close();
+	comboFp->close();
     kmlFp->close();
 	
 	ui->textBrowser->append("\n\nKML generation is complete.  You now have the opportunity to explore your trek so that you can write a more accurate description.  When you're finished, click the 'Upload' button to upload your trek to the GO3 website.");
@@ -543,7 +540,7 @@ bool KmlMakerWidget::createKML() {
 }
 
 void KmlMakerWidget::setComboFP(QFile *fp){
-    kmlFp = fp;
+    comboFp = fp;
 }
 
 QFile * KmlMakerWidget::getKMLfp(){
@@ -583,7 +580,7 @@ bool KmlMakerWidget::writeMetas(QString name, QString desc) {
 
 void KmlMakerWidget::on_openButton_clicked()
 {
-    QDesktopServices::openUrl(QUrl("file:///"+kmlFp->fileName()));
+    QDesktopServices::openUrl(QUrl("file:///"+dataPath+kmlFp->fileName()));
 	ui->openButton->setEnabled(false);
 	ui->uploadButton->setEnabled(true);
 	uploadPressed = false;
