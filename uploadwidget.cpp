@@ -18,7 +18,7 @@ bool UploadWidget::upload(UserInfo userInfo, QFile *kmlFile, TrekInfo trekInfo) 
 	
 	// Prepare stuff
 	ui->viewPostButton->setEnabled(false);
-	ui->uploadAnotherButton->setEnabled(false);
+	ui->quitButton->setEnabled(false);
 	ui->uploadProgressBar->setValue(0);
 	blogUrl.clear();
 	
@@ -120,8 +120,11 @@ bool UploadWidget::upload(UserInfo userInfo, QFile *kmlFile, TrekInfo trekInfo) 
 	
 	QJsonObject dataBuf = resOb["Data"].toObject();
 	blogUrl = dataBuf["BlogURL"].toString();
+	ui->uploadProgressBar->setValue(UP_UPLOAD_SUCCESS);
+	ui->uploadStatusLabel->setText("Your blog has been uploaded!");
 	log("Upload successful!  Check out your blog post to see the trek.");
 	ui->viewPostButton->setEnabled(true);
+	ui->quitButton->setEnabled(true);
 	emit uploadSuccessful(blogUrl);
 	return true;
 }
@@ -130,4 +133,11 @@ void UploadWidget::on_viewPostButton_clicked()
 {
     if (blogUrl.isEmpty()) log("You haven't yet uploaded a blog post!");
 	else QDesktopServices::openUrl(blogUrl);
+}
+
+
+
+void UploadWidget::on_quitButton_clicked()
+{
+    emit quitSuccessful();
 }

@@ -12,6 +12,7 @@
 #include "reconfiguredialog.h"
 #include "defines.h"
 #include "uploadwidget.h"
+#include "quitwidget.h"
 #include <QTime>
 #include <QStackedWidget>
 #include <QMenu>
@@ -40,6 +41,7 @@ public:
 	QAction *resetAct;
 	QAction *quitAct;
     QAction *syncTimeAct;
+	QAction *restartLogAct;
 	
 	Logger *logger;
 	LoginWidget *loginWidget;
@@ -49,6 +51,7 @@ public:
     KmlMakerWidget *kmlMakerWidget;
     BlogWidget *blogWidget;
 	UploadWidget *uploadWidget;
+	QuitWidget *quitWidget;
 	
 	UserInfo userInfo;
 	TrekInfo trekInfo;
@@ -67,10 +70,12 @@ public slots:
 	void onBlogRequested();  // Called when the user presses the "Upload" button, switches to BlogWidget
 	void onBlogWritten(TrekInfo passedTrekInfo);
     void onUploadComplete();    // Called as soon as the KML is made and uploaded
+	void onQuitPressed();
 	
 	void returnToStart();
     void reconfigure();         // Called by the "Reconfigure" menu option
     void synchronizePOMTime();
+	void setRestartLog();
 	void quit();
     void delay();
 
@@ -85,7 +90,7 @@ private:
     QDateTime pomEndTime;
     QFile *comboFp;               //file pointer for the combo file
     QFile *kmlFp;
-	
+	bool restartPomLogger;
 };
 
 #endif // MAINWINDOW_H

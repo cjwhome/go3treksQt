@@ -28,7 +28,7 @@
     </spacer>
    </item>
    <item>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="uploadStatusLabel">
      <property name="text">
       <string>Your trek is being uploaded!</string>
      </property>
@@ -111,7 +111,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="uploadAnotherButton">
+      <widget class="QPushButton" name="quitButton">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -128,7 +128,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Upload Another</string>
+        <string>Quit and Restart POM Log</string>
        </property>
       </widget>
      </item>

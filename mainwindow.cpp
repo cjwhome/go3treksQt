@@ -30,6 +30,13 @@ MainWindow::MainWindow(QWidget *parent) :
     syncTimeAct = new QAction("&Sync Time", this);
     syncTimeAct->setStatusTip(tr("Synchronize POM time with Computer Time"));
     fileMenu->addAction(syncTimeAct);
+	
+	restartLogAct = new QAction("&POM Log Restart", this);
+	restartLogAct->setStatusTip(tr("Enables or Disables POM logger restart after transmitting data to keep logger data"));
+	restartLogAct->setCheckable(true);
+	restartLogAct->setChecked(true);
+	fileMenu->addAction(restartLogAct);
+	restartPomLogger = true;
 
 
 	quitAct = new QAction("&Quit", this);
@@ -50,6 +57,7 @@ MainWindow::MainWindow(QWidget *parent) :
     kmlMakerWidget = new KmlMakerWidget(this, dataPath);
     blogWidget = new BlogWidget(this, dataPath);
 	uploadWidget = new UploadWidget(this, dataPath);
+	quitWidget = new QuitWidget(this, dataPath);
 
 	/// Widget Stack ///
 	mainWidgetStack = new QStackedWidget(this);
@@ -60,6 +68,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mainWidgetStack->addWidget(kmlMakerWidget);
     mainWidgetStack->addWidget(blogWidget);
 	mainWidgetStack->addWidget(uploadWidget);
+	mainWidgetStack->addWidget(quitWidget);
 	
 	this->setCentralWidget(mainWidgetStack);
 	
@@ -85,10 +94,12 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(kmlMakerWidget, &KmlMakerWidget::initiateUpload, this, &MainWindow::onBlogRequested);
 	connect(blogWidget, &BlogWidget::blogWritten, this, &MainWindow::onBlogWritten);
 	connect(uploadWidget, &UploadWidget::uploadSuccessful, this, &MainWindow::onUploadComplete);
+	connect(uploadWidget, &UploadWidget::quitSuccessful, this, &MainWindow::onQuitPressed);
 
 	connect(quitAct, SIGNAL(triggered()), this, SLOT(quit()));
 	connect(resetAct, SIGNAL(triggered()), this, SLOT(reconfigure()));
     connect(syncTimeAct, SIGNAL(triggered()), this, SLOT(synchronizePOMTime()));
+	connect(restartLogAct, SIGNAL(triggered()), this, SLOT(setRestartLog()));
     syncTimeAct->setDisabled(true);             //disable this ability until the POM port has been found
 	
 	logger->log(QDateTime::currentDateTime().toString("[yyyy/MM/dd hh:mm:ss] ")+
@@ -143,7 +154,7 @@ void MainWindow::onLogin(UserInfo user) {
 void MainWindow::onFoundPortComplete(QString portName) {
     logger->log("Found POM port: "+portName+".");
     serialWidget->connectPOM();
-    syncTimeAct->setDisabled(false);
+    //syncTimeAct->setDisabled(false);
 }
 
 
@@ -197,15 +208,25 @@ void MainWindow::onBlogWritten(TrekInfo passedTrekInfo) {
 		logger->log("Postprocessing failed, contact GO3 support");
 		return;
 	}
-	
+	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
 	uploadWidget->upload(userInfo,kmlFp,trekInfo);
 }
 
 void MainWindow::onUploadComplete() {
-    logger->log("well look at that. everything worked. what a miracle. [ICP plays in the distance]");
+    //logger->log("well look at that. everything worked. what a miracle. [ICP plays in the distance]");
+	logger->log("Well Done!  You have successfully created and uploaded a new blog!");
 }
 
-
+void MainWindow::onQuitPressed(){
+	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
+	logger->log("Restarting POM logger and exiting program.");
+	if(restartPomLogger){
+		logger->log("Restarting POM logger now, please connect POM if not connected");
+		serialWidget->restartLogging();
+	}
+	delay();		//delay before exiting
+	quit();
+}
 
 
 void MainWindow::returnToStart() {  // For when they've successfully uploaded a KML file and want to make another one
@@ -229,6 +250,15 @@ void MainWindow::synchronizePOMTime() {
     serialWidget->setPOMTime();
 }
 
+void MainWindow::setRestartLog(){
+	if(!restartPomLogger){
+		restartLogAct->setChecked(true);
+		restartPomLogger = true;
+	}else{
+		restartLogAct->setChecked(false);
+		restartPomLogger = false;
+	}
+}
 
 void MainWindow::loadDefaultSettings() {
 	settings->setValue("ExecutionCount", 1);

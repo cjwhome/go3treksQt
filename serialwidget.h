@@ -30,7 +30,9 @@ public:
 	explicit SerialWidget(QWidget *parent = 0, QString path = "");
 	~SerialWidget();
     bool findPomPort();
+	bool findPomPortAgain();		//clooodging some stuff!
     bool setPOMTime();
+	bool restartLogging();
 	
 signals:
 	void log(QString text);

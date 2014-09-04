@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     blogwidget.cpp \
     updaterequireddialog.cpp \
     reconfiguredialog.cpp \
-    uploadwidget.cpp
+    uploadwidget.cpp \
+    quitwidget.cpp
 
 HEADERS  += mainwindow.h \
     logger.h \
@@ -36,7 +37,8 @@ HEADERS  += mainwindow.h \
     updaterequireddialog.h \
     defines.h \
     reconfiguredialog.h \
-    uploadwidget.h
+    uploadwidget.h \
+    quitwidget.h
 
 FORMS    += \
     loginwidget.ui \
@@ -47,7 +49,8 @@ FORMS    += \
     blogwidget.ui \
     updaterequireddialog.ui \
     reconfiguredialog.ui \
-    uploadwidget.ui
+    uploadwidget.ui \
+    quitwidget.ui
 
 OTHER_FILES +=
 

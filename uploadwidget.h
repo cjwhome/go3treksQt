@@ -21,6 +21,7 @@
 #define UP_DATA_SENT		30
 #define UP_INCREMENT		2  // The speed at which the progress bar goes once the upload has begun; this is added to the progress every 30ms...
 #define UP_HOLD_MAX			95  // ...up to this point
+#define UP_UPLOAD_SUCCESS	100
 
 #define UploadScriptURL		"http://go3project.com/scripts/upload/TreksUpload.php"
 
@@ -42,9 +43,13 @@ public:
 signals:
 	void log(QString text);
 	void uploadSuccessful(QUrl blogUrl);
+	void quitSuccessful();
 	
 private slots:
 	void on_viewPostButton_clicked();
+
+
+	void on_quitButton_clicked();
 	
 private:
 	Ui::UploadWidget *ui;

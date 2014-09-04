@@ -82,6 +82,21 @@ bool SerialWidget::findPomPort()
 	return false;
 }
 
+bool SerialWidget::findPomPortAgain()
+{
+	serialPortInfoList = QSerialPortInfo::availablePorts();
+	for (int i = 0; i < serialPortInfoList.size(); ++i) {
+		
+		if(QString::compare(QString(serialPortInfoList[i].manufacturer()),"Microchip Technology, Inc.")==0)
+		{
+			POMserialPort.setPort(serialPortInfoList[i]);
+			return true;
+		}
+	}
+	log("Could not find POM connection\n");
+	return false;
+}
+
 bool SerialWidget::connectPOM() {
 	
 	
@@ -91,6 +106,7 @@ bool SerialWidget::connectPOM() {
 		log("Unable to find POM port, make sure POM usb is plugged in.  Try to disconnect and reconnect if already plugged in.\n");
 		return false;
 	}*/
+	
 	if(POMserialPort.open(QIODevice::ReadWrite))        //open the port!
 	{
 		
@@ -157,6 +173,44 @@ void SerialWidget::readData()
 	else {
 		pomfile.write(dataLine);
 		ui->transmitDisplay->append(dataLine);
+	}
+	
+}
+
+bool SerialWidget::restartLogging()
+{
+	if(findPomPortAgain())
+	{
+		if(POMserialPort.isOpen())
+		{
+			POMserialPort.write("l");  // Send log command to restart logging
+			POMserialPort.flush();
+			POMserialPort.clear();
+			POMserialPort.close();
+			return true;
+		}else if(POMserialPort.open(QIODevice::ReadWrite))        //open the port!
+		{
+			POMserialPort.setBaudRate(19200,QSerialPort::AllDirections);
+			POMserialPort.setDataBits(QSerialPort::Data8);
+			POMserialPort.setStopBits(QSerialPort::OneStop);
+			POMserialPort.setFlowControl(QSerialPort::NoFlowControl);
+			POMserialPort.setParity(QSerialPort::NoParity);
+			
+			
+			POMserialPort.write("l");  // Send log command to restart logging
+			POMserialPort.flush();
+			POMserialPort.clear();
+			POMserialPort.close();
+			return true;	
+		}
+		else
+		{
+			log("Could not open POM port to restart logger");
+			return false;
+		}
+	}else{
+		log("Could not find POM port to restart logger");
+		return false;
 	}
 	
 }

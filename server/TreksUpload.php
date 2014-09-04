@@ -115,9 +115,10 @@ $body = MI_sqlsan('<p>'.nl2br(htmlentities($request['TrekDescription'])) .
 	"</p>\n<p>&nbsp;</p>\n" .
 	//"<p>Start time:".$request['TrekStartTime']." </p>\n" .
 	//"<p>End time: </p>\n<p>&nbsp;</p>\n" .
-	'<script src="http://www.gmodules.com/ig/ifr?url=http://dl.google.com/developers/maps/embedkmlgadget.xml&amp;up_kml_url=' .
+	'<iframe src="http://www.nearby.org.uk/google/fake-kmlgadget.html?up_kml_url='.			
 	urlencode(TREKSDIRURL.substr($filename, strlen(TREKSDIRECTORY))) .
-	'&amp;up_view_mode=maps&amp;up_earth_2d_fallback=0&amp;up_earth_fly_from_space=1&amp;up_earth_show_nav_controls=1&amp;up_earth_show_buildings=1&amp;up_earth_show_terrain=1&amp;up_earth_show_roads=1&amp;up_earth_show_borders=1&amp;up_earth_sphere=earth&amp;up_maps_zoom_out=0&amp;up_maps_default_type=map&amp;synd=open&amp;w=500&amp;h=400&amp;title=Trek%20Map&amp;border=%23ffffff%7C3px%2C1px+solid+%23999999&amp;output=js"></script>');
+	'&up_view_mode=earth&up_lat=&up_lng=&up_zoom=&up_earth_fly_from_space=1&up_earth_show_nav_controls=1&up_earth_show_buildings=1&up_earth_show_terrain=1&up_earth_show_roads=1&up_earth_show_borders=1&up_earth_sphere=earth&up_maps_default_type=map;output=js" width="800" height="500"></iframe>');
+	//'&amp;up_view_mode=maps&amp;up_earth_2d_fallback=0&amp;up_earth_fly_from_space=1&amp;up_earth_show_nav_controls=1&amp;up_earth_show_buildings=1&amp;up_earth_show_terrain=1&amp;up_earth_show_roads=1&amp;up_earth_show_borders=1&amp;up_earth_sphere=earth&amp;up_maps_zoom_out=0&amp;up_maps_default_type=map&amp;synd=open&amp;w=500&amp;h=400&amp;title=Trek%20Map&amp;border=%23ffffff%7C3px%2C1px+solid+%23999999"></iframe>');
 $date = date('Y-m-d H:i:s');
 
 
