@@ -480,7 +480,7 @@ bool KmlMakerWidget::createKML() {
 			out<<0.0;
 		else
 			out<<mPoint[count].blackCarbon;
-		//out<<"\n";
+		out<<"\n";
 	}
 	out<<"                </coordinates>";
 	out<<"\n";
