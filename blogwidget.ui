@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="cityLabel">
      <property name="font">
       <font>
        <pointsize>12</pointsize>
@@ -43,7 +43,7 @@
     </spacer>
    </item>
    <item>
-    <widget class="QLabel" name="nameBox">
+    <widget class="QLabel" name="nameLabel">
      <property name="font">
       <font>
        <pointsize>12</pointsize>
@@ -55,7 +55,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QLineEdit" name="lineEdit_2"/>
+    <widget class="QLineEdit" name="nameBox"/>
    </item>
    <item>
     <spacer name="verticalSpacer">
@@ -71,7 +71,7 @@
     </spacer>
    </item>
    <item>
-    <widget class="QLabel" name="label_3">
+    <widget class="QLabel" name="blogLabel">
      <property name="font">
       <font>
        <pointsize>12</pointsize>

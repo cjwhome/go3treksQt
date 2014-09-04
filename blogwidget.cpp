@@ -32,7 +32,7 @@ void BlogWidget::on_uploadButton_clicked()
 	trekInfo.City = ui->cityBox->text();
 	
 	// Name ex:  "Boulder, CO: Past 2B Tech (2014/08/25)"
-	trekInfo.Name = ui->nameBox->text().append(": ");
+	trekInfo.Name = ui->cityBox->text().append(": ");
 	trekInfo.Name += ui->nameBox->text();
 	trekInfo.Name += QString(" (").append(trekInfo.StartTime.toString("yyyy/MM/dd")).append(")");
 	

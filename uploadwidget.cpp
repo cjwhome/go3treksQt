@@ -35,7 +35,8 @@ bool UploadWidget::upload(UserInfo userInfo, QFile *kmlFile, TrekInfo trekInfo) 
 	
 	// Base-64 encode KML data
 	kmlFile->open(QIODevice::ReadOnly | QIODevice::Text);
-	requestData.insert("KML", kmlFile->readAll().toBase64());
+	QByteArray base64Encode = kmlFile->readAll().toBase64();
+	requestData.insert("KML", base64Encode);
 	ui->uploadProgressBar->setValue(UP_KML_ENCODED);
 	
 	// Convert QVariantMap to QJsonObject to QJsonDocument to QByteArray
