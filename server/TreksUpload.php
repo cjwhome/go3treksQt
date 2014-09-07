@@ -129,11 +129,29 @@ $db->query(
 		"('$title', '$body', 'user',     {$user['ID']}, ".TREKSCATEGORY.", '$date',       '$date');")
 or die('{"Response":"Failure","Errors":["Insertion error: '.htmlentities($db->error).'"]}');
 
+$blog_id = $db->insert_id;
+
+// Make these blog posts visible to everyone (JP 2014/9/6)
+$db->query(
+	'INSERT INTO `engine4_authorization_allow`
+		(resource_type, resource_id, action,    role,              value)
+	VALUES'.
+		"('blog',       $blog_id,    'view',    'registered',          1),".
+		"('blog',       $blog_id,    'view',    'owner_network',       1),".
+		"('blog',       $blog_id,    'view',    'owner_member_member', 1),".
+		"('blog',       $blog_id,    'view',    'owner_member',        1),".
+		"('blog',       $blog_id,    'view',    'everyone',            1),".
+		"('blog',       $blog_id,    'comment', 'registered',          1),".
+		"('blog',       $blog_id,    'comment', 'owner_network',       1),".
+		"('blog',       $blog_id,    'comment', 'owner_member_member', 1),".
+		"('blog',       $blog_id,    'comment', 'owner_member',        1),".
+		"('blog',       $blog_id,    'comment', 'everyone',            1);"
+);
 
 $response = array(
 	'Response' => 'Success',
 	'Data' => array(
-		'BlogURL' => BLOGURLPREFIX.$db->insert_id
+		'BlogURL' => BLOGURLPREFIX.$blog_id
 	)
 );
 
