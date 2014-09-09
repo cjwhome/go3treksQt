@@ -66,7 +66,7 @@ bool CarbonDataWidget::processCarbonData(){
 			}
 		}
 		ui->textBrowser->append("\nFound closest microAeth file to POM start time: "+bcFilePath+" with a time difference of "+QString::number(min_secs)+" Seconds.");
-		if(min_secs == MAX_TIME_DIFFERENCE) {
+		if(min_secs >= MAX_TIME_DIFFERENCE) {
 			log("Could not find any microAeth files whose dates came close.");
 			ui->textBrowser->append("Could not find any microAeth files whose dates came close.\n");
 			return false;
@@ -241,6 +241,8 @@ bool CarbonDataWidget::processCarbonData(){
 
 void CarbonDataWidget::on_pushButton_clicked()
 {
+	ui->pushButton->setEnabled(false);
+	ui->pushButton->setHidden(true);
     if(processCarbonData())
         log("Processed the carbon data successfully");
 }
