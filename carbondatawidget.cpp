@@ -16,6 +16,7 @@ CarbonDataWidget::~CarbonDataWidget()
 }
 
 bool CarbonDataWidget::processCarbonData(){
+	
     //find file
     //QDir microDir;
     //QString newPath, current_microAeth_path;
@@ -241,10 +242,20 @@ bool CarbonDataWidget::processCarbonData(){
 
 void CarbonDataWidget::on_pushButton_clicked()
 {
+	// Disable the button
 	ui->pushButton->setEnabled(false);
-	ui->pushButton->setHidden(true);
+	
+	// Set progress bar to have an animation
+	ui->progressBar->setEnabled(true);
+	ui->progressBar->setMaximum(0);
+	
+	// Attempt processing
     if(processCarbonData())
         log("Processed the carbon data successfully");
+	
+	// Return progress bar to default state
+	ui->progressBar->setEnabled(false);
+	ui->progressBar->setMaximum(1);
 }
 
 void CarbonDataWidget::setEndDateTime(QDateTime end){
