@@ -74,6 +74,7 @@ private:
     bool foundPath;
     bool foundFile;
     bool comboFileValid;
+	bool foundNewStartTime;
 
 };
 

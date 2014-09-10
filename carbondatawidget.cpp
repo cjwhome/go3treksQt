@@ -127,6 +127,7 @@ bool CarbonDataWidget::processCarbonData(){
 		int max_time_var = MAX_MEASUREMENT_TIME_DIFF_START;
 		int combo_lines = 0;     //counts number of lines appended to combo file
 		comboFileValid = false;
+		foundNewStartTime = false;
 		
 		
 		//QDataStream out(&combined_fp);   // we will serialize the data into the file
@@ -160,11 +161,19 @@ bool CarbonDataWidget::processCarbonData(){
 						}
 					}
 					if(temp_diff <= max_time_var) {
+						if(!foundNewStartTime)						//
+						{
+							foundNewStartTime = true;
+							setStartDateTime(pomLineDateTime);
+						}
+							
 						combo_lines++;
 						ui->textBrowser->append("Found a matching black carbon time stamp at time:" + microLineDateTime.toString());
 						pomLine.append(","+microAethFields[AETH_MEASUREMENT_INDEX]);
 						
 						out<<pomLine+"\n";
+					}else{
+						//
 					}
 				}
 			}
@@ -174,6 +183,7 @@ bool CarbonDataWidget::processCarbonData(){
 		bcFp.close();
 		pomFp->close();
 		if(combo_lines>MIN_COMBO_LINES) {
+			setEndDateTime(pomLineDateTime);		//set the end time to the last line received
 			comboFileValid = true;
 			emit processSuccessful();
 			//QString newname = "combo-"+startDateTime.toString("ddMMyy_hhmmss")+"-"+endDateTime.toString("hhmmss")+".txt";

@@ -59,6 +59,7 @@ bool KmlMakerWidget::createKML() {
 		QString lon;
 		QString lat;
 		QString alt;
+		QString time;
 	};
 	
     //QFileInfo fi(*kmlFp);
@@ -107,8 +108,6 @@ bool KmlMakerWidget::createKML() {
 	#endif
 	long i = 0;
 	while(!in.atEnd()) {
-		
-		
 		dataLine = in.readLine();
 		dataFields = dataLine.split(QRegExp(","));
 		
@@ -119,6 +118,7 @@ bool KmlMakerWidget::createKML() {
 		tempString = dataFields.at(LAT_INDEX);
 		mPoint[i].lat = convertCoordinate(tempString);
 		mPoint[i].alt = dataFields.at(ALT_INDEX);
+		mPoint[i].time = dataFields.at(TIME_INDEX);
 		tempString = dataFields.at(BC_INDEX); 
 #if AVERAGE_BLACK_CARBON
 		bc_array[0]=bc_array[1];
@@ -405,7 +405,10 @@ bool KmlMakerWidget::createKML() {
 		out<<"        <description>";
 		out<<"Ozone = ";
 		out<<mPoint[count].ozone;
-		out<<" ppb</description>";
+		out<<" ppb\n";
+		out<<"Time: ";
+		out<<mPoint[count].time;
+		out<<"/description>";
 		out<<"\n";
 		out<<"     </Placemark>";
 		out<<"\n";
@@ -516,7 +519,10 @@ bool KmlMakerWidget::createKML() {
 		out<<"        <description>";
 		out<<"Black Carbon = ";
 		out<<mPoint[count].blackCarbon/BC_SCALING_FACTOR;
-		out<<" ng/m3</description>";
+		out<<" ng/m3\n";
+		out<<"Time: ";
+		out<<mPoint[count].time;
+		out<<"/description>";
 		out<<"\n";
 		out<<"     </Placemark>";
 		out<<"\n";
