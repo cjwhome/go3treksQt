@@ -245,7 +245,7 @@ void CarbonDataWidget::on_pushButton_clicked()
 	// Disable the button
 	ui->pushButton->setEnabled(false);
 	
-	// Set progress bar to have an animation
+	// Set progress bar to have an animation (min=max)
 	ui->progressBar->setEnabled(true);
 	ui->progressBar->setMaximum(0);
 	
