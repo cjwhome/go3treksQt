@@ -2,7 +2,7 @@
 #define DEFINES_H
 
 
-#define APP_VERSION "1.1"
+#define APP_VERSION "1.2"
 
 
 #endif // DEFINES_H

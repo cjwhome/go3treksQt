@@ -408,7 +408,7 @@ bool KmlMakerWidget::createKML() {
 		out<<" ppb\n";
 		out<<"Time: ";
 		out<<mPoint[count].time;
-		out<<"/description>";
+		out<<"</description>";
 		out<<"\n";
 		out<<"     </Placemark>";
 		out<<"\n";
@@ -522,7 +522,7 @@ bool KmlMakerWidget::createKML() {
 		out<<" ng/m3\n";
 		out<<"Time: ";
 		out<<mPoint[count].time;
-		out<<"/description>";
+		out<<"</description>";
 		out<<"\n";
 		out<<"     </Placemark>";
 		out<<"\n";

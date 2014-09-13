@@ -1,7 +1,7 @@
 #ifndef CARBONDATAWIDGET_H
 #define CARBONDATAWIDGET_H
 
-#define MAX_TIME_DIFFERENCE 1000000
+#define MAX_TIME_DIFFERENCE 100000
 #define MAX_MEASUREMENT_TIME_DIFF_START 15  //start with 10 seconds max, then switch to 60 in case the POM is set to 1 min averaging
 #define MAX_MEASUREMENT_TIME_DIFF_SECOND 60
 #define MIN_COMBO_LINES 1               //minimum number of lines to create a valid combo file
@@ -28,6 +28,10 @@
 #define AETH_MEASUREMENT_INDEX 9
 
 #define MIN_LAT_SIZE 9      //minimum number of characters in the latitude string (for checking bad transmitted data from pom gps)
+
+#define ALLOW_JUST_OZONE true
+
+#define SIZE_OF_AETH_DATE_PART 15	//20140909-130100 (yyyymmdd-hhmmss) but might have a -number so need to remove the -number
 
 #include <QWidget>
 #include <QDir>

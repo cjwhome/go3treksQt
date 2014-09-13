@@ -51,6 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	// Initialize components
 	logger = new Logger(this, dataPath);
 	loginWidget = new LoginWidget(this, dataPath);
+	connectOrFindWidget = new ConnectOrFind(this, dataPath);
 	serialWidget = new SerialWidget(this, dataPath);
     ozoneDataWidget = new OzoneDataWidget(this, dataPath);
     carbonDataWidget = new CarbonDataWidget(this, dataPath);
@@ -62,6 +63,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	/// Widget Stack ///
 	mainWidgetStack = new QStackedWidget(this);
 	mainWidgetStack->addWidget(loginWidget);
+	mainWidgetStack->addWidget(connectOrFindWidget);
 	mainWidgetStack->addWidget(serialWidget);
     mainWidgetStack->addWidget(ozoneDataWidget);
     mainWidgetStack->addWidget(carbonDataWidget);
@@ -77,6 +79,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	
 	// Connect local logging aliases
 	connect(loginWidget, &LoginWidget::log, logger, &Logger::log);
+	connect(connectOrFindWidget, &ConnectOrFind::log, logger, &Logger::log);
 	connect(serialWidget, &SerialWidget::log, logger, &Logger::log);
     connect(ozoneDataWidget, &OzoneDataWidget::log, logger, &Logger::log);
     connect(carbonDataWidget, &CarbonDataWidget::log, logger, &Logger::log);
@@ -86,6 +89,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	
     // Connect success signals
 	connect(loginWidget, &LoginWidget::loginSuccessful, this, &MainWindow::onLogin);
+	connect(connectOrFindWidget, &ConnectOrFind::userChoseConnect, this, &MainWindow::onUserChoseConnect);
+	connect(connectOrFindWidget, &ConnectOrFind::userChoseFind, this, &MainWindow::onUserChoseFind);
     connect(serialWidget, &SerialWidget::foundPortSuccessful, this, &MainWindow::onFoundPortComplete);
     connect(serialWidget, &SerialWidget::transmitSuccessful, this, &MainWindow::onTransmitComplete);
     connect(ozoneDataWidget, &OzoneDataWidget::processSuccessful, this, &MainWindow::onOzoneProcessed);
@@ -145,10 +150,24 @@ void MainWindow::onLogin(UserInfo user) {
 	
 	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
 	
-    bool found=false;
-    while(!found){
-        found = serialWidget->findPomPort();
-    }
+   
+}
+
+void MainWindow::onUserChoseConnect(){	
+	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 1);
+	logger->log("User chose to connect to POM");
+	bool found=false;
+	while(!found){
+	 found = serialWidget->findPomPort();
+	}
+}
+
+void MainWindow::onUserChoseFind(QFile *fp){
+	logger->log("User chose to search for POM file");
+	mainWidgetStack->setCurrentIndex(mainWidgetStack->currentIndex() + 2);		//skip serial read
+	
+	carbonDataWidget->setPomFileLocation(fp);
+    ozoneDataWidget->processOzoneData(fp);
 }
 
 void MainWindow::onFoundPortComplete(QString portName) {

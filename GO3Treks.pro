@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     updaterequireddialog.cpp \
     reconfiguredialog.cpp \
     uploadwidget.cpp \
-    quitwidget.cpp
+    quitwidget.cpp \
+    connectorfind.cpp
 
 HEADERS  += mainwindow.h \
     logger.h \
@@ -38,7 +39,8 @@ HEADERS  += mainwindow.h \
     defines.h \
     reconfiguredialog.h \
     uploadwidget.h \
-    quitwidget.h
+    quitwidget.h \
+    connectorfind.h
 
 FORMS    += \
     loginwidget.ui \
@@ -50,7 +52,8 @@ FORMS    += \
     updaterequireddialog.ui \
     reconfiguredialog.ui \
     uploadwidget.ui \
-    quitwidget.ui
+    quitwidget.ui \
+    connectorfind.ui
 
 OTHER_FILES +=
 

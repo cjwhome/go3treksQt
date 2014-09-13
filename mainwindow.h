@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "logger.h"
 #include "loginwidget.h"
+#include "connectorfind.h"
 #include "serialwidget.h"
 #include "ozonedatawidget.h"
 #include "carbondatawidget.h"
@@ -45,6 +46,7 @@ public:
 	
 	Logger *logger;
 	LoginWidget *loginWidget;
+	ConnectOrFind *connectOrFindWidget;
 	SerialWidget *serialWidget;
     OzoneDataWidget *ozoneDataWidget;
     CarbonDataWidget *carbonDataWidget;
@@ -61,6 +63,8 @@ public:
 public slots:
 	void updateStatus(QString text);
 	void onLogin(UserInfo user);  // Called as soon as the user has successfully logged in
+	void onUserChoseConnect();
+	void onUserChoseFind(QFile *fp);
     void onFoundPortComplete(QString portName);
 
     void onTransmitComplete(QFile *fp);  // Called as soon as the instrument has successfully transmitted data

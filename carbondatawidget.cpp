@@ -173,8 +173,20 @@ bool CarbonDataWidget::processCarbonData(){
 						pomLine.append(","+microAethFields[AETH_MEASUREMENT_INDEX]);
 						
 						out<<pomLine+"\n";
-					}else{
-						//
+					}else{											//still use pom data even if no valid black carbons are found otherwise set to false in the header file
+#if ALLOW_JUST_OZONE
+						if(!foundNewStartTime)						//
+						{
+							foundNewStartTime = true;
+							setStartDateTime(pomLineDateTime);
+						}
+							
+						combo_lines++;
+						ui->textBrowser->append("Did not find any matching BC data for this valid POM line.");
+						pomLine.append(",NULL");
+						
+						out<<pomLine+"\n";
+#endif
 					}
 				}
 			}
@@ -199,6 +211,10 @@ bool CarbonDataWidget::processCarbonData(){
 			return true;
 		}
 
+	}else{
+		ui->textBrowser->append("Could not find a file folder for the microAeth.\nTry to reconnect and download the data again.");
+		log("Could not find a file folder for the microAeth.");
+		return false;
 	}
 
 
