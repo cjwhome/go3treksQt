@@ -38,6 +38,7 @@ private:
 	QLabel *advancedLabel;
 	QLabel *orLabel;
 	QString dataPath;
+    QFile POMFile;
 	
 };
 

@@ -55,7 +55,11 @@ bool CarbonDataWidget::processCarbonData(){
 				name_parts_a = microAethFiles.at(i).split("_");      //first, split into two parts (this should be able to be done with 2 tokens)
 				date_with_ext = name_parts_a.at(1);
 				name_parts_b = date_with_ext.split(".");
-				date_time = name_parts_b.at(0);                      //removed extension (.dat or .csv)
+                QString temp_string = name_parts_b.at(0);
+                if(temp_string.size()>SIZE_OF_AETH_DATE_PART){              //chop off any copied files (-xx) addition
+                    temp_string.chop(temp_string.size()-SIZE_OF_AETH_DATE_PART);
+                }
+                date_time = temp_string;                      //removed extension (.dat or .csv)
 				QDateTime fileName_dateTime = QDateTime::fromString(date_time, "yyyyMMdd-hhmmss");     //extract the date from the file
 				temp_diff = qAbs(fileName_dateTime.secsTo(startDateTime));                             //absolute value of difference
 				if (temp_diff<min_secs) {
@@ -80,32 +84,33 @@ bool CarbonDataWidget::processCarbonData(){
 		//Open the pom file and black carbon file for processing
 		if(pomFp->isOpen()){
 			ui->textBrowser->append("Pom file already open");
-			pomFp->close();
+            pomFp->close();
 			//return false;
-		}
-		if(pomFp->open(QIODevice::ReadWrite)) {
-			ui->textBrowser->append("Opened POM file successfully.");
-		} else {
-			ui->textBrowser->append("Could not open POM file.");
-			//bcFp.close();
-			return false;
-		}
+        }
+        if(pomFp->open(QIODevice::ReadWrite)) {
+            ui->textBrowser->append("Opened POM file successfully.");
+        } else {
+            ui->textBrowser->append("Could not open POM file.");
+            //bcFp.close();
+            return false;
+        }
+
 		// bcFilePath PATH PREPENDING HAPPENS HERE:
 		bcFilePath = bcPath + bcFilePath;
-		QFile bcFp("C:/Users/Craig/Desktop/GO3 Treks Data/AE51-S5-824/AE51-S5-824_20140911-103110.dat");
-		//QFile bcFp (bcFilePath);
+        //QFile bcFp("C:/Users/Craig/Desktop/GO3 Treks Data/AE51-S5-824/AE51-S5-824_20140911-103110.dat");
+        QFile bcFp (bcFilePath);
 		ui->textBrowser->append("Path = " + bcFilePath + "\n");
 		if(bcFp.isOpen()){
 			ui->textBrowser->append("BC file already open");
-			bcFp.close();
-		}
-		if(bcFp.open(QIODevice::ReadOnly | QIODevice::Text)) {
-			log("Opened microAeth file successfully.");
-		} else {
-			log("Could not open microAeth file.");
-			return false;
-		}
-		
+            //bcFp.close();
+        }else{
+            if(bcFp.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                log("Opened microAeth file successfully.");
+            } else {
+                log("Could not open microAeth file.");
+                return false;
+            }
+        }
 		
 		
 		// Start building combo file
@@ -164,8 +169,9 @@ bool CarbonDataWidget::processCarbonData(){
 							microLineDateTime = QDateTime::fromString(microAethFields[AETH_DATE_INDEX]+microAethFields[AETH_TIME_INDEX],"yyyy/MM/ddhh:mm:ss");
 							
 							temp_diff = pomLineDateTime.secsTo(microLineDateTime);                             //absolute value of difference
-							if(temp_diff<0)
-							temp_diff = microLineDateTime.secsTo(pomLineDateTime);
+                            if(temp_diff<0){
+                                temp_diff = microLineDateTime.secsTo(pomLineDateTime);
+                            }
 							ui->textBrowser->append("   POM_TIME: "+ pomLineDateTime.toString("dd/MM/yyyy,hh:mm:ss")+", BC_TIME: " + microLineDateTime.toString("dd/MM/yyyy,hh:mm:ss") + ", diff="+QString::number(temp_diff)+" seconds");
 							
 						}
