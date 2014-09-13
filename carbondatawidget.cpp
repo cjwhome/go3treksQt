@@ -78,26 +78,35 @@ bool CarbonDataWidget::processCarbonData(){
 		
 		
 		//Open the pom file and black carbon file for processing
-		
+		if(pomFp->isOpen()){
+			ui->textBrowser->append("Pom file already open");
+			pomFp->close();
+			//return false;
+		}
+		if(pomFp->open(QIODevice::ReadWrite)) {
+			ui->textBrowser->append("Opened POM file successfully.");
+		} else {
+			ui->textBrowser->append("Could not open POM file.");
+			//bcFp.close();
+			return false;
+		}
 		// bcFilePath PATH PREPENDING HAPPENS HERE:
 		bcFilePath = bcPath + bcFilePath;
-		QFile *bcFp = new QFile(bcFilePath);
+		QFile bcFp("C:/Users/Craig/Desktop/GO3 Treks Data/AE51-S5-824/AE51-S5-824_20140911-103110.dat");
 		//QFile bcFp (bcFilePath);
 		ui->textBrowser->append("Path = " + bcFilePath + "\n");
-		if(bcFp->open(QIODevice::ReadOnly | QIODevice::Text)) {
+		if(bcFp.isOpen()){
+			ui->textBrowser->append("BC file already open");
+			bcFp.close();
+		}
+		if(bcFp.open(QIODevice::ReadOnly | QIODevice::Text)) {
 			log("Opened microAeth file successfully.");
 		} else {
 			log("Could not open microAeth file.");
 			return false;
 		}
 		
-		if(pomFp->open(QIODevice::ReadWrite)) {
-			ui->textBrowser->append("Opened POM file successfully.");
-		} else {
-			ui->textBrowser->append("Could not open POM file.");
-			bcFp->close();
-			return false;
-		}
+		
 		
 		// Start building combo file
 		QString comboFileName = "combo-"+startDateTime.toString("ddMMyy_hhmmss")+"-"+endDateTime.toString("hhmmss")+".txt";
@@ -107,7 +116,7 @@ bool CarbonDataWidget::processCarbonData(){
 		else {
 			ui->textBrowser->append("Could not open combined file.");
 			pomFp->close();
-			bcFp->close();
+			bcFp.close();
 			return false;
 		}
 		//files are open, now search black carbon file for close match
@@ -122,7 +131,7 @@ bool CarbonDataWidget::processCarbonData(){
 		QTextStream pomIn(pomFp);
 		QString microAethLine;
 		QStringList microAethFields;
-		QTextStream microAethIn(bcFp);
+		QTextStream microAethIn(&bcFp);
 		QDateTime pomLineDateTime;
 		QDateTime microLineDateTime;
 		int max_time_var = MAX_MEASUREMENT_TIME_DIFF_START;
@@ -193,7 +202,7 @@ bool CarbonDataWidget::processCarbonData(){
 		}
 		
 		comboFp.close();
-		bcFp->close();
+		bcFp.close();
 		pomFp->close();
 		if(combo_lines>MIN_COMBO_LINES) {
 			setEndDateTime(pomLineDateTime);		//set the end time to the last line received

@@ -37,6 +37,7 @@ private:
 	QLabel *recommendLabel;
 	QLabel *advancedLabel;
 	QLabel *orLabel;
+	QString dataPath;
 	
 };
 

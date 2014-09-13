@@ -7,6 +7,8 @@ ConnectOrFind::ConnectOrFind(QWidget *parent, QString path) :
 {
 	ui->setupUi(this);
 	
+	dataPath = path;
+	
 	connectPOMButton = new QPushButton("Connect to POM");
 	connectPOMButton->setMinimumSize(100,50);
 
@@ -57,8 +59,11 @@ void ConnectOrFind::on_connectPOMButton_clicked(){
 
 void ConnectOrFind::on_findPOMFileButton_clicked(){
 	findPOMFileButton->setEnabled(false);
-	QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) + "/GO3 Treks Data/", tr("Data Files (*.txt);"));
+	//QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) + "/GO3 Treks Data/", tr("Data Files (*.txt);"));
+	//QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), dataPath, tr("Data Files (*.txt);"));
+	QString fileName = "C:/Users/Craig/Desktop/GO3 Treks Data/RawPom.txt";
 	QFile fp;
 	fp.setFileName(fileName);
+	fp.close();
 	emit userChoseFind(&fp);
 }
