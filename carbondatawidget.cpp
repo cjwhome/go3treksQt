@@ -81,10 +81,10 @@ bool CarbonDataWidget::processCarbonData(){
 		
 		// bcFilePath PATH PREPENDING HAPPENS HERE:
 		bcFilePath = bcPath + bcFilePath;
-		
-		QFile bcFp (bcFilePath);
+		QFile *bcFp = new QFile(bcFilePath);
+		//QFile bcFp (bcFilePath);
 		ui->textBrowser->append("Path = " + bcFilePath + "\n");
-		if(bcFp.open(QIODevice::ReadOnly | QIODevice::Text)) {
+		if(bcFp->open(QIODevice::ReadOnly | QIODevice::Text)) {
 			log("Opened microAeth file successfully.");
 		} else {
 			log("Could not open microAeth file.");
@@ -95,7 +95,7 @@ bool CarbonDataWidget::processCarbonData(){
 			ui->textBrowser->append("Opened POM file successfully.");
 		} else {
 			ui->textBrowser->append("Could not open POM file.");
-			bcFp.close();
+			bcFp->close();
 			return false;
 		}
 		
@@ -107,7 +107,7 @@ bool CarbonDataWidget::processCarbonData(){
 		else {
 			ui->textBrowser->append("Could not open combined file.");
 			pomFp->close();
-			bcFp.close();
+			bcFp->close();
 			return false;
 		}
 		//files are open, now search black carbon file for close match
@@ -122,7 +122,7 @@ bool CarbonDataWidget::processCarbonData(){
 		QTextStream pomIn(pomFp);
 		QString microAethLine;
 		QStringList microAethFields;
-		QTextStream microAethIn(&bcFp);
+		QTextStream microAethIn(bcFp);
 		QDateTime pomLineDateTime;
 		QDateTime microLineDateTime;
 		int max_time_var = MAX_MEASUREMENT_TIME_DIFF_START;
@@ -193,7 +193,7 @@ bool CarbonDataWidget::processCarbonData(){
 		}
 		
 		comboFp.close();
-		bcFp.close();
+		bcFp->close();
 		pomFp->close();
 		if(combo_lines>MIN_COMBO_LINES) {
 			setEndDateTime(pomLineDateTime);		//set the end time to the last line received
