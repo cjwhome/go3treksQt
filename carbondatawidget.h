@@ -33,6 +33,8 @@
 
 #define SIZE_OF_AETH_DATE_PART 15	//20140909-130100 (yyyymmdd-hhmmss) but might have a -number so need to remove the -number
 
+#define BYTES_PER_LINE 50       //approximate number of bytes per line in a POM file
+
 #include <QWidget>
 #include <QDir>
 #include <QString>

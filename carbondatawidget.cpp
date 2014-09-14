@@ -105,6 +105,7 @@ bool CarbonDataWidget::processCarbonData(){
             //bcFp.close();
         }else{
             if(bcFp.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                ui->textBrowser->append("Opened microAeth file successfully");
                 log("Opened microAeth file successfully.");
             } else {
                 log("Could not open microAeth file.");
@@ -112,10 +113,12 @@ bool CarbonDataWidget::processCarbonData(){
             }
         }
 		
-		
+        ui->textBrowser->append("Before making combo file");
 		// Start building combo file
 		QString comboFileName = "combo-"+startDateTime.toString("ddMMyy_hhmmss")+"-"+endDateTime.toString("hhmmss")+".txt";
+        ui->textBrowser->append("Made new combo file with name= "+comboFileName);
 		comboFp.setFileName(comboFileName);
+
 		if(comboFp.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text))
 			ui->textBrowser->append("Opened new file for combining data.");
 		else {
@@ -125,8 +128,6 @@ bool CarbonDataWidget::processCarbonData(){
 			return false;
 		}
 		//files are open, now search black carbon file for close match
-		
-		
 		
 		//***This is the part that will get the most scrutiny!!*******
 		//POM could be set to either 10 seconds or 1 minute averaging, so first check to see if any points are within 10 seconds and then increase to 60 seconds if can't find any at 10
@@ -144,15 +145,17 @@ bool CarbonDataWidget::processCarbonData(){
 		comboFileValid = false;
 		foundNewStartTime = false;
 		
-		
-		//QDataStream out(&combined_fp);   // we will serialize the data into the file
 		QTextStream out(&comboFp);
 		//since we are appending a microAeth black carbon measurement to each ozone line, we search the entire ozone file
-		//int temp_diff;        //set high first!
-		
+
+        int line = 0;
+        ui->progressBar->setRange(0,pomFp->size()/BYTES_PER_LINE);
+        //log("Range of progress bar is: "+QString::number(pomFp->size()/50)+" lines");
 		while(!pomIn.atEnd()) {
 			microAethIn.seek(0);
 			pomLine = pomIn.readLine();                              //read an entire line
+            ui->progressBar->setValue(line);
+            line++;
 			pomFields = pomLine.split(QRegExp(","));                 //separate all fields separated by commas
 			if(pomFields.size() == POM_VALID_LINE_FIELDS) {           //make sure it is a measurement line and not other strings
 				if((QString::compare(QString(pomFields[POM_LAT_INDEX]),"0000.00000")!=0)&&(QString::compare(QString(pomFields[POM_LONG_INDEX]),"0000.0000")!=0)&&(pomFields[POM_LAT_INDEX].size()>MIN_LAT_SIZE)) {
@@ -164,7 +167,7 @@ bool CarbonDataWidget::processCarbonData(){
 					while((temp_diff > max_time_var) && (!microAethIn.atEnd())) {       //keep searching until find one or at end of file
 						microAethLine = microAethIn.readLine();
 						microAethFields = microAethLine.split(QRegExp(";"));     //micro uses semicolon
-						//ui->textBrowser->append("POM TIME: "+pomLineDateTime.toString("dd/MM/yyyy,hh:mm:ss"));
+                       // ui->textBrowser->append("POM TIME: "+pomLineDateTime.toString("dd/MM/yyyy,hh:mm:ss"));
 						if((microAethFields.size() == AETH_VALID_LINE_FIELDS)&&(microAethFields[AETH_TIME_INDEX]!="Time")) {
 							microLineDateTime = QDateTime::fromString(microAethFields[AETH_DATE_INDEX]+microAethFields[AETH_TIME_INDEX],"yyyy/MM/ddhh:mm:ss");
 							
@@ -172,7 +175,7 @@ bool CarbonDataWidget::processCarbonData(){
                             if(temp_diff<0){
                                 temp_diff = microLineDateTime.secsTo(pomLineDateTime);
                             }
-							ui->textBrowser->append("   POM_TIME: "+ pomLineDateTime.toString("dd/MM/yyyy,hh:mm:ss")+", BC_TIME: " + microLineDateTime.toString("dd/MM/yyyy,hh:mm:ss") + ", diff="+QString::number(temp_diff)+" seconds");
+                            //ui->textBrowser->append("   POM_TIME: "+ pomLineDateTime.toString("dd/MM/yyyy,hh:mm:ss")+", BC_TIME: " + microLineDateTime.toString("dd/MM/yyyy,hh:mm:ss") + ", diff="+QString::number(temp_diff)+" seconds");
 							
 						}
 					}
@@ -184,7 +187,7 @@ bool CarbonDataWidget::processCarbonData(){
 						}
 							
 						combo_lines++;
-						ui->textBrowser->append("Found a matching black carbon time stamp at time:" + microLineDateTime.toString());
+                        //ui->textBrowser->append("Found a matching black carbon time stamp at time:" + microLineDateTime.toString());
 						pomLine.append(","+microAethFields[AETH_MEASUREMENT_INDEX]);
 						
 						out<<pomLine+"\n";
@@ -197,7 +200,7 @@ bool CarbonDataWidget::processCarbonData(){
 						}
 							
 						combo_lines++;
-						ui->textBrowser->append("Did not find any matching BC data for this valid POM line.");
+                        //ui->textBrowser->append("Did not find any matching BC data for this valid POM line.");
 						pomLine.append(",NULL");
 						
 						out<<pomLine+"\n";
