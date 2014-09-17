@@ -24,9 +24,9 @@ $db->select_db('socialengine');
 /////////////////////
 
 
-//die('{"Response":"Failure","Errors":["Fucking Shit"]}');		//this is just to see what is happening for me to test...
+//if( ! isset($_POST['Request']) die('{"Response":"Failure","Errors":["Nothing Sent"]}');
 
-if( ! isset($_POST['Request']) || strlen($_POST['Request'])==0) die('{"Response":"Failure","Errors":["Empty request"]}');
+//if(strlen($_POST['Request'])==0) die('{"Response":"Failure","Errors":["Empty request"]}');
 
 $request = json_decode($_POST['Request'], true);
 

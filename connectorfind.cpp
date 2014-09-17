@@ -11,11 +11,13 @@ ConnectOrFind::ConnectOrFind(QWidget *parent, QString path) :
 	
 	connectPOMButton = new QPushButton("Connect to POM");
 	connectPOMButton->setMinimumSize(100,50);
+	connectPOMButton->setStatusTip("Press this if you just went on a trek and want to download the data from the POM");
 
 	orLabel = new QLabel("OR");
 	
 	findPOMFileButton = new QPushButton("Find POM file");
 	findPOMFileButton->setMinimumSize(100,50);
+	findPOMFileButton->setStatusTip("Press this if there was a problem when you tried to upload and you already have downloaded the trek from the POM");
 	
 	recommendLabel = new QLabel("(Recommended)");
 	recommendLabel->setAlignment(Qt::AlignCenter);

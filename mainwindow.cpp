@@ -47,6 +47,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	fileMenu->addAction(quitAct);
 	
 
+	/// Help Menu ///
+	helpMenu = menuBar()->addMenu(tr("&Help"));
+	aboutAct = new QAction("&About GO3Treks", this);
+	helpMenu->addAction(aboutAct);
+	
 	
 	// Initialize components
 	logger = new Logger(this, dataPath);
@@ -101,11 +106,15 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(uploadWidget, &UploadWidget::uploadSuccessful, this, &MainWindow::onUploadComplete);
 	connect(uploadWidget, &UploadWidget::quitSuccessful, this, &MainWindow::onQuitPressed);
 
+	//file menu connections
 	connect(quitAct, SIGNAL(triggered()), this, SLOT(quit()));
 	connect(resetAct, SIGNAL(triggered()), this, SLOT(reconfigure()));
     connect(syncTimeAct, SIGNAL(triggered()), this, SLOT(synchronizePOMTime()));
 	connect(restartLogAct, SIGNAL(triggered()), this, SLOT(setRestartLog()));
     syncTimeAct->setDisabled(true);             //disable this ability until the POM port has been found
+	
+	//help menu connections
+	connect(aboutAct, SIGNAL(triggered()), this, SLOT(displayAbout()));
 	
 	logger->log(QDateTime::currentDateTime().toString("[yyyy/MM/dd hh:mm:ss] ")+
 				"Application initialized!  Treks version " APP_VERSION ". Execution number "+
@@ -295,6 +304,20 @@ void MainWindow::quit() {
 	qApp->exit();
 }
 
+void MainWindow::displayAbout(){
+	//QMessageBox::about(this, "About GO3Treks", APP_VERSION);
+	QMessageBox aboutMessage(this);
+	
+	aboutMessage.setText("About GO3 Treks Software");
+	QString versionString("Version ");
+	versionString.append(APP_VERSION);
+	aboutMessage.setInformativeText(versionString);
+	aboutMessage.setStandardButtons(QMessageBox::Ok);
+	aboutMessage.setDefaultButton(QMessageBox::Ok);
+	aboutMessage.setFixedWidth(500);
+	
+	aboutMessage.exec();
+}
 
 void MainWindow::delay()
 {

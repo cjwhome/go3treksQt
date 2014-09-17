@@ -23,6 +23,7 @@
 #include <QSettings>
 #include <QDateTime>
 #include <QTime>
+#include <QMessageBox>
 
 namespace Ui {
 class MainWindow;
@@ -43,6 +44,9 @@ public:
 	QAction *quitAct;
     QAction *syncTimeAct;
 	QAction *restartLogAct;
+	
+	// Help Menu Actions
+	QAction *aboutAct;	
 	
 	Logger *logger;
 	LoginWidget *loginWidget;
@@ -82,12 +86,14 @@ public slots:
 	void setRestartLog();
 	void quit();
     void delay();
+	void displayAbout();
 
 private:
     Ui::MainWindow *ui;
 	
 	QStackedWidget *mainWidgetStack;
 	QMenu *fileMenu;
+	QMenu *helpMenu;
 	
 	void loadDefaultSettings();  // Called by the "Reconfigure" menu option and when setting default settings
     QDateTime pomStartTime;
@@ -95,6 +101,7 @@ private:
     QFile *comboFp;               //file pointer for the combo file
     QFile *kmlFp;
 	bool restartPomLogger;
+	//QMessageBox *aboutBox;
 };
 
 #endif // MAINWINDOW_H

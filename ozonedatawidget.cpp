@@ -32,11 +32,11 @@ void OzoneDataWidget::processOzoneData(QFile *fp){
         while (!in.atEnd()) {
             line = in.readLine();
             fields = line.split(QRegExp(","));
-            for(int a=0;a<fields.size();++a)
-            {
-               ui->fileData->append("Line:" + QString::number(i) +"(field "+ QString::number(a) + "):" + fields[a] + " ");
-            }
-            ui->fileData->append("\n");
+           // for(int a=0;a<fields.size();++a)
+          //  {
+           //    ui->fileData->append("Line:" + QString::number(i) +"(field "+ QString::number(a) + "):" + fields[a] + " ");
+          //  }
+           // ui->fileData->append("\n");
 
             /*****look for valid start and end times*********/
             //first, check to be sure there are gps coordinate in the line (latitude will always have data other than zeros if there was a connection)

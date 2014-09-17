@@ -22,7 +22,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Trek city, state (e.g., &quot;Boulder, CO&quot;)</string>
+      <string>Trek school, city, state (e.g., &quot;Boulder High School - Boulder, CO&quot;)</string>
      </property>
     </widget>
    </item>
