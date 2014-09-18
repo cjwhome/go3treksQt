@@ -17,7 +17,8 @@ OzoneDataWidget::~OzoneDataWidget()
 void OzoneDataWidget::processOzoneData(QFile *fp){
     //working_file = fp;
     QStringList fields;
-    QDateTime tempDateTime;     //used for comparison
+    QDateTime tempDateTime;			//used for comparison
+	QList<QDateTime> startTimeList;	//create an empty list of start times
 
     bool foundStartTime = false;
     bool foundEndTime = false;
@@ -40,18 +41,19 @@ void OzoneDataWidget::processOzoneData(QFile *fp){
 
             /*****look for valid start and end times*********/
             //first, check to be sure there are gps coordinate in the line (latitude will always have data other than zeros if there was a connection)
-
+			int startTimeCounter = 0;
            if(fields.size()==POM_TOTAL_FIELDS){
                if((QString::compare(QString(fields[LAT_INDEX]),"0000.00000")!=0)){  //comment this line if we want all data
-                    if(!foundStartTime){
-                        startDateTime = QDateTime::fromString(fields[DATE_INDEX]+fields[TIME_INDEX], "dd/MM/yyhh:mm:ss");
-                        foundStartTime = true;
-                        log("Found Start time");
-                        startDateTime = startDateTime.addYears(100);
-                        ui->startTimeOutput->setText(startDateTime.toString());
-                        endDateTime = startDateTime;        //do this here for a starting point for the endtime because it at least has to be greater than the starttime
+                    if(!startTimeCounter){
+                        startTimeList.append(QDateTime::fromString(fields[DATE_INDEX]+fields[TIME_INDEX], "dd/MM/yyhh:mm:ss"));
+						startTimeList.at(startTimeCounter) = startTimeList.at(startTimeCounter).addYears(100);		//for some reason, it assumes the date is 19XX instead of 20XX
+                        //foundStartTime = true;
+                        log("Found first start time");
+                        
+                        //ui->startTimeOutput->setText(startDateTime.toString());
+                        endDateTime = startTimeList.at(startTimeCounter);        //do this here for a starting point for the endtime because it at least has to be greater than the starttime
 
-                    }else{      //found the start time, now keep looking for the end time
+                    }else{      //found the first start time, now keep looking for the end time and other start times
 
                         tempDateTime = QDateTime::fromString(fields[DATE_INDEX]+fields[TIME_INDEX], "dd/MM/yyhh:mm:ss");
                         tempDateTime = tempDateTime.addYears(100);
