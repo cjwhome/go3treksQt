@@ -5,6 +5,8 @@
 #include <QDebug>
 #include <QDateTime>
 #include <QFile>
+#include <QRadioButton>
+#include <QGroupBox>
 
 //define the positions of fields in the data line
 #define LOG_INDEX 0     //log number
@@ -22,6 +24,8 @@
 
 #define POM_TOTAL_FIELDS 12
 
+#define ADD_ANOTHER_START_TIME_LIMIT 3600 //1 hour (60sec x 60min = 3600 seconds per hr) 
+
 namespace Ui {
 class OzoneDataWidget;
 }
@@ -37,7 +41,10 @@ public:
     void processOzoneData(QFile *fp);
     QDateTime getEndDateTime();
     QDateTime getStartDateTime();
+	QList<QDateTime> getStartDateTimeList();
+	int getStartTimeCount();
     bool getEndDateTimeValid();
+	QDateTime displayStartTimes(QList<QDateTime> startTimeList);		//allows user to select start time of trek
 
 signals:
     void log(QString text);
@@ -48,8 +55,10 @@ private:
 	QString dataPath;
     QDateTime startDateTime;
     QDateTime endDateTime;
+	QList<QDateTime> startTimeList;	//create an empty list of start times
     QFile *working_file;
     bool endDateTimeValid;
+	int startTimeCounter;
 };
 
 #endif // OZONEDATAWIDGET_H
