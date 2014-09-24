@@ -36,7 +36,9 @@ bool CarbonDataWidget::processCarbonData(){
 			foundPath = true;
 		}
 	}
+	
 	if(foundPath) {       //Found folder, now look inside for files that have the name with date and time in the same range as our POM start and End data
+		
 		QStringList microAethFiles = QDir(bcPath).entryList();
 		QStringList name_parts_a;
 		QString date_with_ext;       //date still has extension attached in first split
@@ -47,6 +49,7 @@ bool CarbonDataWidget::processCarbonData(){
 		ui->textBrowser->append("\nDates of files in microAeth Dir:");
 		QString temp_string;
 		QDateTime fileName_dateTime;
+		bool inserted_first_file = false;
 		signed int temp_diff = 0;
 		signed int list_element_diff;
 		
@@ -58,51 +61,55 @@ bool CarbonDataWidget::processCarbonData(){
 				date_with_ext = name_parts_a.at(1);
 				name_parts_b = date_with_ext.split(".");
 				temp_string = name_parts_b.at(0);
-				if(temp_string.size()>SIZE_OF_AETH_DATE_PART){              //chop off any copied files (-xx) addition
-					temp_string.chop(temp_string.size()-SIZE_OF_AETH_DATE_PART);
-				}
-				date_time = temp_string;                      //removed extension (.dat or .csv)
-				fileName_dateTime = QDateTime::fromString(date_time, "yyyyMMdd-hhmmss");     //extract the date from the file
-				if(i = 0){		//insert the first file into the list always
-					bcFilePathList.append(microAethFiles.at(0));
-					
-				}else{
-					temp_diff = qAbs(fileName_dateTime.secsTo(startDateTime));							//calculate the closest time to the pomstart time before comparing the list to see the best
-					bool inserted_file = false;
-					int a;
-					for(a=0;a<bcFilePathList.size();a++){
-						name_parts_a = bcFilePathList.at(a).split("_");      //first, split into two parts (this should be able to be done with 2 tokens)
-						date_with_ext = name_parts_a.at(1);
-						name_parts_b = date_with_ext.split(".");
-						temp_string = name_parts_b.at(0);
-						if(temp_string.size()>SIZE_OF_AETH_DATE_PART){              //chop off any copied files (-xx) addition
-							temp_string.chop(temp_string.size()-SIZE_OF_AETH_DATE_PART);
+				if(temp_string.size()==SIZE_OF_AETH_DATE_PART){              //chop off any copied files (-xx) addition	
+					date_time = temp_string;                      //removed extension (.dat or .csv)
+					fileName_dateTime = QDateTime::fromString(date_time, "yyyyMMdd-hhmmss");     //extract the date from the file
+					if(!inserted_first_file){		//insert the first file into the list always
+						bcFilePathList.append(microAethFiles.at(i));
+						inserted_first_file = true;
+					}else{
+						temp_diff = qAbs(fileName_dateTime.secsTo(startDateTime));							//calculate the closest time to the pomstart time before comparing the list to see the best
+						bool inserted_file = false;
+						int a;
+						for(a=0;a<bcFilePathList.size();a++){
+							if (bcFilePathList.at(a).endsWith(".dat") || bcFilePathList.at(a).endsWith(".csv")) {
+								name_parts_a = bcFilePathList.at(a).split("_");      //first, split into two parts (this should be able to be done with 2 tokens)
+								date_with_ext = name_parts_a.at(1);
+								name_parts_b = date_with_ext.split(".");
+								temp_string = name_parts_b.at(0);
+								if(temp_string.size()==SIZE_OF_AETH_DATE_PART){   //don't include the duplicate files (end with -1 or -1-1
+									date_time = temp_string;                      //removed extension (.dat or .csv)
+									fileName_dateTime = QDateTime::fromString(date_time, "yyyyMMdd-hhmmss");     //extract the date from the file
+									list_element_diff = qAbs(fileName_dateTime.secsTo(startDateTime));                             //absolute value of difference
+									if(temp_diff < list_element_diff&&(temp_string.size()==SIZE_OF_AETH_DATE_PART)){				//
+										bcFilePathList.insert(a, microAethFiles.at(i));
+										a=bcFilePathList.size();		//set to max to exit the for loop
+										inserted_file = true;
+									}
+								}
+							}
 						}
-						date_time = temp_string;                      //removed extension (.dat or .csv)
-						fileName_dateTime = QDateTime::fromString(date_time, "yyyyMMdd-hhmmss");     //extract the date from the file
-						list_element_diff = qAbs(fileName_dateTime.secsTo(startDateTime));                             //absolute value of difference
-						if(list_element_diff < temp_diff){				//
-							bcFilePathList.insert(a, microAethFiles.at(a));
-							a=bcFilePathList.size();		//set to max to exit the for loop
-							inserted_file = true;
-						}
+						if(!inserted_file&&(microAethFiles.at(i).endsWith(".dat")|| bcFilePathList.at(a).endsWith(".csv")))
+							bcFilePathList.append(microAethFiles.at(i));		//append at the end of the list if didn't get inserted earlier
+						
+						ui->textBrowser->append("Date: " + fileName_dateTime.toString()+ " difference - startdate = "+QString::number(temp_diff));
 					}
-					if(!inserted_file)
-						bcFilePathList.append(microAethFiles.at(a-1));		//append at the end of the list if didn't get inserted earlier
-					
-					ui->textBrowser->append("Date: " + fileName_dateTime.toString()+ " difference - startdate = "+QString::number(min_secs));
 				}
 			}
 		}
-		ui->textBrowser->append("\nFound closest microAeth file to POM start time: "+bcFilePath+" with a time difference of "+QString::number(min_secs)+" Seconds.");
-		if(min_secs >= MAX_TIME_DIFFERENCE) {
+		ui->textBrowser->append("Found and ordered the microAeth files in this order from closest to furthest from the POM start time:");
+		for(int t=0;t<bcFilePathList.size();t++){
+			ui->textBrowser->append("File "+bcFilePathList.at(t));
+		}
+		//ui->textBrowser->append("\nFound closest microAeth file to POM start time: "+bcFilePath+" with a time difference of "+QString::number(min_secs)+" Seconds.");
+		/*if(min_secs >= MAX_TIME_DIFFERENCE) {
 			log("Could not find any microAeth files whose dates came close.");
 			ui->textBrowser->append("Could not find any microAeth files whose dates came close.\n");
 			return false;
 		} else {
 			log("Found closest microAeth file to POM start time: "+bcFilePath+" with a time difference of "+QString::number(min_secs)+" seconds.");
 			ui->textBrowser->append("\nFound closest microAeth file to POM start time: "+bcFilePath+" with a time difference of "+QString::number(min_secs)+" Seconds.");
-		}
+		}*/
 		
 		
 		//Open the pom file and black carbon file for processing
@@ -179,7 +186,8 @@ bool CarbonDataWidget::processCarbonData(){
 			QTextStream microAethIn(&bcFp);
 			line = 0;
 			ui->progressBar->setRange(0,pomFp->size()/BYTES_PER_LINE);
-			//log("Range of progress bar is: "+QString::number(pomFp->size()/50)+" lines");
+			
+			pomIn.seek(0);
 			while(!pomIn.atEnd()) {
 				microAethIn.seek(0);
 				pomLine = pomIn.readLine();                              //read an entire line
@@ -220,20 +228,6 @@ bool CarbonDataWidget::processCarbonData(){
 							pomLine.append(","+microAethFields[AETH_MEASUREMENT_INDEX]);
 							
 							out<<pomLine+"\n";
-						}else{											//still use pom data even if no valid black carbons are found otherwise set to false in the header file
-	#if ALLOW_JUST_OZONE
-							if(!foundNewStartTime)						//
-							{
-								foundNewStartTime = true;
-								setStartDateTime(pomLineDateTime);
-							}
-								
-							combo_lines++;
-							//ui->textBrowser->append("Did not find any matching BC data for this valid POM line.");
-							pomLine.append(",NULL");
-							
-							out<<pomLine+"\n";
-	#endif
 						}
 					}
 				}

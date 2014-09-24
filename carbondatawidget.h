@@ -29,7 +29,7 @@
 
 #define MIN_LAT_SIZE 9      //minimum number of characters in the latitude string (for checking bad transmitted data from pom gps)
 
-#define ALLOW_JUST_OZONE true
+#define ALLOW_JUST_OZONE false
 
 #define SIZE_OF_AETH_DATE_PART 15	//20140909-130100 (yyyymmdd-hhmmss) but might have a -number so need to remove the -number
 
