@@ -235,11 +235,14 @@ bool CarbonDataWidget::processCarbonData(){
 			file_index++;		//increment to the next file in the list if no matching black carbon data was found
 			bcFp.close();		//close before opening a new black carbon file
 		}
-		comboFp.close();	
-		pomFp->close();
+			
+		
 		if(combo_lines>MIN_COMBO_LINES) {
+			comboFp.close();
+			pomFp->close();
 			setEndDateTime(pomLineDateTime);		//set the end time to the last line received
 			comboFileValid = true;
+			log("Found black carbon data to match with " + QString::number(combo_lines) + " lines of POM data");
 			emit processSuccessful();
 			//QString newname = "combo-"+startDateTime.toString("ddMMyy_hhmmss")+"-"+endDateTime.toString("hhmmss")+".txt";
 			/*if(combined_fp.rename(newname)){
@@ -251,6 +254,27 @@ bool CarbonDataWidget::processCarbonData(){
 			}*/
 			
 			return true;
+		}else{
+			//ui->textBrowser->append("Did not find any black carbon data to match with POM data.  Restart application to try again or file will contain only ozone data if you upload.  .");
+			displayNoBCFound();
+			log("Did not find any black carbon data.  File will only contain valid ozone measurements.");
+			pomIn.seek(0);
+			while(!pomIn.atEnd()) {
+				pomLine = pomIn.readLine();
+				pomFields = pomLine.split(QRegExp(","));                 //separate all fields separated by commas
+				if(pomFields.size() == POM_VALID_LINE_FIELDS) {           //make sure it is a measurement line and not other strings
+					if((QString::compare(QString(pomFields[POM_LAT_INDEX]),"0000.00000")!=0)&&(QString::compare(QString(pomFields[POM_LONG_INDEX]),"0000.0000")!=0)&&(pomFields[POM_LAT_INDEX].size()>MIN_LAT_SIZE)) {
+						pomLine.append(",0");
+						out<<pomLine+"\n";
+					}
+				}
+			}
+			comboFp.close();
+			pomFp->close();
+			setEndDateTime(pomLineDateTime);		//set the end time to the last line received
+			comboFileValid = true;
+			emit processSuccessful();
+			return true;
 		}
 
 	}else{
@@ -261,6 +285,19 @@ bool CarbonDataWidget::processCarbonData(){
 
 
 
+}
+
+void CarbonDataWidget::displayNoBCFound(){
+	
+	QMessageBox displayMessage(this);
+	
+	displayMessage.setText("          WARNING!!\nDid not find any valid Black Carbon Data.\nPlease press OK and close this application and retry downloading from microAeth if you think the file should be there.  Make sure you are saving the black carbon data to the GO3 Treks Data folder on the desktop.\nOtherwise, continuing will upload Ozone data only and Black Carbon will be set to zero!");
+	
+	displayMessage.setStandardButtons(QMessageBox::Ok);
+	displayMessage.setDefaultButton(QMessageBox::Ok);
+	displayMessage.setFixedWidth(500);
+	
+	displayMessage.exec();
 }
 
 /*bool CarbonDataWidget::averageCarbonData()

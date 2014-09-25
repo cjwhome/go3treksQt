@@ -17,7 +17,7 @@ ConnectOrFind::ConnectOrFind(QWidget *parent, QString path) :
 	
 	findPOMFileButton = new QPushButton("Find POM file");
 	findPOMFileButton->setMinimumSize(100,50);
-	findPOMFileButton->setStatusTip("Press this if there was a problem when you tried to upload and you already have downloaded the trek from the POM");
+	findPOMFileButton->setStatusTip("PRESS ONLY if there was a problem when you tried to upload and you already have downloaded the trek from the POM (RawPom.txt)");
 	
 	recommendLabel = new QLabel("(Recommended)");
 	recommendLabel->setAlignment(Qt::AlignCenter);

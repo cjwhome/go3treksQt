@@ -42,6 +42,7 @@
 #include <QDateTime>
 #include <QTextStream>
 #include <QDataStream>
+#include <QMessageBox>
 
 
 namespace Ui {
@@ -59,6 +60,7 @@ public:
     void setStartDateTime(QDateTime start);
     void setPomFileLocation(QFile *fp);
     bool processCarbonData();
+	void displayNoBCFound();
     QFile * getComboFp();
    // bool averageCarbonData();
 
