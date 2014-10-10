@@ -29,7 +29,7 @@ bool CarbonDataWidget::processCarbonData(){
 	ui->textBrowser->append("\nContents of GO3Treks Dir:");
 	for(int i=0; i< datFilesAndDirectories.size();++i) {
 		ui->textBrowser->append(datFilesAndDirectories.at(i));
-		if(datFilesAndDirectories.at(i).contains("AE51")){
+		if(datFilesAndDirectories.at(i).contains("AE51")&&!datFilesAndDirectories.at(i).contains("stream")){
 			bcPath = dataPath + datFilesAndDirectories.at(i) + "/";
 			ui->textBrowser->append("Found path:\n"+bcPath);
 			log("BC data ASSUMED (possibly wrongly) to be in '"+bcPath+"'");

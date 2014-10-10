@@ -92,7 +92,8 @@ bool KmlMakerWidget::createKML() {
 	QString tempString;
 
 	//get gps coordinates of first point to use for the lookat view
-	dataLine = in.readLine();                              //read an entire line
+	dataLine = in.readLine();   //read the first data line
+	dataLine = in.readLine();	//adding an extra one is a cheap fix for removing bad gps coordinates!
 	dataFields = dataLine.split(QRegExp(","));
 	tempString = dataFields.at(LAT_INDEX);
 	//ui->textBrowser->append("Here");
@@ -107,8 +108,9 @@ bool KmlMakerWidget::createKML() {
 	double bc_avg;
 	#endif
 	long i = 0;
+	
 	while(!in.atEnd()) {
-		dataLine = in.readLine();
+		dataLine = in.readLine();					
 		dataFields = dataLine.split(QRegExp(","));
 		
 		tempString = dataFields.at(O3_INDEX);
