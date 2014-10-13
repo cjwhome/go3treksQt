@@ -169,7 +169,7 @@ bool KmlMakerWidget::createKML() {
 	double range;
 	int heading;
 	
-	longDiffRad = (minLat.toDouble() - maxLat.toDouble())/360*2*3.14159;
+    longDiffRad = qAbs((minLat.toDouble() - maxLat.toDouble())/360*2*3.14159);
 	latDiffRad = (maxLong.toDouble() - minLong.toDouble())/360*2*3.14159;
 	
 	qDebug()<<"Long Diff Rad: "<<longDiffRad;
