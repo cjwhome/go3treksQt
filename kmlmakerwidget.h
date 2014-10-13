@@ -19,6 +19,8 @@
 #define AVERAGE_BLACK_CARBON 1
 #define BC_SCALING_FACTOR 0.04
 
+#define RANGE_MULTIPLIER 1200
+
 #include <QWidget>
 #include <QFile>
 #include <QDir>
@@ -29,7 +31,9 @@
 #include <QUrl>
 #include <QTime>
 #include <QTimer>
+#include <QDebug>
 #include "defines.h"
+#include <QtMath>
 
 namespace Ui {
 class KmlMakerWidget;

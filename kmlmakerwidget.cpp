@@ -90,25 +90,116 @@ bool KmlMakerWidget::createKML() {
 	QString lookAtLatitude;
 	QString lookAtLongitude;
 	QString tempString;
-
-	//get gps coordinates of first point to use for the lookat view
-	dataLine = in.readLine();   //read the first data line
-	dataLine = in.readLine();	//adding an extra one is a cheap fix for removing bad gps coordinates!
-	dataFields = dataLine.split(QRegExp(","));
-	tempString = dataFields.at(LAT_INDEX);
-	//ui->textBrowser->append("Here");
-	//separate degrees from rest of string
-	lookAtLatitude = convertCoordinate(tempString);
-	tempString = dataFields.at(LONG_INDEX);
-	lookAtLongitude = convertCoordinate(tempString);
-
 	MeasurementPoint mPoint[MAX_POINTS];
+	
+	long i = 0;
+
+	//determine the range for the lookat points
+	dataLine = in.readLine();	//skip first point due to potential bad (TODO: remove this because it is crap!)
+	while(!in.atEnd()){
+		dataLine = in.readLine();
+		dataFields = dataLine.split(QRegExp(","));
+		tempString = dataFields.at(LAT_INDEX);
+		
+		mPoint[i].lat = convertCoordinate(tempString);
+		tempString = dataFields.at(LONG_INDEX);
+		mPoint[i].lon = convertCoordinate(tempString);
+		i++;
+	}
+	
+		
+	int array_length = i;
+	int min = 0;
+	int j;
+	int a;
+	QString maxLat, minLat;
+	QString maxLong, minLong;
+	QString temp;
+	//double temp_double_a, temp_double_b;
+	
+	for(a = 0;a < array_length;a++)	//run sort algorithm on array of measurements
+	{
+		min = a;
+		for(j = a+1;j <= array_length;j++){
+			//temp_double_a = mPoint[j].lat.toDouble();
+			//temp_double_b = mPoint[min].lat.toDouble();
+			if(mPoint[j].lat.toDouble() < mPoint[min].lat.toDouble()) min = j;
+			//swap array[min] and array[j]
+			temp = mPoint[min].lat;
+			mPoint[min].lat = mPoint[a].lat;
+			mPoint[a].lat = temp;
+		}				
+	}
+	lookAtLatitude = mPoint[(array_length/2)-1].lat;	//take median value
+	minLat = mPoint[1].lat;
+	maxLat = mPoint[array_length-1].lat;
+	
+	for(a = 0;a < array_length;a++)	//run sort algorithm on array of measurements
+	{
+		min = a;
+		for(j = a+1;j <= array_length;j++){
+			//temp_double_a = mPoint[j].lat.toDouble();
+			//temp_double_b = mPoint[min].lat.toDouble();
+			if(mPoint[j].lon.toDouble() < mPoint[min].lon.toDouble()) min = j;
+			//swap array[min] and array[j]
+			temp = mPoint[min].lon;
+			mPoint[min].lon = mPoint[a].lon;
+			mPoint[a].lon = temp;
+		}				
+	}
+	lookAtLongitude = mPoint[(array_length/2)-1].lon;	//take median value
+	minLong = mPoint[1].lon;
+	maxLong = mPoint[array_length-1].lon;
+	
+	qDebug()<<"Min latitude: "<<minLat;
+	qDebug()<<"Max latitude: "<<maxLat;
+	qDebug()<<"Min longtitude: "<<minLong;
+	qDebug()<<"Max longitude: "<<maxLong;
+	
+	//display all of the lat and longs to see if they are sorted
+	/*for(a=0;a<array_length;a++){
+		qDebug()<<"Lat["<<a<<"]="<<mPoint[a].lon;
+		qDebug()<<"Long["<<a<<"]="<<mPoint[a].lat;
+	}*/
+	
+	//find the longitude and latitude difference in radians
+	
+	double longDiffRad, latDiffRad;
+	double longDistance, latDistance;
+	double range;
+	int heading;
+	
+	longDiffRad = (minLat.toDouble() - maxLat.toDouble())/360*2*3.14159;
+	latDiffRad = (maxLong.toDouble() - minLong.toDouble())/360*2*3.14159;
+	
+	qDebug()<<"Long Diff Rad: "<<longDiffRad;
+	qDebug()<<"Lat Diff Rad: "<<latDiffRad;
+	
+	//calculate the E-W distance
+	longDistance = 6371*qCos(lookAtLongitude.toDouble()/360*2*3.14159)*longDiffRad;
+	latDistance = 6371*latDiffRad;
+	
+	qDebug()<<"Long Distance: "<<longDistance;
+	qDebug()<<"Lat Distance: "<<latDistance;
+	
+	if(longDistance>latDistance)
+		heading = 0;
+	else
+		heading = 90;
+	
+	if(longDistance>latDistance)
+		range = longDistance*RANGE_MULTIPLIER;
+	else 
+		range = latDistance*RANGE_MULTIPLIER;
+	
+	
 	#if AVERAGE_BLACK_CARBON
 	double bc_array[6];
 	double bc_avg;
 	#endif
-	long i = 0;
 	
+	i=0;		//reset before loop
+	in.seek(0);
 	while(!in.atEnd()) {
 		dataLine = in.readLine();					
 		dataFields = dataLine.split(QRegExp(","));
@@ -296,7 +387,7 @@ bool KmlMakerWidget::createKML() {
 	out<<"</altitude>";
 	out<<"\n";
 	out<<"        <heading>";
-	out<<0;
+	out<<heading;
 	out<<"</heading>";
 	out<<"\n";
 	out<<"        <tilt>";
@@ -304,7 +395,7 @@ bool KmlMakerWidget::createKML() {
 	out<<"</tilt>";
 	out<<"\n";
 	out<<"        <range>";
-	out<<200;
+	out<<range;
 	out<<"</range>";
 	out<<"\n";
 	out<<"      </LookAt>";
@@ -337,11 +428,15 @@ bool KmlMakerWidget::createKML() {
 	out<<500;
 	out<<"</altitude>";
 	out<<"\n";
-	out<<"        <heading>0</heading>";
+	out<<"        <heading>";
+	out<<heading;
+	out<<"</heading>";
 	out<<"\n";
 	out<<"        <tilt>60</tilt>";
 	out<<"\n";
-	out<<"        <range>200</range>";
+	out<<"        <range>";
+	out<<range;
+	out<<"</range>";
 	out<<"\n";
 	out<<"      </LookAt>";
 	out<<"\n";
@@ -446,11 +541,15 @@ bool KmlMakerWidget::createKML() {
 	out<<500;
 	out<<"</altitude>";
 	out<<"\n";
-	out<<"        <heading>0</heading>";
+	out<<"        <heading>";
+	out<<heading;
+	out<<"</heading>";
 	out<<"\n";
 	out<<"        <tilt>60</tilt>";
 	out<<"\n";
-	out<<"        <range>200</range>";
+	out<<"        <range>";
+	out<<range;
+	out<<"</range>";
 	out<<"\n";
 	out<<"      </LookAt>";
 	out<<"\n";
