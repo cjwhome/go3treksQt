@@ -35,7 +35,8 @@ QString KmlMakerWidget::convertCoordinate(QString str) {
 	double fraction = fracString.toDouble();
 	//ui->textBrowser->append(QString::number(fraction));
 	fraction /= 60;
-	fracString = QString::number(fraction);
+	//fracString = QString::number(fraction);
+	fracString.setNum(fraction, 'f', 7);
 	fracString.remove(0,1);     //remove leading zero
 	
 	//ui->textBrowser->append("Degrees: "+ degrees);
@@ -92,7 +93,13 @@ bool KmlMakerWidget::createKML() {
 	QString tempString;
 	MeasurementPoint mPoint[MAX_POINTS];
 	
+	out.setIntegerBase(10);
+	out.setRealNumberNotation(QTextStream::FixedNotation);
+	out.setRealNumberPrecision(7);
+	
 	long i = 0;
+	double longitudeTotal = 0;
+	double latitudeTotal = 0;
 
 	//determine the range for the lookat points
 	dataLine = in.readLine();	//skip first point due to potential bad (TODO: remove this because it is crap!)
@@ -102,8 +109,10 @@ bool KmlMakerWidget::createKML() {
 		tempString = dataFields.at(LAT_INDEX);
 		
 		mPoint[i].lat = convertCoordinate(tempString);
+		latitudeTotal += mPoint[i].lat.toDouble();
 		tempString = dataFields.at(LONG_INDEX);
 		mPoint[i].lon = convertCoordinate(tempString);
+		longitudeTotal += mPoint[i].lon.toDouble();
 		i++;
 	}
 	
@@ -130,9 +139,11 @@ bool KmlMakerWidget::createKML() {
 			mPoint[a].lat = temp;
 		}				
 	}
-	lookAtLatitude = mPoint[(array_length/2)-1].lat;	//take median value
+	//lookAtLatitude = mPoint[(array_length/2)-1].lat;	//take median value
 	minLat = mPoint[1].lat;
 	maxLat = mPoint[array_length-1].lat;
+	lookAtLatitude.setNum((minLat.toDouble()+maxLat.toDouble())/2, 'f', 7);		//calculate averages for the midpoint
+	
 	
 	for(a = 0;a < array_length;a++)	//run sort algorithm on array of measurements
 	{
@@ -147,19 +158,24 @@ bool KmlMakerWidget::createKML() {
 			mPoint[a].lon = temp;
 		}				
 	}
-	lookAtLongitude = mPoint[(array_length/2)-1].lon;	//take median value
+	
 	minLong = mPoint[1].lon;
-	maxLong = mPoint[array_length-1].lon;
+	maxLong = mPoint[array_length-2].lon;
+	
+	lookAtLongitude.setNum((minLong.toDouble()+maxLong.toDouble())/2, 'f', 7);		//average the max and min values to calculate the midpoint
 	
 	qDebug()<<"Min latitude: "<<minLat;
 	qDebug()<<"Max latitude: "<<maxLat;
 	qDebug()<<"Min longtitude: "<<minLong;
 	qDebug()<<"Max longitude: "<<maxLong;
 	
+	qDebug()<<"Median latitude: "<<lookAtLatitude;
+	qDebug()<<"Median longitude: "<<lookAtLongitude;
+	
 	//display all of the lat and longs to see if they are sorted
 	/*for(a=0;a<array_length;a++){
-		qDebug()<<"Lat["<<a<<"]="<<mPoint[a].lon;
-		qDebug()<<"Long["<<a<<"]="<<mPoint[a].lat;
+		qDebug()<<"Long["<<a<<"]="<<mPoint[a].lon;
+		//qDebug()<<"Lat["<<a<<"]="<<mPoint[a].lat;
 	}*/
 	
 	//find the longitude and latitude difference in radians
@@ -169,14 +185,17 @@ bool KmlMakerWidget::createKML() {
 	double range;
 	int heading;
 	
-    longDiffRad = qAbs((minLat.toDouble() - maxLat.toDouble())/360*2*3.14159);
-	latDiffRad = (maxLong.toDouble() - minLong.toDouble())/360*2*3.14159;
+    latDiffRad = (maxLat.toDouble() - minLat.toDouble())/360*2*3.14159;
+	if(minLong.toDouble() > maxLong.toDouble())
+		longDiffRad = (minLong.toDouble() - maxLong.toDouble())/360*2*3.14159;
+	else
+		longDiffRad = (maxLong.toDouble() - minLong.toDouble())/360*2*3.14159;
 	
 	qDebug()<<"Long Diff Rad: "<<longDiffRad;
 	qDebug()<<"Lat Diff Rad: "<<latDiffRad;
 	
 	//calculate the E-W distance
-	longDistance = 6371*qCos(lookAtLongitude.toDouble()/360*2*3.14159)*longDiffRad;
+	longDistance = 6371*qCos(lookAtLatitude.toDouble()/360*2*3.14159)*longDiffRad;
 	latDistance = 6371*latDiffRad;
 	
 	qDebug()<<"Long Distance: "<<longDistance;
@@ -461,6 +480,7 @@ bool KmlMakerWidget::createKML() {
 	out<<"\n";
 	
 	//<!-- Coordinates and ozone measurements:  Longitude, Latitude, Ozone -->
+	
 	int count;
 	for (count=0;count<i;count++) {
 		out<<mPoint[count].lon;

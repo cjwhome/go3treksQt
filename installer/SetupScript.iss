@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "GO3 Treks"
-#define MyAppVersion "1.5"
+#define MyAppVersion "1.6"
 #define MyAppPublisher "Global Ozone Project"
 #define MyAppURL "http://go3project.com/"
 #define MyAppExeName "GO3Treks.exe"

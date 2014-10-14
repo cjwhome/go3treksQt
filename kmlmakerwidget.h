@@ -20,6 +20,7 @@
 #define BC_SCALING_FACTOR 0.04
 
 #define RANGE_MULTIPLIER 1200
+#define RANGE_MINIMUM 400
 
 #include <QWidget>
 #include <QFile>
