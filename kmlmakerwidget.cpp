@@ -211,6 +211,9 @@ bool KmlMakerWidget::createKML() {
 	else 
 		range = latDistance*RANGE_MULTIPLIER;
 	
+	if(range < RANGE_MINIMUM)
+		range = RANGE_MINIMUM;
+	
 	
 	#if AVERAGE_BLACK_CARBON
 	double bc_array[6];
