@@ -642,7 +642,9 @@ bool KmlMakerWidget::createKML() {
 		out<<"\n";
 		out<<"        <description>";
 		out<<"Black Carbon = ";
-		out<<mPoint[count].blackCarbon/BC_SCALING_FACTOR;
+		
+		temp.setNum(mPoint[count].blackCarbon/BC_SCALING_FACTOR,'f', 0);
+		out<<temp;
 		out<<" ng/m3\n";
 		out<<"Time: ";
 		out<<mPoint[count].time;
